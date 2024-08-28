@@ -1,0 +1,195 @@
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <!-- Brand Logo -->
+  <a (click)="inicio()" class="brand-link">
+    <img
+      src="assets/icono.png"
+      alt="AdminLTE Logo"
+      class="brand-image img-rounded elevation-3"
+      style="opacity: 0.8"
+    />
+    <span class="brand-text font-weight-light"
+      ><strong>Team CellMania</strong></span
+    >
+  </a>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- Sidebar user panel (optional) -->
+    <div
+      class="cursor-poiner user-panel mt-3 pb-3 mb-3 d-flex"
+      (click)="perfil()"
+    >
+      <div *ngIf="userimg; else content">
+        <div class="image">
+          <img src="{{ userimg }}" alt="" class="rounded-circle" />
+        </div>
+      </div>
+      <ng-template #content>
+        <div class="image">
+          <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i></div
+      ></ng-template>
+      <!-- <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i> -->
+
+      <div class="info">
+        <a class="d-block">{{ user }}</a>
+      </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <nav (click)="linksdata()" class="mt-2">
+      <ul
+        class="nav nav-pills nav-sidebar flex-column"
+        data-widget="treeview"
+        role="menu"
+        data-accordion="false"
+        *ngIf="nivel1"
+      >
+        <!-- Add icons to the links using the .nav-icon class
+                 with font-awesome or any other icon font library -->
+
+        <li class="nav-item menu-open btn6">
+          <a
+            (click)="linksdata()"
+            class="cursor-poiner nav-link"
+            routerLink="/dashboard"
+            routerLinkActive="bg-primary"
+          >
+            <i class="nav-icon bi bi-house-fill"></i>
+            <p>Inicio</p>
+          </a>
+        </li>
+      </ul>
+      <ul
+      class="nav nav-pills nav-sidebar flex-column"
+      data-widget="treeview"
+      role="menu"
+      data-accordion="false"
+      *ngIf="nivel2"
+    >
+      <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+
+      <li class="nav-item menu-open btn10">
+        <a
+          (click)="linksdata()"
+          class="cursor-poiner nav-link"
+          routerLink="/suppliers"
+          routerLinkActive="bg-primary"
+        >
+          <i class="nav-icon bi bi-people"></i>
+          <p>Proveedores</p>
+        </a>
+      </li>
+      <li class="nav-item menu-open btn11" *ngIf="nivel2">
+        <a
+          class="nav-link"
+          routerLink="/income"
+          routerLinkActive="active"
+        >
+          <i class="nav-icon bi bi-box-arrow-in-down"></i>
+          <p>Ingresos</p>
+        </a>
+      </li>
+    </ul>
+      <ul
+        class="nav nav-pills nav-sidebar flex-column"
+        data-widget="treeview"
+        role="menu"
+        data-accordion="true"
+        *ngIf="nivel1 || nivel2"
+      >
+        <li class="nav-item btn6" [ngClass]="{ 'menu-open': open }">
+          <a
+            class="nav-link"
+            (click)="handleClick()"
+            [ngClass]="{ active: activebut }"
+          >
+            <i class="nav-icon bi bi-tools"></i>
+            <p>
+              Inventario Rep.
+              <i class="right bi bi-chevron-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item" *ngIf="nivel1">
+              <a
+                class="nav-link"
+                routerLink="/inventory"
+                routerLinkActive=" active"
+              >
+                <i class="nav-icon bi bi-inboxes-fill"></i>
+                <p>Inventario</p>
+              </a>
+            </li>
+            <li class="nav-item" *ngIf="nivel1">
+              <a
+                class="nav-link"
+                routerLink="/movements"
+                routerLinkActive="active"
+              >
+                <i class="nav-icon bi bi-arrow-down-up"></i>
+                <p>Movimientos</p>
+              </a>
+            </li>
+
+            <li class="nav-item" *ngIf="nivel1">
+              <a
+                class="nav-link"
+                routerLink="/incomerep"
+                routerLinkActive="active"
+              >
+                <i class="nav-icon bi bi-check-square"></i>
+                <p>Ingtresos REP.</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <ul
+        class="nav nav-pills nav-sidebar flex-column"
+        data-widget="treeview1"
+        role="menu"
+        data-accordion="true"
+        *ngIf="nivel3"
+      >
+        <li class="nav-item btn6" [ngClass]="{ 'menu-open': open1 }">
+          <a
+            class="nav-link"
+            (click)="handleClick1()"
+            [ngClass]="{ active: activebut1 }"
+          >
+            <i class="nav-icon bi bi-box"></i>
+            <p>
+              Inventario PER.
+              <i class="right bi bi-chevron-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item" *ngIf="nivel3">
+              <a
+                class="nav-link"
+                routerLink="/inventoryper"
+                routerLinkActive="active"
+              >
+                <i class="nav-icon bi bi-inboxes-fill"></i>
+                <p>Inventario</p>
+              </a>
+              <a
+              class="nav-link"
+              routerLink="/movementsper"
+              routerLinkActive="active"
+            >
+            <i class="nav-icon bi bi-arrow-down-up"></i>
+            <p>Movimientos Per.</p>
+            </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
+</aside>

@@ -1,0 +1,58 @@
+<p-dialog header="Ingrese fecha reporte para wassap" [(visible)]="displayDialog" [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '50vw'}" [draggable]="false"
+    [resizable]="false" (onHide)="closeModal( )" styleClass="custom-dialog">
+ 
+     
+        <form [formGroup]="dateform">
+            <div class="row mt-4">
+            <select class="form-select" aria-label="Default select example" formControlName="inventoryname">
+                <option value="0" selected>All</option>
+                <option *ngFor="let item of namesinventory"
+                [ngValue]="item._id"
+                >{{item.inventory_name}}</option>
+          
+              </select>
+            </div>
+            <div class="row mt-4">
+              <!-- derecha-->
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="border-lable-flt">
+                    <input
+                      type="date"
+                      class="form-control"
+                      placeholder="Procedencia"
+                      formControlName="datestart"
+                    />
+                    <span lass="widget-title  shop-sidebar">Fecha Inicio</span>
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="border-lable-flt">
+                    <input
+                      type="date"
+                      class="form-control"
+                      placeholder="Procedencia"
+                      formControlName="dateend"
+                    />
+                    <span lass="widget-title  shop-sidebar">Fecha Fin</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-center gap-3 mt-3">
+              <button
+                type="submit"
+                class="btn btn-success"
+                (click)="wassapgetreport(dateform.value)"
+              >
+                Generar
+              </button>
+              <button type="button" class="btn btn-danger" (click)="closeModal( )">
+                Cancelar
+              </button>
+            </div>
+          </form>  
+</p-dialog>

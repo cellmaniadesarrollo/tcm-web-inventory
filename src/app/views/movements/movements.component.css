@@ -1,0 +1,33 @@
+.cursor-poiner{
+    cursor: pointer;
+}
+select {
+    appearance: none;
+    background: white;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16px' height='16px' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6.1018 8C5.02785 8 4.45387 9.2649 5.16108 10.0731L10.6829 16.3838C11.3801 17.1806 12.6197 17.1806 13.3169 16.3838L18.8388 10.0731C19.5459 9.2649 18.972 8 17.898 8H6.1018Z' fill='%23212121'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    border-radius: 2px;
+    padding: 0.25rem 2rem 0.25rem 0.75rem;
+  }
+
+
+  .red {
+    background-color: red;
+  }
+  
+  .blue {
+    background-color: blue;
+  }
+  .table-sm1 td {
+    font-size: 12px;  
+  } 
+  .table-sm1 th {
+    font-size: 14px;  
+  }
+
+  .spinner-border {
+    margin: 20px auto; /* Ajusta el margen para centrar verticalmente la animación */
+  }
+
+ 

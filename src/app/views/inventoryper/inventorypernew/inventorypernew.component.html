@@ -1,0 +1,725 @@
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Nuevo Producto Personalizados</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a class="cursor-poiner text-primary" (click)="inicio()"><u>Inicio</u></a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="cursor-poiner text-primary" (click)="cancelar()"
+                ><u>Inventario Personalizados</u></a
+              >
+            </li>
+            <li class="breadcrumb-item active">
+              Nuevo Producto Personalizados
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <div class="card card-secondary">
+    <div class="card-header">
+      <h3 class="card-title">Nuevo Producto Personalizados</h3> 
+    </div>
+
+    <!-- /.card-header -->
+    <div class="card-body">
+      <div class="row">
+        <!-- izquierda -->
+        <div class="col-sm-6">
+          <div class="row mt-3">
+            <div class="col-sm-1" align="center">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                (change)="onCheckboxChange($event)"
+                checked
+              />
+            </div>
+            <!-- izquierda -->
+            <div class="col-sm-10">
+              <div class="form-group">
+                <label *ngIf="codeauto; else templateElse">
+                  Codigo principal generado automaticamente</label
+                >
+                <ng-template #templateElse>
+                  <form [formGroup]="nuevoForm">
+                  <div class="custom-form-group">
+                    
+                    <input
+                      type="text"
+                      class="custom-form-control"
+                      id="myInpu"
+                      placeholder=" "
+                      autocomplete="off"
+                      formControlName="cod_upc"
+                    />
+                    <label for="myInpu" class="custom-label"
+                      >Codigo principal</label
+                    >
+                  </div>
+                </form>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <!-- izquierda -->
+            <div class="col-sm-11">
+              <!-- inicio buscador -->
+              <div class="position-relative">
+                <div class="input-group">
+                  <div class="form-floating mb-0">
+                    <div class="input-group-prepend">
+                      <button
+                        class="btn btn-outline-secondary search-btn"
+                        type="button"
+                        [disabled]="blockbusquedaname"
+                        (click)="openModal()"
+                      >
+                        <i class="fa fa-plus"></i>
+                      </button>
+                      <button
+                        class="btn btn-outline-secondary search-btn1"
+                        type="button"
+                        [disabled]="blockbusquedaname"
+                        (click)="makechoice('Enter')"
+                      >
+                        <i class="fa fa-search"></i>
+                      </button>
+                    </div>
+                    <input
+                      #inputElement
+                      type="search"
+                      class="form-control shadow-bottom"
+                      placeholder="Buscar Producto"
+                      autocomplete="off"
+                      id="myInput"
+                      (focus)="onInputFocus('name_items')"
+                      (blur)="onInputBlur('name_items')"
+                      (keydown)="makechoice($event)"
+                      [(ngModel)]="terminoDeBusqueda"
+                      (ngModelChange)="onInputChange('name_items')"
+                      [readonly]="blockbusquedaname"
+                      aria-describedby="sugerenciasDropdown"
+                    />
+                    <label for="inputSearch">Buscar Nombre</label>
+                  </div>
+                </div>
+                <ul
+                  class="loading-list list-group position-absolute"
+                  *ngIf="loadername; else loaderpronn"
+                >
+                  <li class="list-group-item">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </li>
+                </ul>
+                <ng-template #loaderpronn>
+                  <ul
+                    class="list-group position-absolute custom-scrollbar"
+                    *ngIf="mostrarSugerencias"
+                  >
+                    <ng-container *ngFor="let item of nameite">
+                      <li
+                        class="list-group-item"
+                        *ngIf="
+                          item.name_nameitems
+                            .toLowerCase()
+                            .includes(terminoDeBusqueda.toLowerCase())
+                        "
+                        (click)="
+                          seleccionarSugerencia(
+                            item.name_nameitems,
+                            item._id,
+                            'name_items'
+                          )
+                        "
+                      >
+                        {{ item.name_nameitems }}
+                      </li>
+                    </ng-container>
+                  </ul>
+                </ng-template>
+              </div>
+              <div
+              *ngIf="nuevoForm.get('name_items')?.errors?.['required'] && submitted"
+              class="error-message"
+            >
+              Nombre Requerido.
+            </div>
+              <!-- fin buscador -->
+            </div>
+          </div>
+          <form [formGroup]="nuevoForm">
+            <div class="row mt-3">
+              <div class="col-sm-1"></div>
+              <!-- izquierda -->
+              <div class="col-sm-10">
+                <div class="custom-form-group">
+                  <input
+                    type="number"
+                    class="custom-form-control"
+                    id="myInpu"
+                    placeholder=" "
+                    autocomplete="off"
+                    formControlName="stock"
+                    (focus)="onFocus($event)"
+                  />
+                  <label for="myInpu" class="custom-label">Stock</label>
+                </div>
+                <div
+                *ngIf="nuevoForm.get('stock')?.errors?.['required'] && submitted"
+                class="error-message"
+              >
+                Stock Requerido.
+              </div>
+              </div>
+            </div>
+          </form>
+          <div class="row mt-3">
+            <!-- derecha-->
+            <div class="col-sm-11">
+              <div class="position-relative">
+                <div class="input-group">
+                  <div class="form-floating mb-0">
+                    <div class="input-group-prepend">
+                      <button
+                        (click)="openModalbrand()"
+                        class="btn btn-outline-secondary search-btn"
+                      >
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </div>
+                    <input
+                      type="search"
+                      class="form-control shadow-bottom"
+                      placeholder="Buscar Producto"
+                      autocomplete="off"
+                      id="myInput"
+                      (focus)="onInputFocus('id_brand')"
+                      (blur)="onInputBlur('id_brand')"
+                      (keydown)="makechoice($event)"
+                      [(ngModel)]="searchTerm"
+                      (ngModelChange)="onInputChange('id_brand')"
+                      [readonly]="blockbusquedaname"
+                      aria-describedby="sugerenciasDropdown"
+                    />
+                    <label for="inputSearch">Buscar Marca</label>
+                  </div>
+                </div>
+                <ul
+                  class="loading-list list-group position-absolute"
+                  *ngIf="loaderbrand; else loaderbrand1"
+                >
+                  <li class="list-group-item">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </li>
+                </ul>
+                <ng-template #loaderbrand1>
+                  <ul
+                    class="list-group position-absolute custom-scrollbar"
+                    *ngIf="mostrarSugerencias2"
+                  >
+                    <ng-container *ngFor="let item of brands">
+                      <li
+                        class="list-group-item"
+                        *ngIf="
+                          item.name_brands
+                            .toLowerCase()
+                            .includes(searchTerm.toLowerCase())
+                        "
+                        (click)="
+                          [
+                            seleccionarSugerencia(
+                              item.name_brands,
+                              item._id,
+                              'id_brand'
+                            ),
+                            getmodels(item._id)
+                          ]
+                        "
+                      >
+                        {{ item.name_brands }}
+                      </li>
+                    </ng-container>
+                  </ul>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <!-- derecha-->
+
+            <!-- izquierda -->
+            <div class="col-sm-11">
+              <div class="position-relative">
+                <div class="input-group">
+                  <div class="form-floating mb-0">
+                    <div class="input-group-prepend">
+                      <button
+                        class="btn btn-outline-secondary search-btn"
+                      (click)="openModalmodel()"  
+                      >
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </div>
+                    <input
+                      #inputElementmodelo
+                      type="search"
+                      class="form-control shadow-bottom"
+                      placeholder="Tipo"
+                      autocomplete="off"
+                      id="myInput"
+                      (focus)="onInputFocus('id_model')"
+                      (blur)="onInputBlur('id_model')"
+                      [(ngModel)]="searchmodels"
+                      (ngModelChange)="onInputChange('id_model')"
+                      [readonly]="blockbusquedaname"
+                      aria-describedby="sugerenciasDropdown"
+                    />
+                    <label for="inputSearch">Selecionar Modelo</label>
+                  </div>
+                </div>
+                <ul
+                  class="loading-list list-group position-absolute"
+                  *ngIf="loadermodel; else loadermodel3"
+                >
+                  <li class="list-group-item">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </li>
+                </ul>
+                <ng-template #loadermodel3>
+                  <ul
+                    class="list-group position-absolute custom-scrollbar"
+                    *ngIf="mostrarSugerencias3"
+                  >
+                    <ng-container *ngFor="let item of models">
+                      <li
+                        class="list-group-item"
+                        *ngIf="
+                          item.business_model
+                            .toLowerCase()
+                            .includes(searchmodels.toLowerCase())
+                        "
+                        (click)="
+                          seleccionarSugerencia(
+                            item.business_model,
+                            item._id,
+                            'id_model'
+                          )
+                        "
+                      >
+                        {{ item.business_model }}
+                      </li>
+                    </ng-container>
+                  </ul>
+                </ng-template>
+              </div>
+              <div
+              *ngIf="nuevoForm.get('id_model')?.errors?.['required'] && submitted"
+              class="error-message"
+            >
+              Modelo Requerido.
+            </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-sm-11">
+              <div class="position-relative">
+                <div class="input-group">
+                  <div class="form-floating mb-0">
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-secondary search-btn" (click)=" openModaltype()">
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </div>
+                    <input
+                      type="search"
+                      class="form-control shadow-bottom"
+                      placeholder="Buscar Producto"
+                      autocomplete="off"
+                      id="myInput"
+                      (focus)="onInputFocus('id_type')"
+                      (blur)="onInputBlur('id_type')"
+                      [(ngModel)]="searchtype"
+                      (ngModelChange)="onInputChange('id_type')"
+                      [readonly]="blockbusquedaname"
+                      aria-describedby="sugerenciasDropdown"
+                    />
+                    <label for="inputSearch">Selecionar tipo</label>
+                  </div>
+                </div>
+                <ul
+                  class="loading-list list-group position-absolute"
+                  *ngIf="loadermodel; else loadermodel4"
+                >
+                  <li class="list-group-item">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </li>
+                </ul>
+                <ng-template #loadermodel4>
+                  <ul
+                    class="list-group position-absolute custom-scrollbar"
+                    *ngIf="mostrarSugerencias4"
+                  >
+                    <ng-container *ngFor="let item of types">
+                      <li
+                        class="list-group-item"
+                        *ngIf="
+                          item.type_inventoryflow
+                            .toLowerCase()
+                            .includes(searchtype.toLowerCase())
+                        "
+                        (click)="
+                          seleccionarSugerencia(
+                            item.type_inventoryflow,
+                            item._id,
+                            'id_type'
+                          )
+                        "
+                      >
+                        {{ item.type_inventoryflow }}
+                      </li>
+                    </ng-container>
+                  </ul>
+                </ng-template>
+              </div>
+              <div
+              *ngIf="nuevoForm.get('id_type')?.errors?.['required'] && submitted"
+              class="error-message"
+            >
+              Tipo Requerido.
+            </div>
+            </div>
+          </div>
+        </div>
+        <!-- derecha -->
+        <div class="col-sm-6">
+          <div class="row mt-3">
+            <div class="col-sm-11">
+              <div class="position-relative">
+                <div class="input-group">
+                  <div class="form-floating mb-0">
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-secondary search-btn" (click)="openModalcolor()">
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </div>
+                    <input
+                      type="search"
+                      class="form-control shadow-bottom"
+                      placeholder="Buscar Producto"
+                      autocomplete="off"
+                      id="myInput"
+                      (focus)="onInputFocus('id_color')"
+                      (blur)="onInputBlur('id_color')"
+                      [(ngModel)]="searchcolor"
+                      (ngModelChange)="onInputChange('id_color')"
+                      [readonly]="blockbusquedaname"
+                      aria-describedby="sugerenciasDropdown"
+                    />
+                    <label for="inputSearch">Selecionar Color</label>
+                  </div>
+                </div>
+                <ul
+                  class="loading-list list-group position-absolute"
+                  *ngIf="loadermodel; else loadermodel5"
+                >
+                  <li class="list-group-item">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </li>
+                </ul>
+                <ng-template #loadermodel5>
+                  <ul
+                    class="list-group position-absolute custom-scrollbar"
+                    *ngIf="mostrarSugerencias5"
+                  >
+                    <ng-container *ngFor="let item of colors">
+                      <li
+                        class="list-group-item"
+                        *ngIf="item.color_name
+                            .toLowerCase()
+                            .includes(searchcolor.toLowerCase())
+                        "
+                        (click)="
+                          seleccionarSugerencia(
+                            item.color_name,
+                            item._id,
+                            'id_color'
+                          )
+                        "
+                      >
+                        {{ item.color_name }}
+                      </li>
+                    </ng-container>
+                  </ul>
+                </ng-template>
+              </div>
+              <div
+              *ngIf="nuevoForm.get('id_color')?.errors?.['required'] && submitted"
+              class="error-message"
+            >
+              Color Requerido.
+            </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-sm-11">
+              <div class="position-relative">
+                <div class="input-group">
+                  <div class="form-floating mb-0">
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-secondary search-btn" (click)="openModalquality()">
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </div>
+                    <input
+                      type="search"
+                      class="form-control shadow-bottom"
+                      placeholder="Buscar Producto"
+                      autocomplete="off"
+                      id="myInput"
+                      (focus)="onInputFocus('id_quality')"
+                      (blur)="onInputBlur('id_quality')"
+                      [(ngModel)]="searchquality"
+                      (ngModelChange)="onInputChange('id_quality')"
+                      [readonly]="blockbusquedaname"
+                      aria-describedby="sugerenciasDropdown"
+                    />
+                    <label for="inputSearch">Selecionar Calidad</label>
+                  </div>
+                </div>
+                <ul
+                  class="loading-list list-group position-absolute"
+                  *ngIf="loadermodel; else loadermodel6"
+                >
+                  <li class="list-group-item">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </li>
+                </ul>
+                <ng-template #loadermodel6>
+                  <ul
+                    class="list-group position-absolute custom-scrollbar"
+                    *ngIf="mostrarSugerencias6"
+                  >
+                    <ng-container *ngFor="let item of qualitys">
+                      <li
+                        class="list-group-item"
+                        *ngIf="
+                          item.quality_inventoryflow
+                            .toLowerCase()
+                            .includes(searchquality.toLowerCase())
+                        "
+                        (click)="
+                          seleccionarSugerencia(
+                            item.quality_inventoryflow,
+                            item._id,
+                            'id_quality'
+                          )
+                        "
+                      >
+                        {{ item.quality_inventoryflow }}
+                      </li>
+                    </ng-container>
+                  </ul>
+                </ng-template>
+              </div>
+              <div
+              *ngIf="nuevoForm.get('id_quality')?.errors?.['required'] && submitted"
+              class="error-message"
+            >
+              Calidad Requerida.
+            </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-sm-11">
+              <div class="position-relative">
+                <div class="input-group">
+                  <div class="form-floating mb-0">
+                    <div class="input-group-prepend">
+                      <button class="btn btn-outline-secondary search-btn" (click)="openModalstate()">
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </div>
+                    <input
+                      type="search"
+                      class="form-control shadow-bottom"
+                      placeholder="Buscar Producto"
+                      autocomplete="off"
+                      id="myInput"
+                      (focus)="onInputFocus('id_stateproduct_inventoryflow')"
+                      (blur)="onInputBlur('id_stateproduct_inventoryflow')"
+                      [(ngModel)]="searchstateproduct_inventoryflow"
+                      (ngModelChange)="
+                        onInputChange('id_stateproduct_inventoryflow')
+                      "
+                      [readonly]="blockbusquedaname"
+                      aria-describedby="sugerenciasDropdown"
+                    />
+                    <label for="inputSearch"
+                      >Selecionar Estado del Producto</label
+                    >
+                  </div>
+                </div>
+ 
+                  <ul
+                    class="list-group position-absolute custom-scrollbar"
+                    *ngIf="mostrarSugerencias7"
+                  >
+                    <ng-container *ngFor="let item of stateproducts">
+                      <li
+                        class="list-group-item"
+                        *ngIf="
+                          item.stateproduct_inventoryflow
+                            .toLowerCase()
+                            .includes(searchstateproduct_inventoryflow.toLowerCase())
+                        "
+                        (click)="
+                          seleccionarSugerencia(
+                            item.stateproduct_inventoryflow,
+                            item._id,
+                            'id_stateproduct_inventoryflow'
+                          )
+                        "
+                      >
+                        {{ item.stateproduct_inventoryflow }}
+                      </li>
+                    </ng-container>
+                  </ul> 
+              </div>
+              <div
+              *ngIf="nuevoForm.get('id_stateproduct_inventoryflow')?.errors?.['required'] && submitted"
+              class="error-message"
+            >
+              Estado del producto Requerido.
+            </div>
+            </div>
+          </div>
+          <form [formGroup]="nuevoForm">
+            <div class="row mt-3">
+              <div class="col-sm-1"></div>
+              <!-- izquierda -->
+              <div class="col-sm-10">
+                <div class="custom-form-group">
+                  <input
+                    type="number"
+                    class="custom-form-control"
+                    step=".01"
+                    min="0"
+                    id="myInpu"
+                    placeholder=" "
+                    autocomplete="off"
+                    formControlName="price"
+                    (focus)="onFocus($event)"
+                  />
+                  <label for="myInpu" class="custom-label">Precio Venta</label>
+                </div> 
+              </div>
+            </div>
+          
+          <div class="row mt-3">
+            <div class="col-sm-1"></div>
+            <!-- izquierda -->
+            
+            <div class="col-sm-10">
+              <div class="custom-form-group">
+                <textarea
+                  class="custom-form-control"
+                  placeholder=" "
+                  autocomplete="off"
+                  formControlName="observations"
+                ></textarea>
+                <label for="myInpu" class="custom-label">Observaciones</label>
+              </div>
+            </div>
+          
+          </div>
+        </form>
+        </div>
+      </div>
+      <form [formGroup]="nuevoForm">
+      <div class="row mt-3">
+        <div class="col-sm-10" align="center"  >
+          <input class="form-check-input" type="checkbox" formControlName="get_print" />
+          <label for="">Imprimir</label>
+        </div>
+      </div>
+    </form>
+      <div class="row mt-3">
+        <!-- /.col -->
+        <div class="col-3">
+          <button type="submit" class="btn btn-primary btn-block" (click)="onSubmit()">
+            Aceptar
+          </button>
+        </div>
+        <div class="col-3">
+          <button type="button" class="btn btn-success btn-block" (click)="onSubmitclose()">
+            Aceptar y cerrar
+          </button>
+        </div>
+
+        <div class="col-3">
+          <button type="button" class="btn btn-danger btn-block" (click)="cancelar()">
+            cancelar
+          </button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>
+
+<app-createnameitems
+[inventory]="nameinventory"
+  *ngIf="modalVisible" 
+  (closeModalEvent)="closeModal($event)"
+>
+</app-createnameitems>
+<app-createbrand
+  *ngIf="modalVisible1"
+  [inventory]="nameinventory"
+  (closeModalEvent)="closeModalbrand($event)"
+></app-createbrand>
+<app-createmodel 
+*ngIf="modalVisible2"
+[inventory]="nameinventory"
+(closeModalEvent)="closeModalmodel($event)" ></app-createmodel>
+
+<app-createtype   *ngIf="modalVisible3"
+[inventory]="nameinventory"
+(closeModalEvent)="closeModaltype($event)"></app-createtype>
+
+<app-createcolor
+*ngIf="modalVisible4" 
+[inventory]="nameinventory"
+(closeModalEvent)="closeModalcolor($event)"></app-createcolor>
+
+<app-createquality *ngIf="modalVisible5"
+[inventory]="nameinventory"
+(closeModalEvent)="closeModalquality($event)"></app-createquality>
+<app-createstateiteminventory *ngIf="modalVisible6" 
+[inventory]="nameinventory"
+(closeModalEvent)="closeModalstate($event)"></app-createstateiteminventory>

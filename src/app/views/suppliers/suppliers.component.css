@@ -1,0 +1,39 @@
+.chip-input-container {
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  width: 50%; /* Ancho fijo */
+  height: 57px; /* Altura fija */
+  overflow-x: hidden; /* Desplazamiento horizontal */
+    /* Oculta el desplazamiento vertical */
+}
+
+.chips {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.chip {
+  background-color: #f1f1f1;
+  color: #333;
+  border-radius: 20px;
+  padding: 5px 10px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.close-btn {
+  margin-left: 5px;
+  color: #888;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #555;
+}
+input[type="text"] {
+  border: none;
+  outline: none; /* Elimina el contorno al enfocar el campo */
+}

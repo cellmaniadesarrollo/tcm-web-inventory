@@ -1,0 +1,85 @@
+<div id="sect1"  >
+<section
+  class="view intro-2 min-vh-100 d-flex flex-column align-items-center justify-content-center py-4"
+>
+  
+    <div class="login-box ">
+      <!-- /.login-logo -->
+      <div class="bodylogin card card-outline card-primary">
+        <div class="card-header text-center">
+          <img
+            src="assets/logo.png"
+            id="icon"
+            class="img-fluid"
+            alt="Responsive image"
+          />
+        </div>
+        <div class="card-body">
+          <p class="login-box-msg">Ingrese sus credenciales</p>
+
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin(loginForm.value)">
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="usuario"
+                formControlName="name_user"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="fa fa-user-circle-o"></i>
+                </span>
+               </div>
+            </div>
+            <div class="input-group mb-3">
+              <input id="txtPassword"
+              [type]="fieldTextType ? 'text' : 'password'"
+                class="form-control"
+                placeholder="contraseña"
+                formControlName="pasword_user"
+              />
+              <div class="input-group-append">
+                
+                <span class="input-group-text">
+                  <i class="fa"
+                  [ngClass]="{
+                    'fa-eye-slash': !fieldTextType,
+                    'fa-eye': fieldTextType
+                  }"
+                  (click)="toggleFieldTextType()"></i>
+                </span>
+               
+              </div>
+            </div>
+            <div class="row">
+              <!-- /.col -->
+              <div class="col-5">
+                <button type="submit" class="btn btn-primary btn-block">
+                  Iniciar sesión
+                </button>
+              </div>
+              <!-- /.col -->
+            </div>
+          </form>
+          <div class="pt-2 h-30">
+          <div class="alert bodydangeralert p-0" role="alert" *ngIf="errorStatus">
+             <div class=" ms-2 pt-1">
+              <h6 class="text-white">{{ erroMsj }}</h6>
+            </div>
+          </div>
+        </div>
+        
+          <!-- /.social-auth-links -->
+        </div>
+
+
+    
+        <!-- /.card-body -->
+      </div>
+
+
+      <!-- /.card -->
+    </div>
+ 
+</section>
+</div>

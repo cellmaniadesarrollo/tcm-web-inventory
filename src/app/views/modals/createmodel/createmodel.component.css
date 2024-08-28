@@ -1,0 +1,148 @@
+.custom-form-group {
+    position: relative;
+  }
+  
+  .custom-form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  .custom-form-control:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .custom-form-control:focus + .custom-label,
+  .custom-form-control:not(:placeholder-shown) + .custom-label {
+    font-size: 0.75rem;
+    color: #007bff;
+    top: -15px;
+    left:   1rem;
+    background-color: #fff;
+    padding: 0 5px;
+  }
+  
+  .custom-label {
+    position: absolute;
+    top: 10px;
+    left:  2rem;
+    font-size: 1rem;
+    color: #2f3133;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+  }
+  .error-message {
+    color: red;
+  }
+
+
+
+
+
+  .form-floating {
+    position: relative;
+  }
+   
+  .form-floating input.form-control {
+    border: none;
+    border-bottom: 1px solid #ced4da; /* Línea inferior */
+    border-radius: 0;
+    box-shadow: none; /* Eliminar sombra por defecto */
+  }
+   
+  .form-floating input.form-control:focus {
+    border-color: rgb(0, 110, 255); /* Color de la línea inferior al enfocar */
+  }
+  
+  .form-floating label {
+    position: absolute;
+    left: 2rem;
+    top: 0.25rem;
+    font-size: 0.875rem;
+    color: #2f3133;
+    pointer-events: none;
+    transition: top 0.3s, font-size 0.3s, color 0.3s;
+  }
+  
+  .form-floating input.form-control:not(:placeholder-shown) + label {
+    top: -0.5rem;
+    left: 1.5rem;
+    font-size: 0.75rem;
+    color: rgb(0, 110, 255);
+  }
+  
+  /* BOTONES */
+  .search-btn1 {
+    position: absolute;
+    left: 2rem;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+    outline: none;
+  }
+  .search-btn1 i {
+    color: rgba(0, 123, 255, 0.8); /* Color inicial del icono */
+    font-size: 1.3rem;
+  }
+  
+  .search-btn1 i:hover {
+    color: rgb(
+      0,
+      110,
+      255
+    ); /* Cambia el color del icono al pasar el mouse sobre el botón */
+  }
+  .shadow-bottom {
+    box-shadow: 0 2px 4px rgba(0, 255, 21, 0.452); /* Sombra inferior */
+  }
+  
+  .search-btn {
+    position: absolute;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+    outline: none;
+  }
+  .search-btn i {
+    color: rgba(40, 167, 69, 0.8); /* Color inicial del icono */
+    font-size: 1.3rem;
+  }
+  
+  .search-btn i:hover {
+    color: rgb(
+      20,
+      147,
+      49
+    ); /* Cambia el color del icono al pasar el mouse sobre el botón */
+  }
+    .position-absolute li { 
+    margin-left: 2rem; /* Ajusta el valor según tus necesidades */
+    margin-top: 0rem;
+  }
+  /* BOTONES FIN*/
+    .position-absolute li:hover {
+    background-color: rgb(187, 178, 178);
+    cursor: pointer; /* Cambia el color de fondo cuando se pasa el mouse */
+  }
+  .spinner-border {
+    margin: 20px auto; /* Ajusta el margen para centrar verticalmente la animación */
+  }
+  .custom-scrollbar {
+    max-height: 250px;
+    overflow-y: auto;
+  }
+  .position-absolute {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+  }
+  
+  #myInput {
+    text-align: left; /* Alinea el texto a la derecha */
+    padding-left: 40px; /* Espaciado a la izquierda */
+  }

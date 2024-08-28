@@ -1,0 +1,165 @@
+<p-dialog
+  header="Nuevo Modelo"
+  [(visible)]="displayDialog"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '30vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="closeModal({}, true)"
+  styleClass="custom-dialog"
+>
+  <div class="row">
+    <div class="col">
+      <div class="row mt-3">
+        <!-- derecha-->
+        <div class="col-sm-12">
+          <div class="position-relative">
+            <div class="input-group">
+              <div class="form-floating mb-0">
+                <div class="input-group-prepend">
+                  <button class="btn btn-outline-secondary search-btn" (click)="openModalbrand()">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+                <input
+                  type="search"
+                  class="form-control shadow-bottom"
+                  placeholder="Buscar Producto"
+                  autocomplete="off"
+                  id="myInput"
+                  (focus)="onInputFocus('id_brands')"
+                  (blur)="onInputBlur('id_brands')"
+                  [(ngModel)]="searchTerm"
+                  (ngModelChange)="onInputChange('id_brands')"
+                  aria-describedby="sugerenciasDropdown"
+                />
+                <label for="inputSearch">Buscar Marca</label>
+              </div>
+            </div>
+
+            <ul
+              class="list-group position-absolute custom-scrollbar"
+              *ngIf="mostrarSugerencias2"
+            >
+              <ng-container *ngFor="let item of brands">
+                <li
+                  class="list-group-item"
+                  *ngIf="
+                    item.name_brands
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase())
+                  "
+                  (click)="
+                    [
+                      seleccionarSugerencia(
+                        item.name_brands,
+                        item._id,
+                        'id_brands'
+                      )
+                    ]
+                  "
+                >
+                  {{ item.name_brands }}
+                </li>
+              </ng-container>
+            </ul>
+          </div>
+          <div
+          *ngIf="modelform.get('id_brands')?.errors?.['required'] && submitted"
+          class="error-message"
+        >
+          Marca Requerida.
+        </div>
+        </div>
+      </div>
+      <form [formGroup]="modelform">
+        <div class="row mt-3">
+          <div class="custom-form-group">
+            <input
+              type="text"
+              class="custom-form-control"
+              placeholder=" "
+              formControlName="business_model"
+            />
+            <label for="myInpu" class="custom-label">Modelo de Negocio</label>
+          </div>
+          <div
+            *ngIf="modelform.get('business_model')?.errors?.['required'] && submitted"
+            class="error-message"
+          >
+            Modelo de Negocio Requerido.
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="custom-form-group">
+            <input
+              type="text"
+              class="custom-form-control"
+              placeholder=" "
+              formControlName="technical_model"
+            />
+            <label for="myInpu" class="custom-label">Modelo Técnico</label>
+          </div>
+          <div
+            *ngIf="modelform.get('technical_model')?.errors?.['required'] && submitted"
+            class="error-message"
+          >
+            Modelo Técnico Requerido.
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="custom-form-group">
+            <input
+              type="number"
+              class="custom-form-control"
+              placeholder=" "
+              formControlName="year_model"
+            />
+            <label for="myInpu" class="custom-label">Año</label>
+          </div>
+          <div
+            *ngIf="modelform.get('year_model')?.errors?.['required'] && submitted"
+            class="error-message"
+          >
+            Año Requerido.
+          </div>
+        </div>
+      </form>
+      <div class="row mt-3 justify-content-center">
+        <div class="col-3">
+          <button
+            type="submit"
+            class="btn btn-primary btn-block"
+            (click)="onSubmit()"
+          >
+            Aceptar
+          </button>
+        </div>
+        <div class="col-5">
+          <button
+            type="button"
+            class="btn btn-success btn-block"
+            (click)="onSubmitclose()"
+          >
+            Aceptar y cerrar
+          </button>
+        </div>
+        <div class="col-3">
+          <button
+            type="button"
+            class="btn btn-danger btn-block"
+            (click)="closeModal({}, true)"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</p-dialog>
+<app-createbrand
+  *ngIf="modalVisible1"
+  (closeModalEvent)="closeModalbrand($event)"
+></app-createbrand>

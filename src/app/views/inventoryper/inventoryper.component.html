@@ -1,0 +1,294 @@
+<!-- Content Header (Page header) -->
+
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Inventario Personalizados</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a class="cursor-poiner text-primary" (click)="inicio()"
+                ><u>Inicio</u></a
+              >
+            </li>
+            <li class="breadcrumb-item active">Inventario Personalizados</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="col-12 p-3">
+                <div class="d-flex justify-content-center">
+                  <h3 class="card-title-content">Inventario Personalizados</h3>
+                </div>
+              </div>
+              <!--  -->
+              <div class="row">
+                <div class="col-sm-4 my-auto">
+                  <div class="row">
+                    <div class="col-sm-2">
+                      <button
+                        type="button"
+                        class="btn btn-block bg-gradient-secondary"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Nuevo item +"
+                        (click)="newoinventoryrep()"
+                      >
+                        <i class="fa fa-cog fa-xl" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4 justify-content-center">
+                   
+                    <div class="input-group">
+                      <input
+                        type="search" 
+                        class="form-control form-control-lg"
+                        placeholder="Buscar" 
+                        [(ngModel)]="datapage.findlike"
+                        (keyup)=" Changeserarch($event)"
+                        (ngModelChange)="Changeserarch($event)"
+                      />
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-lg btn-default">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </div> 
+                </div>
+                <div class="col-sm-4 my-auto">
+                   
+                    <div class="d-flex flex-row-reverse bd-highlight">
+                      <div class="col-sm-5">
+                        <div
+                          class="form-group my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            [(ngModel)]="datapage.allclients"
+                            (ngModelChange)="Change()"
+                          >
+                            <option [value]="0">ALL</option>
+                            <option
+                            *ngFor="let stateproduct of stateproducts"
+                            [ngValue]="stateproduct._id"
+                          >
+                            {{ stateproduct.stateproduct_inventoryflow }}
+                          </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="my-auto">
+                        <a>Filtro:</a>
+                      </div>
+                    </div>
+                   
+                </div>
+              </div>
+              <!--  -->
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body">
+              <div class="row p-3">
+                <div class="col-sm-6 my-auto">
+                  <p class="text-black-50">
+                    Página {{ datapage.pagination }} mostrando
+                    {{ items.length }} resultados de {{ totalentries }}
+                  </p>
+                </div>
+                <div class="col-sm-6 my-auto">
+                  <div class="d-flex justify-content-end">
+                    <div class="col-sm-2"> 
+                        <div
+                          class="my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            [(ngModel)]="datapage.numperpage"
+                            (ngModelChange)="Change()" 
+                          >
+                            <option
+                              *ngFor="let numperpag of numperpagess"
+                              [ngValue]="numperpag.tems"
+                            >
+                              {{ numperpag.value }}
+                            </option>
+                          </select>
+                        </div> 
+                    </div>
+                    <pagination-controls (pageChange)="renderPage($event)"> </pagination-controls>
+                  </div>
+                </div>
+              </div>
+
+              <table *ngIf="loading; else dataLoaded">
+                <tr>
+                  <td colspan="3">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <ng-template #dataLoaded>
+                <div class="table-responsive">
+                  <table
+                    id="example2"
+                    class="table table-bordered table-hover table-striped table-sm1"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Codigo</th>
+                        <th>Nombre</th>
+                        <th>Modelo</th>
+                        <th>Color</th>
+                        <th>Calidad</th>
+                        <th>Estado</th>
+                        <th>PvP</th>
+                        <th>Stock</th>
+                        <th>Observaciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="let item of items | paginate
+                        : {
+                            itemsPerPage: datapage.numperpage,
+                            currentPage: datapage.pagination,
+                            totalItems: totalentries
+                          }"
+                        [ngClass]="datacolor(item.stock.stock)"
+                      >
+                        <td>
+                          {{ item.sku }}
+                        </td>
+                        <td (click)="openModaloptions(item.items.inventoryfownameitem?.name_nameitems+' '+item.sku ,item._id)">
+                          {{ item.items.inventoryfownameitem?.name_nameitems }}
+                        </td>
+                        <td>
+                          {{ item.items.models?.business_model }}
+                        </td>
+                        <td>
+                          {{ item.items.colors.color_name }}
+                        </td>
+                        <td>
+                          {{ item.items.quality.quality_inventoryflow }}
+                        </td>
+                        <td>
+                          {{ item.items.stateproduc.stateproduct_inventoryflow }}
+                        </td>
+                        <td>${{ item.items.item_price }}</td>
+                        <td>
+                          {{ item.stock.stock }}
+                        </td>
+                        <td>
+                          {{ item.observations }}
+                        </td>
+                        <td>
+                          <abbr title="Imprimir normal" class="p-1"  (click)="print(item._id,item.stock.stock)"
+                            ><a class="btn btn-outline-dark p-1"
+                              ><i class="fa fa-print"></i></a
+                          ></abbr>
+                          <abbr title="Imprimir normal" class="p-1"  (click)="printlocal(item.items.models?.business_model, item.items.inventoryfownameitem?.name_nameitems+' ' +item.items.quality.quality_inventoryflow ,item.sku,item.stock.stock)"
+                          ><a class="btn btn-outline-dark p-1"
+                            ><i class="fa fa-ticket"></i></a
+                        ></abbr>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </ng-template>
+              <div class="row p-3">
+                <div class="col-sm-6 my-auto">
+                  <p class="text-black-50">
+                    Página {{ datapage.pagination }} mostrando
+                    {{ items.length }} resultados de {{ totalentries }}
+                  </p>
+                </div>
+                <div class="col-sm-6 my-auto">
+                  <div class="d-flex justify-content-end">
+                    <div class="col-sm-2"> 
+                        <div
+                          class="my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                        <select
+                        class="form-control select2"
+                        style="width: 100%"
+                        [(ngModel)]="datapage.numperpage"
+                        (ngModelChange)="Change()" 
+                      >
+                        <option
+                          *ngFor="let numperpag of numperpagess"
+                          [ngValue]="numperpag.tems"
+                        >
+                          {{ numperpag.value }}
+                        </option>
+                      </select>
+                        </div> 
+                    </div>
+                    <pagination-controls (pageChange)="renderPage($event)"> </pagination-controls>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+
+          <!--  -->
+
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+</div>
+<app-printtiketsitems *ngIf="modalVisible3"
+[title]="idtit"
+[cant]="canti"
+(closeModalEvent)="closeModaltype($event)"></app-printtiketsitems>
+
+<app-printticketslocal *ngIf="modalVisible4"
+[namet1]="name1"
+[namet2]="name2"
+[nameb]="name3"
+[can]="cantid"
+[qrdata]="name3"
+(closeModalEvent)="closeprintlocal()"></app-printticketslocal>
+
+ <app-optionsitems *ngIf="modalVisible"
+[title]="name"
+[iditem]="idtit"
+(closeModalEvent)="closeModaloptions($event)">
+</app-optionsitems>

@@ -1,0 +1,39 @@
+.custom-form-group {
+    position: relative;
+  }
+  
+  .custom-form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  .custom-form-control:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .custom-form-control:focus + .custom-label,
+  .custom-form-control:not(:placeholder-shown) + .custom-label {
+    font-size: 0.75rem;
+    color: #007bff;
+    top: -15px;
+    left:   1rem;
+    background-color: #fff;
+    padding: 0 5px;
+  }
+  
+  .custom-label {
+    position: absolute;
+    top: 10px;
+    left:  2rem;
+    font-size: 1rem;
+    color: #2f3133;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+  }
+  .error-message {
+    color: red;
+  }

@@ -1,0 +1,77 @@
+<p-dialog
+  header="Imprimir Etiquetas"
+  [(visible)]="displayDialog"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '30vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="closeModal({},true)"
+  styleClass="custom-dialog"
+>
+  <div class="row">
+    <div class="col" *ngIf="loading; else dataLoaded">
+        <H3><strong>Por Favor Espere</strong> </H3>
+    <div class="spinner-border text-primary" role="status">
+        
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <ng-template #dataLoaded>
+        <div class="col">
+            <form [formGroup]="printform">
+              <div class="row mt-3">
+                  <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" formControlName="large">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        Incluir Etiqueta Grande
+                      </label>
+                    </div>
+              </div>
+              <div class="row mt-3">
+      
+                <div class="custom-form-group">
+                  <input
+                    type="number"
+                    class="custom-form-control"
+                    placeholder=" "
+                    formControlName="cantt"
+                    min="0"
+                    (input)="onInputChange($event)"
+                    (focus)="onFocus($event)"
+                  />
+                  <label for="myInpu" class="custom-label">Catidad etiquetas</label>
+                </div>
+                <div
+                  *ngIf="printform.get('cantt')?.errors?.['required'] && submitted"
+                  class="error-message"
+                >
+                  Tipo requerido.
+                </div>
+              </div>
+            </form>
+            <div class="row mt-3 justify-content-center">
+              <div class="col-3">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-block"
+                  (click)="onSubmit()"
+                >
+                  Aceptar
+                </button>
+              </div> 
+              <div class="col-3">
+                <button
+                  type="button"
+                  class="btn btn-danger btn-block"
+                  (click)="closeModal({},true)"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+    </ng-template>
+
+  </div>
+</p-dialog>

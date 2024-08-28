@@ -1,0 +1,46 @@
+.drop-area {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.drop-area p {
+  margin: 0;
+}
+
+.drop-area input[type="file"] {
+  display: none;
+}
+
+.drop-area button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.drop-area img {
+  max-width: 100%;
+  max-height: 300px;
+  margin-top: 20px;
+  display: block;
+  border-radius: 5px;
+}
+
+.image-container {
+  max-width: 200px;
+  max-height: 200px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden; /* Para ocultar cualquier parte de la imagen que exceda los límites del contenedor */
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+}

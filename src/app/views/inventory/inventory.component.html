@@ -1,0 +1,1080 @@
+<!-- Content Header (Page header) -->
+
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Inventario</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a class="cursor-poiner text-primary" (click)="inicio()"
+                ><u>Inicio</u></a
+              >
+            </li>
+            <li class="breadcrumb-item active">Inventario</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="col-12 p-3">
+                <div class="d-flex justify-content-center">
+                  <h3 class="card-title-content">Inventario</h3>
+                </div>
+              </div>
+              <!--  -->
+              <div class="row">
+                <div class="col-sm-4 my-auto">
+                  <div class="row">
+                    <div class="col-sm-2">
+                      <button
+                        type="button"
+                        class="btn btn-block bg-gradient-primary"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Nuevo Item"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal2 "
+                      >
+                        <i class="fa fa-plus fa-xl" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="col-sm-2">
+                      <button
+                        type="button"
+                        class="btn btn-block bg-gradient-secondary"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Nuevo item +"
+                        (click)="newoinventory()"
+                      >
+                        <i class="fa fa-cog fa-xl" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                    <div class="col-sm-2">
+                      <button
+                        type="button"
+                        class="btn btn-block bg-gradient-info"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Generar Codigos"
+                        (click)="codesqrprint()"
+                      >
+                        <i class="bi bi-qr-code" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4 justify-content-center">
+                  <form [formGroup]="searchForm">
+                    <div class="input-group">
+                      <input
+                        type="search"
+                        oninput="this.value = this.value.toUpperCase()"
+                        (keyup)="onKeyDownEvent($event)"
+                        (input)="onKeyDownEvent($event)"
+                        [readonly]="blockbusqueda"
+                        class="form-control form-control-lg"
+                        placeholder="Buscar"
+                        formControlName="valuesearch"
+                      />
+                      <div class="input-group-append">
+                        <button
+                          type="button"
+                          class="btn btn-lg btn-default"
+                          [disabled]="blockbusqueda"
+                          (click)="findbutton()"
+                        >
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="col-sm-4 my-auto">
+                  <form [formGroup]="stateproductform">
+                    <div class="d-flex flex-row-reverse bd-highlight">
+                      <div class="col-sm-5">
+                        <div
+                          class="form-group my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            formControlName="stateproduct_inventoryflow"
+                            (change)="changeLeagueOwner()"
+                          >
+                            <option [value]="0">ALL</option>
+                            <option
+                              *ngFor="let stateproduct of stateproducts"
+                              [ngValue]="stateproduct._id"
+                            >
+                              {{ stateproduct.stateproduct_inventoryflow }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="my-auto">
+                        <a>Filtro:</a>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!--  -->
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body">
+              <div class="row p-3">
+                <div class="col-sm-6 my-auto">
+                  <p class="text-black-50">
+                    Página {{ datapage.pagination }} mostrando
+                    {{ items.length }} resultados de {{ totalentries }}
+                  </p>
+                </div>
+                <div class="col-sm-6 my-auto">
+                  <div class="d-flex justify-content-end">
+                    <div class="col-sm-2">
+                      <form [formGroup]="numperpagesForm">
+                        <div
+                          class="my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            (change)="updateSortingperpage()"
+                            formControlName="valueperpage"
+                          >
+                            <option
+                              *ngFor="let numperpag of numperpagess"
+                              [ngValue]="numperpag.tems"
+                            >
+                              {{ numperpag.value }}
+                            </option>
+                          </select>
+                        </div>
+                      </form>
+                    </div>
+                    <pagination-controls (pageChange)="renderPage($event)">
+                    </pagination-controls>
+                  </div>
+                </div>
+              </div>
+
+              <table *ngIf="loading; else dataLoaded">
+                <tr>
+                  <td colspan="3">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <ng-template #dataLoaded>
+                <div class="table-responsive">
+                  <table
+                    id="example2"
+                    class="table table-bordered table-hover table-striped table-sm1"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Codigo</th>
+                        <th>Nombre</th>
+                        <th>Modelo</th>
+                        <th>Color</th>
+                        <th>Calidad</th>
+                        <th>Estado</th>
+                        <th>PvP</th>
+                        <th>Stock</th>
+                        <th>Observaciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let item of items
+                            | paginate
+                              : {
+                                  itemsPerPage: datapage.numperpage,
+                                  currentPage: datapage.pagination,
+                                  totalItems: totalentries
+                                }
+                        "
+                        [ngClass]="datacolor(item.stock.stock)"
+                      >
+                        <td
+                          (click)="
+                            datafind(
+                              item._id,
+                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.sku,
+                              item.stock.stock
+                            )
+                          "
+                          data-bs-toggle="modal"
+                          data-bs-target="#nuevoprocedenciamodal"
+                        >
+                          {{ item.sku }}
+                        </td>
+                        <td
+                          (click)="
+                            datafind(
+                              item._id,
+                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.sku,
+                              item.stock.stock
+                            )
+                          "
+                          data-bs-toggle="modal"
+                          data-bs-target="#nuevoprocedenciamodal"
+                        >
+                          {{ item.items.inventoryfownameitem?.name_nameitems }}
+                        </td>
+                        <td
+                          (click)="
+                            datafind(
+                              item._id,
+                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.sku,
+                              item.stock.stock
+                            )
+                          "
+                          data-bs-toggle="modal"
+                          data-bs-target="#nuevoprocedenciamodal"
+                        >
+                          {{ item.items.models?.business_model }}
+                        </td>
+                        <td
+                          (click)="
+                            datafind(
+                              item._id,
+                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.sku,
+                              item.stock.stock
+                            )
+                          "
+                          data-bs-toggle="modal"
+                          data-bs-target="#nuevoprocedenciamodal"
+                        >
+                          {{ item.items.colors.color_name }}
+                        </td>
+                        <td
+                          (click)="
+                            datafind(
+                              item._id,
+                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.sku,
+                              item.stock.stock
+                            )
+                          "
+                          data-bs-toggle="modal"
+                          data-bs-target="#nuevoprocedenciamodal"
+                        >
+                          {{ item.items.quality.quality_inventoryflow }}
+                        </td>
+                        <td
+                          (click)="
+                            datafind(
+                              item._id,
+                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.sku,
+                              item.stock.stock
+                            )
+                          "
+                          data-bs-toggle="modal"
+                          data-bs-target="#nuevoprocedenciamodal"
+                        >
+                          {{ item.items.stateproduc.stateproduct_inventoryflow }}
+                        </td>
+                        <td
+                          (click)="
+                            datafind(
+                              item._id,
+                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.sku,
+                              item.stock.stock
+                            )
+                          "
+                          data-bs-toggle="modal"
+                          data-bs-target="#nuevoprocedenciamodal"
+                        >
+                          ${{ item.items.item_price }}
+                        </td>
+                        <td
+                          (click)="
+                            datafind(
+                              item._id,
+                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.sku,
+                              item.stock.stock
+                            )
+                          "
+                          data-bs-toggle="modal"
+                          data-bs-target="#nuevoprocedenciamodal"
+                        >
+                          {{ item.stock.stock }}
+                        </td>
+                        <td
+                          (click)="
+                            datafind(
+                              item._id,
+                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.sku,
+                              item.stock.stock
+                            )
+                          "
+                          data-bs-toggle="modal"
+                          data-bs-target="#nuevoprocedenciamodal"
+                        >
+                          {{ item.observations }}
+                        </td>
+                        <td>
+                          <!-- <abbr
+                        title="Descargar PDF"
+                        class="p-1"
+                        (click)="downloadpdf(item._id)"
+                        ><a class="btn btn-outline-danger p-1"
+                          ><i class="fa fa-file-pdf-o"></i></a
+                      ></abbr> -->
+
+                          <!-- <abbr
+                            title="Imprimir normal"
+                            class="p-1"
+                            (click)="print(item._id)"
+                            ><a class="btn btn-outline-dark p-1"
+                              ><i class="fa fa-print"></i></a
+                          ></abbr> -->
+
+                          <abbr title="Imprimir normal" class="p-1"  (click)="printlocal(item.items.models?.business_model, item.items.inventoryfownameitem?.name_nameitems+' ' +item.items.quality.quality_inventoryflow ,item.sku,item.stock.stock)"
+                          ><a class="btn btn-outline-dark p-1"
+                            ><i class="fa fa-ticket"></i></a
+                        ></abbr>
+                          <!-- <abbr
+                        title="Imprimir Ticket"
+                        class="p-1"
+                        (click)="print2(item._id)"
+                        ><a class="btn btn-outline-info p-1"
+                          ><i class="fa fa-ticket"></i></a
+                      ></abbr> -->
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </ng-template>
+
+              <div class="row p-3">
+                <div class="col-sm-6 my-auto">
+                  <p class="text-black-50">
+                    Página {{ datapage.pagination }} mostrando
+                    {{ items.length }} resultados de {{ totalentries }}
+                  </p>
+                </div>
+                <div class="col-sm-6 my-auto">
+                  <div class="d-flex justify-content-end">
+                    <div class="col-sm-2">
+                      <form [formGroup]="numperpagesForm">
+                        <div
+                          class="my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            (change)="updateSortingperpage()"
+                            formControlName="valueperpage"
+                          >
+                            <option
+                              *ngFor="let numperpag of numperpagess"
+                              [ngValue]="numperpag.tems"
+                            >
+                              {{ numperpag.value }}
+                            </option>
+                          </select>
+                        </div>
+                      </form>
+                    </div>
+                    <pagination-controls (pageChange)="renderPage($event)">
+                    </pagination-controls>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+
+          <!--  -->
+
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <!-- Modal -->
+  <div
+    class="modal fade"
+    id="exampleModal2"
+    tabindex="-1"
+    aria-labelledby="exampleModal2Label"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger" id="exampleModal2Label">
+            Nuevo item
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label class="border-lable-flt">
+                <input
+                  type="text"
+                  class="form-control text-uppercase"
+                  placeholder="cedula"
+                />
+                <span lass="widget-title  shop-sidebar">Keyword</span>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Aceptar</button>
+
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  -->
+  <!--  -->
+  <!-- Modal  nueva procedencia-->
+  <div
+    class="modal fade"
+    id="nuevoprocedenciamodal"
+    data-bs-backdrop="static"
+    tabindex="-1"
+    aria-labelledby="nuevoprocedenciamodal"
+    aria-hidden="true"
+    #content
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+            <li [ngbNavItem]="1">
+              <button ngbNavLink (click)="salidas()">Salida</button>
+            </li>
+            <li [ngbNavItem]="2">
+              <button ngbNavLink (click)="editars()">Editar</button>
+            </li>
+            <li [ngbNavItem]="3">
+              <button ngbNavLink (click)="histori()">Historial</button>
+            </li>
+            <li [ngbNavItem]="4" *ngIf="nivel2">
+              <button ngbNavLink (click)="incomeh()">Ingresos H.</button>
+            </li>
+          </ul>
+          <button
+            type="button"
+            #closebutton
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+
+        <div class="modal-body" *ngIf="salida">
+          <div class="col-12">
+            <div class="d-flex justify-content-center">
+              <label for="">{{ nameitem }} </label>
+            </div>
+          </div>
+
+          <form [formGroup]="salidaForm">
+            <div class="form-group">
+              <label class="border-lable-flt">
+                <input
+                  id="myInput"
+                  type="text"
+                  class="form-control"
+                  placeholder="Procedencia"
+                  autocomplete="off"
+                  formControlName="codigo_movimiento"
+                  (input)="imputremplace($event)"
+                  [ngClass]="{
+                    'is-invalid':
+                      submittedoutmovement && f1['codigo_movimiento'].errors
+                  }"
+                />
+
+                <span lass="widget-title  shop-sidebar"
+                  >codigo de movimiento</span
+                >
+              </label>
+            </div>
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-12">
+                  <label *ngIf="codeauto; else templateElse">
+                    Sin numero de orden</label
+                  >
+                  <ng-template #templateElse>
+                    <label class="border-lable-flt">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Numero de orden"
+                        formControlName="numero_orden"
+                        id="myInput2"
+                        [ngClass]="{
+                          'is-invalid':
+                            submittedoutmovement && f1['numero_orden'].errors
+                        }"
+                      />
+                      <span lass="widget-title  shop-sidebar"
+                        >Numero de orden</span
+                      >
+                    </label>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <!-- derecha-->
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <ng-select
+                    placeholder="Tipo de salida *"
+                    formControlName="tipo_salida"
+                    (change)="changeLeagueOwnertype($event)"
+                    [ngClass]="{
+                      'is-invalid':
+                        submittedoutmovement && f1['tipo_salida'].errors
+                    }"
+                  >
+                    <ng-option *ngFor="let out of outs" [value]="out._id"
+                      >{{ out.name_movement }}
+                    </ng-option>
+                  </ng-select>
+                  <div
+                    *ngIf="submittedoutmovement && f1['tipo_salida'].errors"
+                    class="invalid-feedback"
+                  >
+                    <div
+                      *ngIf="f1['tipo_salida'].errors['required']"
+                      class="pb-1"
+                    >
+                      "Tipo de salida" Requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--  -->
+              <div class="col-sm-6">
+                <ng-select
+                  placeholder="Entrega a*"
+                  formControlName="entrega_a"
+                  [ngClass]="{
+                    'is-invalid': submittedoutmovement && f1['entrega_a'].errors
+                  }"
+                  required
+                >
+                  <ng-option
+                    *ngFor="let technici of technician"
+                    [value]="technici._id?._id"
+                    >{{ technici._id?.employee?.first_name1 }}-{{
+                      technici._id?.employee?.last_name1
+                    }}
+                  </ng-option>
+                </ng-select>
+                <div
+                  *ngIf="submittedoutmovement && f1['entrega_a'].errors"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="f1['entrega_a'].errors['required']" class="pb-1">
+                    "Entrega a" Requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <!-- derecha-->
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="border-lable-flt">
+                    <input
+                      type="number"
+                      class="form-control"
+                      placeholder="Cantidad"
+                      formControlName="cantidad"
+                      min="{{ minvalue }}"
+                      max="{{ maxvalue }}"
+                      [ngClass]="{
+                        'is-invalid':
+                          submittedoutmovement && f1['cantidad'].errors
+                      }"
+                    />
+                    <span lass="widget-title  shop-sidebar">Cantidad</span>
+                  </label>
+                </div>
+              </div>
+              <!-- izquierda -->
+
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label class="border-lable-flt">
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      placeholder="Procedencia"
+                      formControlName="fecha"
+                      [ngClass]="{
+                        'is-invalid': submittedoutmovement && f1['fecha'].errors
+                      }"
+                    />
+                    <span lass="widget-title  shop-sidebar">Fecha</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="border-lable-flt">
+                <textarea
+                  class="form-control"
+                  formControlName="observaciones"
+                  placeholder="Observaciones"
+                ></textarea>
+
+                <span lass="widget-title  shop-sidebar">Observaciones</span>
+              </label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-body" *ngIf="editar">
+          <form [formGroup]="nuevoForm">
+            <div class="row">
+              <div class="d-flex justify-content-center">
+                <label for=""> {{ upc }}</label>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="row">
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <label class="border-lable-flt">
+                        <input
+                          type="text"
+                          class="form-control"
+                          onkeyup="this.value=this.value.toUpperCase();"
+                          formControlName="name_items"
+                          placeholder="nombre"
+                          [ngClass]="{
+                            'is-invalid': submitted && f['name_items'].errors
+                          }"
+                          readonly
+                        />
+                        <span lass="widget-title  shop-sidebar">Nombre </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <label class="border-lable-flt">
+                        <input
+                          type="number"
+                          class="form-control"
+                          formControlName="stock"
+                          placeholder="Stock"
+                          [ngClass]="{
+                            'is-invalid': submitted && f['stock'].errors
+                          }"
+                          required
+                        />
+                        <span lass="widget-title  shop-sidebar">Stock *</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <!-- izquierda -->
+                  <!-- derecha-->
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <label class="border-lable-flt">
+                        <input
+                          type="text"
+                          class="form-control"
+                          onkeyup="this.value=this.value.toUpperCase();"
+                          formControlName="id_brand"
+                          placeholder="nombre"
+                          [ngClass]="{
+                            'is-invalid': submitted && f['id_brand'].errors
+                          }"
+                          readonly
+                        />
+                        <span lass="widget-title  shop-sidebar">Marca</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <!-- derecha-->
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <label class="border-lable-flt">
+                        <input
+                          type="text"
+                          class="form-control"
+                          onkeyup="this.value=this.value.toUpperCase();"
+                          formControlName="id_model"
+                          placeholder="nombre"
+                          [ngClass]="{
+                            'is-invalid': submitted && f['id_model'].errors
+                          }"
+                          readonly
+                        />
+                        <span lass="widget-title  shop-sidebar">Modelo</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- derecha-->
+                  <!-- izquierda -->
+                  <div class="col-sm-10"> 
+                    <ng-select
+                    placeholder="Selecionar estado inventario*"
+                    formControlName="id_type"
+                    [ngClass]="{
+                      'is-invalid':
+                        submitted && f['id_type'].errors
+                    }"
+                  >
+                    <ng-option
+                      *ngFor="let type of types"
+                      [value]="type._id"
+                      >{{ type.type_inventoryflow }}
+                    </ng-option>
+                  </ng-select>
+                  <div
+                    *ngIf="submitted && f['id_type'].errors"
+                    class="invalid-feedback"
+                  >
+                    <div
+                      *ngIf="f['id_type'].errors['required']"
+                    >
+                      Tipo de producto requerido
+                    </div>
+                  </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- derecha-->
+
+                  <!-- izquierda -->
+                  <!-- <div class="col-sm-10">
+                    <label class="border-lable-flt">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Procedencia"
+                        value="{{ procedencia }}"
+                        readonly
+                      />
+                      <span lass="widget-title  shop-sidebar">Procedencia</span>
+                    </label>
+                  </div> -->
+                </div>
+
+                <div class="row">
+                  <!-- derecha-->
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <label class="border-lable-flt">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Color"
+                        formControlName="id_color"
+                        readonly
+                      />
+                      <span lass="widget-title  shop-sidebar">Color</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!-- derecha -->
+              <div class="col-sm-6">
+                <div class="row">
+                  <!-- derecha-->
+
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <label class="border-lable-flt">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Calidad"
+                        formControlName="id_quality"
+                        readonly
+                      />
+                      <span lass="widget-title  shop-sidebar">Calidad</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- derecha-->
+
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <label class="border-lable-flt">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Estado del producto"
+                        formControlName="id_stateproduct_inventoryflow"
+                        readonly
+                      />
+                      <span lass="widget-title  shop-sidebar"
+                        >Estado del producto</span
+                      >
+                    </label>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <label class="border-lable-flt">
+                        <textarea
+                          class="form-control"
+                          formControlName="observations"
+                          placeholder="Observaciones"
+                        ></textarea>
+
+                        <span lass="widget-title  shop-sidebar"
+                          >Observaciones</span
+                        >
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <!-- derecha-->
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <ng-select
+                      placeholder="Selecionar estado inventario*"
+                      formControlName="id_stateinventoryflow"
+                      [ngClass]="{
+                        'is-invalid':
+                          submitted && f['id_stateinventoryflow'].errors
+                      }"
+                    >
+                      <ng-option
+                        *ngFor="let stateinventoryflow of stateinventoryflows"
+                        [value]="stateinventoryflow._id"
+                        >{{ stateinventoryflow.state_inventoryflow }}
+                      </ng-option>
+                    </ng-select>
+                    <div
+                      *ngIf="submitted && f['id_stateinventoryflow'].errors"
+                      class="invalid-feedback"
+                    >
+                      <div
+                        *ngIf="f['id_stateinventoryflow'].errors['required']"
+                      >
+                        Estado del inventario requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-body" *ngIf="history">
+          <div class="col-12">
+            <div class="d-flex justify-content-center">
+              <label for="">{{ nameitem }} </label>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Cant.</th>
+                  <th>Emisor</th>
+                  <th>Receptor</th>
+                  <th>Fecha</th>
+                  <th>Movimiento</th>
+                  <th>Nº Orden</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let dato of movementshisto"
+                  [ngClass]="datacolor1(dato.movementname)"
+                >
+                  <td>{{ dato.cant_movement }}</td>
+                  <td>{{ dato.sender }}</td>
+                  <td>{{ dato.recipient }}</td>
+                  <td>{{ dato.date_movement.substring(0, 10) }}</td>
+                  <td>{{ dato.movementname }}</td>
+                  <td>{{ dato.numordermovement }}</td>
+                  <td>{{ dato.observations_movement }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-body" *ngIf="incomeH">
+          <div class="col-12">
+            <div class="d-flex justify-content-center">
+              <label for="">{{ nameitem }} </label>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Cant.</th>
+                  <th>Fecha</th>
+                  <th>Nº Doc.</th>
+                  <th>Proveedor</th>
+                  <th>PU</th>
+                  <th>PI</th>
+                  <th>PT</th>
+                  <th>Observaciones</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let dato of incomeshistory">
+                  <td>{{ dato.quantity }}</td>
+                  <td>{{ dato.date_income.substring(0, 10) }}</td>
+                  <td>{{ dato.document }}</td>
+                  <td>{{ dato.supplier }}</td>
+                  <td>{{ dato.unit_price }}</td>
+                  <td>
+                    {{
+                      pvimpuesto(dato.unit_price, dato.taxpercentaje).toFixed(2)
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      pvitotal(
+                        dato.unit_price,
+                        dato.taxpercentaje,
+                        dato.quantity
+                      ).toFixed(2)
+                    }}
+                  </td>
+                  <td>{{ dato.observations }}</td>
+                  <td>{{ dato.status }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div *ngIf="editar">
+            <button
+              type="button"
+              class="btn btn-success"
+              data-bs-dismiss="modal"
+              (click)="onSubmitclose()"
+            >
+              Editar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+          </div>
+          <div *ngIf="salida">
+            <button
+              type="button"
+              (click)="saveoutmovement()"
+              class="btn btn-success"
+            >
+              Guardar
+            </button>
+            <!-- data-bs-dismiss="modal" -->
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-printticketslocal *ngIf="modalVisible4"
+[namet1]="name1"
+[namet2]="name2"
+[nameb]="name3"
+[can]="cantid"
+[qrdata]="name3"
+(closeModalEvent)="closeprintlocal()"></app-printticketslocal>

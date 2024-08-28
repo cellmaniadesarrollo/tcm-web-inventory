@@ -1,0 +1,245 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Proveedores</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a class="cursor-poiner text-primary" (click)="inicio()"
+                ><u>Inicio</u></a
+              >
+            </li>
+            <li class="breadcrumb-item active">Proveedores</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <!--  -->
+
+  <!--  -->
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="col-12 p-3">
+                <div class="d-flex justify-content-center">
+                  <h3 class="card-title-content">Proveedores</h3>
+                </div>
+              </div>
+              <!--  -->
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="row">
+                    <div class="col-sm-2">
+                      <button
+                        type="button"
+                        class="btn btn-block bg-gradient-primary"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="Nuevo Item"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal2 "
+                      >
+                        <i class="fa fa-plus fa-xl" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4 justify-content-center">
+                  <form [formGroup]="searchForm">
+                    <div class="input-group">
+                      <input
+                        type="search"
+                        (input)="onKeyDownEvent($event)"
+                        class="form-control form-control-lg"
+                        placeholder="Buscar"
+                        formControlName="valuesearch"
+                      />
+                      <div class="input-group-append">
+                        <button
+                          type="button"
+                          class="btn btn-lg btn-default"
+                          (click)="findbutton()"
+                        >
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="col-sm-4 my-auto">
+                  <form>
+                    <div class="d-flex flex-row-reverse bd-highlight">
+                      <div class="col-sm-9">
+                        <div
+                          class="form-group my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            formControlName="name_movement"
+                          >
+                            <option ngClass="table-light" [value]="0">
+                              ALL
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!--  -->
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body">
+              <div class="row p-3">
+                <div class="col-sm-6 my-auto">
+                  <p class="text-black-50">Página</p>
+                </div>
+                <div class="col-sm-6 my-auto">
+                  <div class="d-flex justify-content-end">
+                    <div class="col-sm-2">
+                      <form>
+                        <div
+                          class="my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            formControlName="valueperpage"
+                          >
+                            <option
+                              *ngFor="let numperpag of numperpagess"
+                              [ngValue]="numperpag.tems"
+                            >
+                              {{ numperpag.value }}
+                            </option>
+                          </select>
+                        </div>
+                      </form>
+                    </div>
+                    <pagination-controls> </pagination-controls>
+                  </div>
+                </div>
+              </div>
+              <table *ngIf="loading; else dataLoaded">
+                <tr>
+                  <td colspan="3">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              <ng-template #dataLoaded>
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover table-sm1">
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Modelo</th>
+                      <th>Emisor</th>
+                      <th>Receptor</th>
+                      <th>Fecha</th>
+                      <th>Movimiento</th>
+                      <th>Cantidad</th>
+                      <th>Nº Orden</th>
+                      <th>Observaciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr                       *ngFor="
+                    let suplier of supliers
+                      | paginate
+                        : {
+                            itemsPerPage: datapage.numperpage,
+                            currentPage: datapage.pagination,
+                            totalItems: totalentries
+                          }
+                  ">
+                      <td
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal2"
+                      >{{suplier.razon_social}}</td>
+                      <td>{{suplier.ruc}}</td>
+                      <td>{{suplier.address}}</td>
+                      
+                      <td></td>
+                      <td></td>
+
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ng-template>
+              <div class="row p-3">
+                <div class="col-sm-6 my-auto">
+                  <p class="text-black-50">Página</p>
+                </div>
+                <div class="col-sm-6 my-auto">
+                  <div class="d-flex justify-content-end">
+                    <div class="col-sm-2">
+                      <form>
+                        <div
+                          class="my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            formControlName="valueperpage"
+                          >
+                            <option
+                              *ngFor="let numperpag of numperpagess"
+                              [ngValue]="numperpag.tems"
+                            >
+                              {{ numperpag.value }}
+                            </option>
+                          </select>
+                        </div>
+                      </form>
+                    </div>
+                    <pagination-controls> </pagination-controls>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+
+          <!--  -->
+
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+</div>

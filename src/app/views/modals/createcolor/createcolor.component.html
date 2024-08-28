@@ -1,0 +1,60 @@
+<p-dialog
+  header="Nuevo Color"
+  [(visible)]="displayDialog"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+  [style]="{ width: '30vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="closeModal({},true)"
+  styleClass="custom-dialog"
+>
+  <div class="row">
+    <div class="col">
+      <form [formGroup]="colorform">
+        <div class="row mt-3">
+          <div class="custom-form-group">
+            <input
+              type="text"
+              class="custom-form-control"
+              placeholder=" "
+              formControlName="color_name"
+            />
+            <label for="myInpu" class="custom-label">Color</label>
+          </div>
+          <div
+            *ngIf="colorform.get('color_name')?.errors?.['required'] && submitted"
+            class="error-message"
+          >
+            El color es requerido.
+          </div>
+        </div>
+      </form>
+      <div class="row mt-3 justify-content-center">
+        <div class="col-3">
+          <button
+            type="submit"
+            class="btn btn-primary btn-block"
+            (click)="onSubmit()"
+          >
+            Aceptar
+          </button>
+        </div>
+        <div class="col-5">
+          <button type="button" class="btn btn-success btn-block" (click)="onSubmitclose()">
+            Aceptar y cerrar
+          </button>
+        </div>
+        <div class="col-3">
+          <button
+            type="button"
+            class="btn btn-danger btn-block"
+            (click)="closeModal({},true)"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-dialog>

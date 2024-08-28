@@ -1,0 +1,271 @@
+ 
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Ingresos Repusestos</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a class="cursor-poiner text-primary" (click)="inicio()"
+                ><u>Inicio</u></a
+              >
+            </li>
+            <li class="breadcrumb-item active">Ingresos Repuestos</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="col-12 p-3">
+                <div class="d-flex justify-content-center">
+                  <h3 class="card-title-content">Ingresos Repuestos</h3>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-4 my-auto"></div>
+                <div class="col-sm-4 justify-content-center">
+                  <form [formGroup]="searchForm">
+                    <div class="input-group">
+                      <input
+                        type="search"
+                        oninput="this.value = this.value.toUpperCase()"
+                        (keyup)="onKeyDownEvent($event)"
+                        (input)="onKeyDownEvent($event)"
+                        [readonly]="blockbusqueda"
+                        class="form-control form-control-lg"
+                        placeholder="Buscar"
+                        formControlName="valuesearch"
+                      />
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-lg btn-default" [disabled]="blockbusqueda" (click)="findbutton()">
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="col-sm-4 my-auto">
+                  <form [formGroup]="stateincomesform">
+                    <div class="d-flex flex-row-reverse bd-highlight">
+                      <div class="col-sm-5">
+                        <div
+                          class="form-group my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            formControlName="stateincome"
+                            (change)="changeLeagueOwner()"
+                          >
+                            <option [value]="0">ALL</option>
+                            <option
+                              *ngFor="let item of statusincomes"
+                              [ngValue]="item._id"
+                            >
+                              {{ item.name_incomestypes }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="my-auto">
+                        <a>Filtro:</a>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row p-3">
+                <div class="col-sm-6 my-auto">
+                  <p class="text-black-50">
+                    Página {{ datapage.pagination }} mostrando
+                    {{ incomeslists.length }} resultados de {{ totalentries }}
+                  </p>
+                </div>
+                <div class="col-sm-6 my-auto">
+                  <div class="d-flex justify-content-end">
+                    <div class="col-sm-2">
+                      <form [formGroup]="numperpagesForm">
+                        <div
+                          class="my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            formControlName="valueperpage"
+                            (change)="updateSortingperpage()"
+                          >
+                            <option
+                              *ngFor="let numperpag of numperpagess"
+                              [ngValue]="numperpag.tems"
+                            >
+                              {{ numperpag.value }}
+                            </option>
+                          </select>
+                        </div>
+                      </form>
+                    </div>
+                    <pagination-controls (pageChange)="renderPage($event)">
+                    </pagination-controls>
+                  </div>
+                </div>
+              </div> 
+              <table *ngIf="loading; else dataLoaded">
+                <tr>
+                  <td colspan="3">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <ng-template #dataLoaded>
+              <div class="table-responsive">
+              <table
+                id="example2"
+                class="table table-bordered table-hover table-striped table-sm1"
+              >
+                <thead>
+                  <tr>
+                    <th>Cant.</th>
+                    <th>Nombre</th>
+                    <th>Modelo</th>
+                    <th>Calidad</th>
+                    <th>Color</th>
+                    <th>Proveedor</th>
+                    <th>Nº Doc.</th>
+                    <th>Fecha</th>
+                    <th>PvP</th>
+                    <th>Observaciones</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="
+                      let item of incomeslists
+                        | paginate
+                          : {
+                              itemsPerPage: datapage.numperpage,
+                              currentPage: datapage.pagination,
+                              totalItems: totalentries
+                            }
+                    "
+                    [ngClass]="datacolor(item.incomestype?.name_incomestypes)"
+                  >
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.inventoryflow?.nameitem }}</td>
+                    <td>{{ item.inventoryflow?.modelitem }}</td>
+                    <td>{{ item.inventoryflow?.quality }}</td>
+                    <td>{{ item.inventoryflow?.colors1 }}</td>
+                    <td>
+                      {{ item.documentnumberincome?.supplier?.razon_social }}
+                    </td>
+                    <td>{{ item.documentnumberincome?.document_number }}</td>
+                    <td title="{{ item.date_income }}">
+                      {{ item.date_income.substring(0, 10) }}
+                    </td>
+                    <td>{{ item.inventoryflow?.price}}</td>
+                    <td>{{ item.observations }}</td>
+
+                    <td
+                      *ngIf="
+                        item.incomestype?.name_incomestypes != 'PENDIENTE';
+                        else templateElse
+                      "
+                    >
+                      {{ item.incomestype?.name_incomestypes }}
+                    </td>
+                    <ng-template #templateElse>
+                      <td class="text-center">
+                        <tr class="p-1">
+                          <td class="p-1">
+                            <button
+                              type="button"
+                              class="btn btn-outline-success btn-sm p-1"
+                              (click)="aceptar(item)"
+                            >
+                              <i class="bi bi-check-circle p-0"></i>
+                            </button>
+                          </td>
+                          <td class="p-1">
+                            <button
+                              type="button"
+                              class="btn btn-outline-danger btn-sm p-1"
+                              (click)="NOaceptar(item)"
+                            >
+                              <i class="bi bi-x-circle p-0"></i>
+                            </button>
+                          </td>
+                        </tr></td
+                    ></ng-template>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </ng-template>
+              <div class="row p-3">
+                <div class="col-sm-6 my-auto">
+                  <p class="text-black-50">
+                    Página {{ datapage.pagination }} mostrando
+                    {{ incomeslists.length }} resultados de {{ totalentries }}
+                  </p>
+                </div>
+                <div class="col-sm-6 my-auto">
+                  <div class="d-flex justify-content-end">
+                    <div class="col-sm-2">
+                      <form [formGroup]="numperpagesForm">
+                        <div
+                          class="my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            formControlName="valueperpage"
+                            (change)="updateSortingperpage()"
+                          >
+                            <option
+                              *ngFor="let numperpag of numperpagess"
+                              [ngValue]="numperpag.tems"
+                            >
+                              {{ numperpag.value }}
+                            </option>
+                          </select>
+                        </div>
+                      </form>
+                    </div>
+                    <pagination-controls (pageChange)="renderPage($event)">
+                    </pagination-controls>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

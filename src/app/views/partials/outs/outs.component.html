@@ -1,0 +1,170 @@
+<form [formGroup]="salidaForm">
+
+  <div class="row mt-3">  
+    <div class="col-sm-11">
+      <div class="custom-form-group">
+        <input
+          type="text"
+          class="custom-form-control"
+          id="myInpu"
+          placeholder=" "
+          autocomplete="off" 
+          formControlName="codigo_movimiento" 
+        />
+        <label for="myInpu" class="custom-label">codigo de movimiento</label>
+      </div> 
+    </div>
+  </div> 
+  <div class="row mt-3">  
+    <div class="col-sm-11" *ngIf="codeauto; else templateElse">
+      <label >
+        Sin numero de orden</label
+      >
+    </div><ng-template #templateElse>
+    <div class="col-sm-11">
+      <div class="custom-form-group">
+        <input
+          type="text"
+          class="custom-form-control"
+          id="myInpu"
+          placeholder=" "
+          autocomplete="off" 
+          formControlName="numero_orden" 
+        />
+        <label for="myInpu" class="custom-label">Número de orden</label>
+      </div> 
+    </div>
+  </ng-template>
+  </div> 
+    <div class="row">
+      <!-- derecha-->
+      <div class="col-sm-6">
+        <div class="form-group">
+          <ng-select
+            placeholder="Tipo de salida *"
+            formControlName="tipo_salida"
+            (change)="changeLeagueOwnertype($event)"
+            [ngClass]="{
+              'is-invalid':
+                submittedoutmovement && f1['tipo_salida'].errors
+            }"
+          >
+            <ng-option *ngFor="let out of outs" [value]="out._id"
+              >{{ out.name_movement }}
+            </ng-option>
+          </ng-select>
+          <div
+            *ngIf="submittedoutmovement && f1['tipo_salida'].errors"
+            class="invalid-feedback"
+          >
+            <div
+              *ngIf="f1['tipo_salida'].errors['required']"
+              class="pb-1"
+            >
+              "Tipo de salida" Requerido
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--  -->
+      <div class="col-sm-6">
+        <ng-select
+          placeholder="Entrega a*"
+          formControlName="entrega_a"
+          [ngClass]="{
+            'is-invalid': submittedoutmovement && f1['entrega_a'].errors
+          }"
+          required
+        >
+          <ng-option
+            *ngFor="let technici of technician"
+            [value]="technici._id?._id"
+            >{{ technici._id?.employee?.first_name1 }}-{{
+              technici._id?.employee?.last_name1
+            }}
+          </ng-option>
+        </ng-select>
+        <div
+          *ngIf="submittedoutmovement && f1['entrega_a'].errors"
+          class="invalid-feedback"
+        >
+          <div *ngIf="f1['entrega_a'].errors['required']" class="pb-1">
+            "Entrega a" Requerido
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- derecha-->
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label class="border-lable-flt">
+            <input
+              type="number"
+              class="form-control"
+              placeholder="Cantidad"
+              formControlName="cantidad"
+              min="{{ minvalue }}"
+              max="{{ maxvalue }}"
+              [ngClass]="{
+                'is-invalid':
+                  submittedoutmovement && f1['cantidad'].errors
+              }"
+            />
+            <span lass="widget-title  shop-sidebar">Cantidad</span>
+          </label>
+        </div>
+      </div>
+      <!-- izquierda -->
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label class="border-lable-flt">
+            <input
+              type="datetime-local"
+              class="form-control"
+              placeholder="Procedencia"
+              formControlName="fecha"
+              [ngClass]="{
+                'is-invalid': submittedoutmovement && f1['fecha'].errors
+              }"
+            />
+            <span lass="widget-title  shop-sidebar">Fecha</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="border-lable-flt">
+        <textarea
+          class="form-control"
+          formControlName="observaciones"
+          placeholder="Observaciones"
+        ></textarea>
+
+        <span lass="widget-title  shop-sidebar">Observaciones</span>
+      </label>
+    </div>
+
+  <!-- data-bs-dismiss="modal" -->
+  <div class="row justify-content-center">
+    <div class="col-auto">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="saveoutmovement()"
+      >
+        Guardar
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger ms-2"
+        data-bs-dismiss="modal"
+      >
+        Cancelar
+      </button>
+    </div>
+  </div>
+  </form>

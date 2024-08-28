@@ -1,0 +1,468 @@
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Nuevo Producto</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a class="cursor-poiner text-primary"><u>Inicio</u></a>
+            </li>
+            <li class="breadcrumb-item">
+              <a class="cursor-poiner text-primary"><u>Inventario</u></a>
+            </li>
+            <li class="breadcrumb-item active">Nuevo Producto</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <div class="card card-secondary">
+    <div class="card-header">
+      <h3 class="card-title">Nuevo Producto</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <form [formGroup]="nuevoForm" (ngSubmit)="onSubmit(nuevoForm.value)">
+        <div class="row">
+          <!-- izquierda -->
+          <div class="col-sm-6">
+            <div class="row">
+              <div class="col-sm-1" align="center">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  (change)="onCheckboxChange($event)"
+                  checked
+                />
+              </div>
+              <!-- izquierda -->
+              <div class="col-sm-10">
+                <div class="form-group">
+                  <label *ngIf="codeauto; else templateElse">
+                    Codigo principal generado automaticamente</label
+                  >
+                  <ng-template #templateElse>
+                    <label class="border-lable-flt">
+                      <input
+                        type="text"
+                        class="form-control"
+                        formControlName="cod_upc"
+                        placeholder="nombre"
+                        [ngClass]="{
+                          'is-invalid': submitted && f['cod_upc'].errors
+                        }"
+                      />
+                      <span lass="widget-title  shop-sidebar"
+                        >Codigo principal *</span
+                      >
+                    </label>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1">
+                <abbr title="Nuevo"
+                  ><a
+                    class="btn btn-outline-success p-1"
+                    (click)="openModalname()"
+                    ><i class="fa fa-plus"></i></a
+                ></abbr>
+              </div>
+              <!-- izquierda -->
+              <div class="col-sm-10">
+                <div class="form-group">
+                  <ng-select
+                    placeholder="Selecionar Nombre"
+                    formControlName="name_items"
+                    [ngClass]="{
+                      'is-invalid': submitted && f['name_items'].errors
+                    }"
+                    required
+                  >
+                    <ng-option *ngFor="let brand of nameite" [value]="brand._id"
+                      >{{ brand.name_nameitems }}
+                    </ng-option>
+                  </ng-select>
+                  <div
+                    *ngIf="submitted && f['name_items'].errors"
+                    class="invalid-feedback"
+                  >
+                    <div *ngIf="f['name_items'].errors['required']">
+                      Nombre de producto requerido
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <!-- izquierda -->
+              <div class="col-sm-10">
+                <div class="form-group">
+                  <label class="border-lable-flt">
+                    <input
+                      type="number"
+                      class="form-control"
+                      formControlName="stock"
+                      placeholder="Stock"
+                      [ngClass]="{
+                        'is-invalid': submitted && f['stock'].errors
+                      }"
+                      required
+                    />
+                    <span lass="widget-title  shop-sidebar">Stock *</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <!-- izquierda -->
+              <div class="col-sm-1">
+                <abbr title="Nuevo"
+                  ><a
+                    class="btn btn-outline-success p-1"
+                    (click)="openModalbrand()"
+                    ><i class="fa fa-plus"></i></a
+                ></abbr>
+              </div>
+
+              <!-- derecha-->
+              <div class="col-sm-10">
+                <div class="form-group">
+                  <ng-select
+                    placeholder="Selecionar Marca"
+                    formControlName="id_brand"
+                    (change)="changeLeagueOwner($event)"
+                  >
+                    <ng-option *ngFor="let brand of brands" [value]="brand._id"
+                      >{{ brand.name_brands }}
+                    </ng-option>
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <!-- derecha-->
+              <div class="col-sm-1">
+                <abbr title="Nuevo"
+                  ><a
+                    class="btn btn-outline-success p-1"
+                    (click)="openModalmodel()"
+                    ><i class="fa fa-plus"></i></a
+                ></abbr>
+              </div>
+              <!-- izquierda -->
+              <div class="col-sm-10">
+                <ng-select
+                  placeholder="Selecionar Modelo *"
+                  formControlName="id_model"
+                  (input)="makechoice()"
+                  (clear)="makechoice()"
+                  #ngselects
+                  [ngClass]="{
+                    'is-invalid': submitted && f['id_model'].errors
+                  }"
+                  required
+                >
+                  <ng-option *ngFor="let model of models" [value]="model._id"
+                    >{{ model.business_model }}
+                  </ng-option>
+                </ng-select>
+                <div
+                  *ngIf="submitted && f['id_model'].errors"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="f['id_model'].errors['required']">
+                    Modelo de producto requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <!-- derecha-->
+              <div class="col-sm-1">
+                <abbr title="Nuevo tipo"
+                  ><a
+                    class="btn btn-outline-success p-1"
+                    (click)="openModaltype()"
+                    ><i class="fa fa-plus"></i></a
+                ></abbr>
+              </div>
+              <!-- izquierda -->
+              <div class="col-sm-10">
+                <ng-select
+                  placeholder="Selecionar tipo *"
+                  formControlName="id_type"
+                  [ngClass]="{ 'is-invalid': submitted && f['id_type'].errors }"
+                >
+                  <ng-option *ngFor="let type of types" [value]="type._id"
+                    >{{ type.type_inventoryflow }}
+                  </ng-option>
+                </ng-select>
+                <div
+                  *ngIf="submitted && f['id_type'].errors"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="f['id_type'].errors['required']">
+                    Tipo de producto requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- derecha -->
+          <div class="col-sm-6">
+            <div class="row">
+              <!-- derecha-->
+              <div class="col-sm-1">
+                <abbr title="Nuevo color"
+                  ><a
+                    class="btn btn-outline-success p-1"
+                    (click)="openModalcolor()"
+                    ><i class="fa fa-plus"></i></a
+                ></abbr>
+              </div>
+              <!-- izquierda -->
+              <div class="col-sm-10">
+                <ng-select
+                  placeholder="Selecionar Color *"
+                  formControlName="id_color"
+                  [ngClass]="{
+                    'is-invalid': submitted && f['id_color'].errors
+                  }"
+                >
+                  <ng-option *ngFor="let color of colors" [value]="color._id"
+                    >{{ color.color_name }}
+                  </ng-option>
+                </ng-select>
+                <div
+                  *ngIf="submitted && f['id_color'].errors"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="f['id_color'].errors['required']">
+                    Color de producto requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <!-- derecha-->
+              <div class="col-sm-1">
+                <abbr title="Nuevo tipo"
+                  ><a
+                    class="btn btn-outline-success p-1"
+                    (click)="openModalquality()"
+                    ><i class="fa fa-plus"></i></a
+                ></abbr>
+              </div>
+              <!-- izquierda -->
+              <div class="col-sm-10">
+                <ng-select
+                  placeholder="Selecionar Calidad *"
+                  formControlName="id_quality"
+                  [ngClass]="{
+                    'is-invalid': submitted && f['id_quality'].errors
+                  }"
+                >
+                  <ng-option
+                    *ngFor="let quality of qualitys"
+                    [value]="quality._id"
+                    >{{ quality.quality_inventoryflow }}
+                  </ng-option>
+                </ng-select>
+                <div
+                  *ngIf="submitted && f['id_quality'].errors"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="f['id_quality'].errors['required']">
+                    Calidad de producto requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <!-- derecha-->
+              <div class="col-sm-1">
+                <abbr title="Nuevo tipo"
+                  ><a
+                    class="btn btn-outline-success p-1"
+                    (click)="openModalstate()"
+                    ><i class="fa fa-plus"></i></a
+                ></abbr>
+              </div>
+              <!-- izquierda -->
+              <div class="col-sm-10">
+                <ng-select
+                  placeholder="Selecionar Estado del producto *"
+                  formControlName="id_stateproduct_inventoryflow"
+                  [ngClass]="{
+                    'is-invalid':
+                      submitted && f['id_stateproduct_inventoryflow'].errors
+                  }"
+                >
+                  <ng-option
+                    *ngFor="let stateproduct of stateproducts"
+                    [value]="stateproduct._id"
+                    >{{ stateproduct.stateproduct_inventoryflow }}
+                  </ng-option>
+                </ng-select>
+                <div
+                  *ngIf="submitted && f['id_stateproduct_inventoryflow'].errors"
+                  class="invalid-feedback"
+                >
+                  <div
+                    *ngIf="
+                      f['id_stateproduct_inventoryflow'].errors['required']
+                    "
+                  >
+                    Estado de producto requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <!-- izquierda -->
+              <div class="col-sm-10">
+                <div class="form-group">
+                  <label class="border-lable-flt">
+                    <input
+                      type="text"
+                      class="form-control"
+                      onkeyup="this.value=this.value.toUpperCase();"
+                      formControlName="observations"
+                      placeholder="Observaciones"
+                      autofocus
+                    />
+                    <span lass="widget-title  shop-sidebar">Observaciones</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <!-- derecha-->
+              <div class="col-sm-1"></div>
+              <!-- izquierda -->
+              <div class="col-sm-10">
+                <ng-select
+                  placeholder="Selecionar estado inventario*"
+                  formControlName="id_stateinventoryflow"
+                  [ngClass]="{
+                    'is-invalid': submitted && f['id_stateinventoryflow'].errors
+                  }"
+                >
+                  <ng-option
+                    *ngFor="let stateinventoryflow of stateinventoryflows"
+                    [value]="stateinventoryflow._id"
+                    >{{ stateinventoryflow.state_inventoryflow }}
+                  </ng-option>
+                </ng-select>
+                <div
+                  *ngIf="submitted && f['id_stateinventoryflow'].errors"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="f['id_stateinventoryflow'].errors['required']">
+                    Estado del inventario requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-10" align="center">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              formControlName="get_print"
+            />
+            <label for="">Imprimir</label>
+          </div>
+        </div>
+        <div class="row">
+          <!-- /.col -->
+          <div class="col-3">
+            <button type="submit" class="btn btn-primary btn-block">
+              Aceptar
+            </button>
+          </div>
+          <div class="col-3">
+            <button
+              type="button"
+              (click)="onSubmitclose()"
+              class="btn btn-success btn-block"
+            >
+              Aceptar y cerrar
+            </button>
+          </div>
+
+          <div class="col-3">
+            <button
+              type="button"
+              (click)="cancelar()"
+              class="btn btn-danger btn-block"
+            >
+              cancelar
+            </button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+    </div>
+    <!-- /.card-body -->
+  </div>
+ 
+
+  <!-- Modal  nuevo nombre producto-->
+  <app-createnameitems
+    *ngIf="modalVisible"
+    [inventory]="nameinventory"
+    (closeModalEvent)="closeModalname($event)"
+  >
+  </app-createnameitems>
+  <!-- Modal  nuevaMarca-->
+  <app-createbrand
+    *ngIf="modalVisible1"
+    [inventory]="nameinventory"
+    (closeModalEvent)="closeModalbrand($event)"
+  ></app-createbrand>
+  <!--Modal  nuevaModelo-->
+  <app-createmodel
+    *ngIf="modalVisible2"
+    [inventory]="nameinventory"
+    (closeModalEvent)="closeModalmodel($event)"
+  ></app-createmodel>
+  <!--Modal  nuevatipo-->
+  <app-createtype
+    *ngIf="modalVisible3"
+    [inventory]="nameinventory"
+    (closeModalEvent)="closeModaltype($event)"
+  ></app-createtype>
+  <!--Modal  nueva color-->
+  <app-createcolor
+    *ngIf="modalVisible4"
+    [inventory]="nameinventory"
+    (closeModalEvent)="closeModalcolor($event)"
+  ></app-createcolor>
+  <app-createquality
+    *ngIf="modalVisible5"
+    [inventory]="nameinventory"
+    (closeModalEvent)="closeModalquality($event)"
+  ></app-createquality>
+  <app-createstateiteminventory
+    *ngIf="modalVisible6"
+    [inventory]="nameinventory"
+    (closeModalEvent)="closeModalstate($event)"
+  ></app-createstateiteminventory>
+</div>

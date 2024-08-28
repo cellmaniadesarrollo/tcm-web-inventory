@@ -1,0 +1,116 @@
+
+<div class="content-wrapper">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Inicio</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a class="cursor-poiner text-primary"><u>Inicio</u></a>
+            </li>
+            <li class="breadcrumb-item active">Inicio</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <section class="content">
+    <div class="container-fluid">
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-info">
+            <div class="inner">
+              <h3>{{ cantproducts }}</h3>
+
+              <p>Productos</p>
+            </div>
+            <div class="icon">
+              <i class="bi bi-box-seam-fill"></i>
+            </div>
+            <a class="small-box-footer"
+              >More info <i class="bi bi-arrow-right-circle"></i
+            ></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-success">
+            <div class="inner">
+              <h3>{{ canstmovementsout }}</h3>
+
+              <p>Total Salidas</p>
+            </div>
+            <div class="icon">
+              <i class="bi bi-card-checklist"></i>
+            </div>
+            <a class="small-box-footer"
+              >More info <i class="bi bi-arrow-right-circle"></i
+            ></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-warning">
+            <div class="inner">
+              <h3>{{ canstmovementsreturns }}</h3>
+
+              <p>Devoluciones</p>
+            </div>
+            <div class="icon">
+              <i class="bi bi-card-list"></i>
+            </div>
+            <a class="small-box-footer"
+              >More info <i class="bi bi-arrow-right-circle"></i>
+            </a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-danger">
+            <div class="inner">
+              <h3>{{ cantstock0 }}</h3>
+
+              <p>Productos sin Stock</p>
+            </div>
+            <div class="icon">
+              <i class="bi bi-box-seam-fill"></i>
+            </div>
+            <a class="cursor-poiner small-box-footer" (click)="getreportout()"
+              >Reporte <i class="bi bi-arrow-right-circle"></i
+            ></a>
+          </div>
+        </div>
+        <!-- ./col -->
+      </div>
+      <div class="row">
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-primary">
+            <div class="inner">
+              <h3>{{ cantincome }}</h3>
+
+              <p>Ingresos sin aceptar</p>
+            </div>
+            <div class="icon">
+              <i class="bi bi-box-arrow-in-down"></i>
+            </div>
+            <a class="cursor-poiner small-box-footer"  
+              >Reporte <i class="bi bi-arrow-right-circle"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

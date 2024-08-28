@@ -1,0 +1,243 @@
+<div class="row justify-content-center" *ngIf="loading; else dataLoaded">
+<div class="spinner-border text-primary" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+</div>
+<ng-template #dataLoaded> 
+<form [formGroup]="nuevoForm">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="row mt-3"> 
+            <!-- izquierda -->
+            <div class="col-sm-11">
+              <div class="custom-form-group">
+                <input
+                  type="text"
+                  class="custom-form-control"
+                  id="myInpu"
+                  placeholder=" "
+                  autocomplete="off" 
+                  formControlName="name_items"
+                  readonly
+                />
+                <label for="myInpu" class="custom-label">Nombre</label>
+              </div> 
+            </div>
+          </div>
+
+        <div class="row mt-3"> 
+            <!-- izquierda -->
+            <div class="col-sm-11">
+              <div class="custom-form-group">
+                <input
+                  type="number"
+                  class="custom-form-control"
+                  id="myInpu"
+                  placeholder=" "
+                  autocomplete="off"
+                  formControlName="stock"
+                  (focus)="onFocus($event)"
+                />
+                <label for="myInpu" class="custom-label">Stock</label>
+              </div>
+              <div
+              *ngIf="nuevoForm.get('stock')?.errors?.['required'] && submitted"
+              class="error-message"
+            >
+              Stock Requerido.
+            </div>
+            </div>
+          </div>
+
+          <div class="row mt-3"> 
+            <!-- izquierda -->
+            <div class="col-sm-11">
+              <div class="custom-form-group">
+                <input
+                  type="text"
+                  class="custom-form-control"
+                  id="myInpu"
+                  placeholder=" "
+                  autocomplete="off" 
+                  formControlName="id_brand"
+                  readonly
+                />
+                <label for="myInpu" class="custom-label">Marca</label>
+              </div> 
+            </div>
+          </div>
+
+          <div class="row mt-3"> 
+            <!-- izquierda -->
+            <div class="col-sm-11">
+              <div class="custom-form-group">
+                <input
+                  type="text"
+                  class="custom-form-control"
+                  id="myInpu"
+                  placeholder=" "
+                  autocomplete="off" 
+                  formControlName="id_model"
+                  readonly
+                />
+                <label for="myInpu" class="custom-label">Modelo</label>
+              </div> 
+            </div>
+          </div>
+          <div class="row mt-3"> 
+            <!-- izquierda -->
+            <div class="col-sm-11"> 
+              <ng-select
+              placeholder="Selecionar estado inventario*"
+              formControlName="id_type"
+               
+            >
+              <ng-option
+                *ngFor="let type of types"
+                [value]="type._id"
+                >{{ type.type_inventoryflow }}
+              </ng-option>
+            </ng-select> 
+              
+              <!-- <div class="custom-form-group">
+                <input
+                  type="text"
+                  class="custom-form-control"
+                  id="myInpu"
+                  placeholder=" "
+                  autocomplete="off" 
+                  formControlName="id_type"
+                  readonly
+                />
+                <label for="myInpu" class="custom-label">Tipo</label>
+              </div>  -->
+            </div>
+          </div>
+          <div class="row mt-3"> 
+            <!-- izquierda -->
+            <div class="col-sm-11">
+              <div class="custom-form-group">
+                <input
+                  type="text"
+                  class="custom-form-control"
+                  id="myInpu"
+                  placeholder=" "
+                  autocomplete="off" 
+                  formControlName="id_color"
+                  readonly
+                />
+                <label for="myInpu" class="custom-label">Color</label>
+              </div> 
+            </div>
+          </div>
+
+
+      </div>
+      <!-- derecha -->
+      <div class="col-sm-6">
+
+        <div class="row mt-3"> 
+            <!-- izquierda -->
+            <div class="col-sm-11">
+              <div class="custom-form-group">
+                <input
+                  type="text"
+                  class="custom-form-control"
+                  id="myInpu"
+                  placeholder=" "
+                  autocomplete="off" 
+                  formControlName="id_quality"
+                  readonly
+                />
+                <label for="myInpu" class="custom-label">Calidad</label>
+              </div> 
+            </div>
+          </div>
+          <div class="row mt-3"> 
+            <!-- izquierda -->
+            <div class="col-sm-11">
+              <div class="custom-form-group">
+                <input
+                  type="text"
+                  class="custom-form-control"
+                  id="myInpu"
+                  placeholder=" "
+                  autocomplete="off" 
+                  formControlName="id_stateproduct_inventoryflow"
+                  readonly
+                />
+                <label for="myInpu" class="custom-label">Estado del Producto</label>
+              </div> 
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-sm-1"></div>
+            <!-- izquierda -->
+            <div class="col-sm-10">
+              <div class="custom-form-group">
+                <input
+                  type="number"
+                  class="custom-form-control"
+                  step=".01"
+                  min="0"
+                  id="myInpu"
+                  placeholder=" "
+                  autocomplete="off"
+                  formControlName="price"
+                  (focus)="onFocus($event)"
+                />
+                <label for="myInpu" class="custom-label">Precio Venta</label>
+              </div> 
+            </div>
+          </div>
+        <div class="row mt-3"> 
+          <div class="col-sm-11">
+            <div class="custom-form-group">
+              <textarea
+                class="custom-form-control"
+                placeholder=" "
+                autocomplete="off" 
+                formControlName="observations"
+              ></textarea>
+              <label for="myInpu" class="custom-label">Observaciones</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3">
+
+          <div class="col-sm-10">
+            <select class="form-select" aria-label="Default select example" formControlName="id_stateinventoryflow">
+              <option *ngFor="let stateinventoryflow of stateinventoryflows"
+              [value]="stateinventoryflow._id">{{ stateinventoryflow.state_inventoryflow }}</option>
+       
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3 justify-content-center">
+      <div class="col-auto">
+        <button
+          type="button"
+          class="btn btn-success"
+          data-bs-dismiss="modal"
+          (click)="onSubmitclose()"
+        >
+          Editar
+        </button>
+      </div>
+      <div class="col-auto">
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-bs-dismiss="modal"
+          (click)="cancel()"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+    
+  </form>
+</ng-template> 

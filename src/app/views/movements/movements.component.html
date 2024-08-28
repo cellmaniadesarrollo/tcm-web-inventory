@@ -1,0 +1,781 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Movimientos</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a class="cursor-poiner text-primary" (click)="inicio()"
+                ><u>Inicio</u></a
+              >
+            </li>
+            <li class="breadcrumb-item active">Moviemientos</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="col-12 p-3">
+                <div class="d-flex justify-content-center">
+                  <h3 class="card-title-content">Movimientos</h3>
+                </div>
+              </div>
+              <!--  -->
+              <div class="row">
+                <div class="col-sm-2 my-auto">
+                  <div class="row">
+                    <div class="col-sm-3">
+                  <button
+                  type="button"
+                  class="btn btn-block bg-gradient-primary"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="Generar Reporte"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal16" 
+                  (click)="datareset()"
+                >
+                  <i class="fa fa-bar-chart fa-xl" aria-hidden="true"></i>
+                </button>
+              </div>
+              </div>
+                </div>
+                <div class="col-sm-4 justify-content-center">
+                  <form [formGroup]="searchForm">
+                    <div class="input-group">
+                      
+                      <input
+                        type="search"
+                        (keyup)="onKeyDownEvent($event)"
+                        (input)="onKeyDownEvent($event)"
+                        [readonly]="blockbusqueda"
+                        class="form-control form-control-lg"
+                        placeholder="Buscar"
+                        formControlName="valuesearch"
+                      />
+                      <div class="input-group-append">
+                        <button
+                          type="button"
+                          class="btn btn-lg btn-default"
+                          [disabled]="blockbusqueda"
+                          (click)="findbutton()"
+                        >
+                          <i class="fa fa-search"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="col-sm-3 my-auto">
+                  <form [formGroup]="typemovementform">
+                    <div class="d-flex flex-row-reverse bd-highlight">
+                      <div class="col-sm-9">
+                        <div
+                          class="form-group my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            formControlName="type_movement"
+                            (change)="changeLeagueOwnertype()"
+                          >
+                            <option ngClass="table-light" [value]="0">
+                              ALL
+                            </option>
+                            <option
+                              *ngFor="let typesty of typestypemovements"
+                              [ngValue]="typesty._id"
+                            >
+                              {{ typesty.name_movementtype }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="col-sm-3 my-auto">
+                  <form [formGroup]="namemovementform">
+                    <div class="d-flex flex-row-reverse bd-highlight">
+                      <div class="col-sm-9">
+                        <div
+                          class="form-group my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            formControlName="name_movement"
+                            (change)="changeLeagueOwner()"
+                          >
+                            <option ngClass="table-light" [value]="0">
+                              ALL
+                            </option>
+                            <option
+                              *ngFor="let typesmovement of typesmovements"
+                              [ngValue]="typesmovement._id"
+                              [ngClass]="datacolor(typesmovement.name_movement)"
+                            >
+                              {{ typesmovement.name_movement }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <!--  -->
+            </div>
+
+            <!-- /.card-header -->
+            <div class="card-body">
+              <div class="row p-3">
+                <div class="col-sm-6 my-auto">
+                  <p class="text-black-50">
+                    Página {{ datapage.pagination }} mostrando
+                    {{ movements.length }} resultados de {{ totalentries }}
+                  </p>
+                </div>
+                <div class="col-sm-6 my-auto">
+                  <div class="d-flex justify-content-end">
+                    <div class="col-sm-2">
+                      <form [formGroup]="numperpagesForm">
+                        <div
+                          class="my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            formControlName="valueperpage"
+                            (change)="updateSortingperpage()"
+                          >
+                            <option
+                              *ngFor="let numperpag of numperpagess"
+                              [ngValue]="numperpag.tems"
+                            >
+                              {{ numperpag.value }}
+                            </option>
+                          </select>
+                        </div>
+                      </form>
+                    </div>
+                    <pagination-controls (pageChange)="renderPage($event)">
+                    </pagination-controls>
+                  </div>
+                </div>
+              </div>
+              <table *ngIf="loading; else dataLoaded">
+                <tr>
+                  <td colspan="3">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <ng-template #dataLoaded>
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover table-sm1">
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Modelo</th>
+                      <th>Emisor</th>
+                      <th>Receptor</th>
+                      <th>Fecha</th>
+
+                      <th>Movimiento</th>
+                      <th>Cantidad</th>
+                      <th>Nº Orden</th>
+                      <th>Observaciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="
+                        let movement of movements
+                          | paginate
+                            : {
+                                itemsPerPage: datapage.numperpage,
+                                currentPage: datapage.pagination,
+                                totalItems: totalentries
+                              }
+                      "
+                      [ngClass]="
+                        datacolor(movement.name_movement?.name_movement)
+                      "
+                    >
+                      <td
+                        (click)="findonemovement(movement._id)"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exampleModal2"
+                      >
+                        {{
+                          movement.itemsinventory?.items?.inventoryfownameitem
+                            ?.name_nameitems
+                        }}
+                      </td>
+                      <td>
+                        {{
+                          movement.itemsinventory?.items?.models?.business_model
+                        }}
+                      </td>
+                      <td>
+                        {{ movement.user_sender?.employee?.first_name1 }}
+                        {{ movement.user_sender?.employee?.last_name1 }}
+                      </td>
+                      <td>
+                        {{ movement.user_recipient?.employee?.first_name1 }}
+                        {{ movement.user_recipient?.employee?.last_name1 }}
+                      </td>
+                      <td title="{{ movement.date_movement }}">
+                        {{ movement.date_movement.substring(0, 10) }}
+                      </td>
+
+                      <td>{{ movement.name_movement?.name_movement }}</td>
+                      <td>{{ movement.cant_movement }}</td>
+                      <td>{{ movement.numorder?.numorders }}</td>
+                      <td>{{ movement.observations_movement }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </ng-template>
+              <div class="row p-3">
+                <div class="col-sm-6 my-auto">
+                  <p class="text-black-50">
+                    Página {{ datapage.pagination }} mostrando
+                    {{ movements.length }} resultados de {{ totalentries }}
+                  </p>
+                </div>
+                <div class="col-sm-6 my-auto">
+                  <div class="d-flex justify-content-end">
+                    <div class="col-sm-2">
+                      <form [formGroup]="numperpagesForm">
+                        <div
+                          class="my-auto"
+                          data-toggle="tooltip"
+                          data-placement="bottom"
+                          title="Filtrar Por"
+                        >
+                          <select
+                            class="form-control select2"
+                            style="width: 100%"
+                            formControlName="valueperpage"
+                            (change)="updateSortingperpage()"
+                          >
+                            <option
+                              *ngFor="let numperpag of numperpagess"
+                              [ngValue]="numperpag.tems"
+                            >
+                              {{ numperpag.value }}
+                            </option>
+                          </select>
+                        </div>
+                      </form>
+                    </div>
+                    <pagination-controls (pageChange)="renderPage($event)">
+                    </pagination-controls>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+
+          <!--  -->
+
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+</div>
+<!-- 
+  modal
+ -->
+<div
+  class="modal fade"
+  data-bs-backdrop="static"
+  id="exampleModal2"
+  tabindex="-1"
+  aria-labelledby="exampleModal2Label"
+  aria-hidden="true"
+  #content
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+          <li [ngbNavItem]="1" *ngIf="devoluciones">
+            <button ngbNavLink (click)="salidas()">Devolución</button>
+          </li>
+          <li [ngbNavItem]="2">
+            <button ngbNavLink (click)="detallesin()">Detalles</button>
+          </li>
+          <li [ngbNavItem]="3">
+            <button ngbNavLink (click)="editcoment()">Editar</button>
+          </li>
+        </ul>
+        <button
+          type="button"
+          #closebutton
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="salida">
+          <form [formGroup]="devolucionForm">
+            <div class="col-12">
+              <div class="form-group">
+                <ng-select
+                  placeholder="Motivo de devolucion *"
+                  formControlName="tipo_devolucion"
+                  [ngClass]="{
+                    'is-invalid':
+                      submittedoutmovement && f['tipo_devolucion'].errors
+                  }"
+                >
+                  <ng-option *ngFor="let inp of ins" [value]="inp._id"
+                    >{{ inp.name_movement }}
+                  </ng-option>
+                </ng-select>
+                <div
+                  *ngIf="submittedoutmovement && f['tipo_devolucion'].errors"
+                  class="invalid-feedback"
+                >
+                  <div
+                    *ngIf="f['tipo_devolucion'].errors['required']"
+                    class="pb-1"
+                  >
+                    "Motivo de devolución" Requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <ng-select
+                  placeholder="Emisor*"
+                  formControlName="recibe_de"
+                  [ngClass]="{
+                    'is-invalid': submittedoutmovement && f['recibe_de'].errors
+                  }"
+                >
+                  <ng-option
+                    *ngFor="let technician of technicians"
+                    [value]="technician._id?._id"
+                    >{{ technician._id?.employee?.first_name1 }}
+                    {{ technician._id?.employee?.last_name1 }}
+                  </ng-option>
+                </ng-select>
+                <div
+                  *ngIf="submittedoutmovement && f['recibe_de'].errors"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="f['recibe_de'].errors['required']" class="pb-1">
+                    "Emisor requerido" Requerido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                <label class="border-lable-flt">
+                  <textarea
+                    class="form-control"
+                    formControlName="observaciones"
+                    placeholder="Observaciones"
+                  ></textarea>
+                  <span lass="widget-title  shop-sidebar">Observaciones</span>
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label class="border-lable-flt">
+                  <input
+                    type="datetime-local"
+                    class="form-control"
+                    placeholder="Procedencia"
+                    formControlName="fecha"
+                    [ngClass]="{
+                      'is-invalid': submittedoutmovement && f['fecha'].errors
+                    }"
+                  />
+                  <span lass="widget-title  shop-sidebar">Fecha</span>
+                </label>
+              </div>
+            </div>
+            <!-- derecha-->
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label class="border-lable-flt">
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Cantidad"
+                    formControlName="cantidad"
+                    min="{{ minvalue }}"
+                    max="{{ maxvalue }}"
+                    [ngClass]="{
+                      'is-invalid': submittedoutmovement && f['cantidad'].errors
+                    }"
+                  />
+                  <span lass="widget-title  shop-sidebar">Cantidad</span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div
+          *ngIf="detalles"
+          [ngClass]="datacolor(detailsdata.name_movement?.name_movement)"
+        >
+          <div class="col-12">
+            <div class="d-flex justify-content-center">
+              <h3>
+                {{
+                  detailsdata.itemsinventory?.items?.inventoryfownameitem
+                    ?.name_nameitems
+                }}-{{
+                  detailsdata.itemsinventory?.items?.models?.brand?.name_brands
+                }}-{{
+                  detailsdata.itemsinventory?.items?.models?.business_model
+                }}
+              </h3>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="row">
+              <div class="col-4">
+                <div class="d-flex justify-content-start">Movimiento:</div>
+              </div>
+              <div class="col-8">
+                <div class="d-flex justify-content-start">
+                  <label for="">{{
+                    detailsdata.name_movement?.movementtype?.name_movementtype
+                  }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="row">
+              <div class="col-4">
+                <div class="d-flex justify-content-start">Motivo:</div>
+              </div>
+              <div class="col-8">
+                <div class="d-flex justify-content-start">
+                  <label for="">{{
+                    detailsdata.name_movement?.name_movement
+                  }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="row">
+              <div class="col-4">
+                <div class="d-flex justify-content-start">Fecha:</div>
+              </div>
+              <div class="col-8">
+                <div class="d-flex justify-content-start">
+                  <label for="">{{ detailsdata.date_movement }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-4">
+                <div class="d-flex justify-content-start">Cantidad:</div>
+              </div>
+              <div class="col-8">
+                <div class="d-flex justify-content-start">
+                  <label for="">{{ detailsdata.cant_movement }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- derecha-->
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-4">
+                <div class="d-flex justify-content-start">Emisor:</div>
+              </div>
+              <div class="col-8">
+                <div class="d-flex justify-content-start">
+                  <label for=""
+                    >{{ detailsdata.user_sender?.employee?.first_name1 }}
+                    {{ detailsdata.user_sender?.employee?.last_name1 }}</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-4">
+                <div class="d-flex justify-content-start">Receptor:</div>
+              </div>
+              <div class="col-8">
+                <div class="d-flex justify-content-start">
+                  <label for=""
+                    >{{ detailsdata.user_recipient?.employee?.first_name1 }}
+                    {{
+                      detailsdata.user_recipient?.employee?.last_name1
+                    }}</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-4">
+                <div class="d-flex justify-content-start">Numero de orden:</div>
+              </div>
+              <div class="col-8">
+                <div class="d-flex justify-content-start">
+                  <label for="">{{ detailsdata.numorder?.numorders }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-4">
+                <div class="d-flex justify-content-start">Cod. movimiento:</div>
+              </div>
+              <div class="col-8">
+                <div class="d-flex justify-content-start">
+                  <label for="">{{ detailsdata.uuid_movement?.uuid }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-4">
+                <div class="d-flex justify-content-start">Observaciones:</div>
+              </div>
+              <div class="col-8">
+                <div class="d-flex justify-content-start">
+                  <label for="">{{ detailsdata.observations_movement }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="editar">
+          <form [formGroup]="editmovementForm">
+            <div
+              [ngClass]="datacolor(detailsdata.name_movement?.name_movement)"
+            >
+              <div class="col-12">
+                <div class="d-flex justify-content-center">
+                  <h3>
+                    {{
+                      detailsdata.itemsinventory?.items?.inventoryfownameitem
+                        ?.name_nameitems
+                    }}-{{
+                      detailsdata.itemsinventory?.items?.models?.brand
+                        ?.name_brands
+                    }}-{{
+                      detailsdata.itemsinventory?.items?.models?.business_model
+                    }}
+                  </h3>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="row">
+                <div class="col-4">
+                  <div class="d-flex justify-content-start">Movimiento:</div>
+                </div>
+                <div class="col-8">
+                  <div class="d-flex justify-content-start">
+                    <label for="">{{
+                      detailsdata.name_movement?.movementtype?.name_movementtype
+                    }}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="row">
+                <div class="col-4">
+                  <div class="d-flex justify-content-start">Motivo:</div>
+                </div>
+                <div class="col-8">
+                  <div class="d-flex justify-content-start">
+                    <label for="">{{
+                      detailsdata.name_movement?.name_movement
+                    }}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-group">
+                <label class="border-lable-flt">
+                  <textarea
+                    id="myInput"
+                    class="form-control"
+                    formControlName="observations"
+                    placeholder="Observaciones"
+                  ></textarea>
+                  <span lass="widget-title  shop-sidebar">Observaciones</span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div *ngIf="salida">
+          <button
+            type="button"
+            (click)="savemovementreturn()"
+            class="btn btn-primary"
+          >
+            Aceptar
+          </button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+        </div>
+        <div *ngIf="detalles">
+          <button type="button" data-bs-dismiss="modal" class="btn btn-primary">
+            aceptar
+          </button>
+        </div>
+        <div *ngIf="editar">
+          <button
+            type="button"
+            (click)="savemovementedit()"
+            class="btn btn-primary"
+          >
+            Editar
+          </button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- modal fecha de precios -->
+<div
+  class="modal fade"
+  id="exampleModal16"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="exampleModal2Label"
+  aria-hidden="true"
+  #content
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- header modal -->
+      <div class="modal-header">
+        <h5 class="col-12 modal-title text-center" id="exampleModal2Label">
+          Ingrese fecha reporte de movimientos  
+          <button
+            type="button"
+            class="close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            #closebutton33
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </h5>
+      </div>
+      <!-- end header modal -->
+      <!-- body modal -->
+
+      <div class="modal-body">
+         
+          <div class="row">
+            <!-- derecha-->
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="border-lable-flt">
+                  <input
+                    type="date"
+                    class="form-control"
+                    [(ngModel)]="fechainit" 
+                  />
+                  <span lass="widget-title  shop-sidebar">Fecha Inicio</span>
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="border-lable-flt">
+                  <input
+                    type="date"
+                    class="form-control"
+                    [(ngModel)]="fechafin"
+                  />
+                  <span lass="widget-title  shop-sidebar">Fecha Fin</span>
+                </label>
+              </div>
+            </div>
+          </div> 
+      </div>
+
+      <!-- end body modal -->
+      <!-- modal footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="reportemovimientos()"
+        >
+          Generar
+        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
+
+      <!-- end modal footer -->
+    </div>
+  </div>
+</div>

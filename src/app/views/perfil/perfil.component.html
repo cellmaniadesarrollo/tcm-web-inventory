@@ -1,0 +1,299 @@
+ 
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container mt-5">
+      <div class="card">
+        <h5 class="card-header text-center">Detalle de Usuario</h5>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-4 text-center">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div *ngIf="userimg; else content">
+                    <img
+                      src="{{ userimg }}"
+                      alt="Imagen de perfil"
+                      class="rounded-circle img-fluid p-0"
+                    />
+                  </div>
+                  <ng-template #content
+                    ><i class="fa fa-user-circle fa-2x" aria-hidden="true"></i
+                  ></ng-template>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="iniciarmodal()"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editwassap"
+                  >
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-8">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Nombre de Usuario:</strong>
+                    </p>
+                    <p class="card-text mt-0">{{ usuario.name_user }}</p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Primer Nombre:</strong>
+                    </p>
+                    <p class="card-text mt-0">
+                      {{ usuario.employee?.first_name1 }}
+                    </p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Segundo Nombre:</strong>
+                    </p>
+                    <p class="card-text mt-0">
+                      {{ usuario.employee?.first_name2 }}
+                    </p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Primer Apellido:</strong>
+                    </p>
+                    <p class="card-text mt-0">
+                      {{ usuario.employee?.last_name1 }}
+                    </p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Segundo Apellido:</strong>
+                    </p>
+                    <p class="card-text mt-0">
+                      {{ usuario.employee?.last_name2 }}
+                    </p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>DNI (Cédula):</strong>
+                    </p>
+                    <p class="card-text mt-0">{{ usuario.employee?.dni }}</p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Fecha de Nacimiento:</strong>
+                    </p>
+                    <p class="card-text mt-0">
+                      {{ usuario.employee?.birthdate }}
+                    </p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Dirección:</strong>
+                    </p>
+                    <p class="card-text mt-0">{{ usuario.employee?.addres }}</p>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Teléfono Personal:</strong>
+                    </p>
+                    <p class="card-text mt-0">
+                      {{ usuario.employee?.phone_personal }}
+                    </p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Teléfono Empresarial:</strong>
+                    </p>
+                    <p class="card-text mt-0">
+                      {{ usuario.employee?.phone_business }}
+                    </p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Email Personal:</strong>
+                    </p>
+                    <p class="card-text mt-0">
+                      {{ usuario.employee?.email_personal }}
+                    </p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Email Empresarial:</strong>
+                    </p>
+                    <p class="card-text mt-0">
+                      {{ usuario.employee?.email_business }}
+                    </p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Género:</strong>
+                    </p>
+                    <p class="card-text mt-0">
+                      {{ usuario.employee?.genders?.name }}
+                    </p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Fecha de Ingreso:</strong>
+                    </p>
+                    <p class="card-text mt-0">
+                      {{ usuario.employee?.date_of_admission }}
+                    </p>
+                  </div>
+                  <div class="row">
+                    <p class="card-text mb-0">
+                      <strong>Grupos:</strong>
+                    </p>
+                    <p class="card-text mt-0">
+                      <span *ngFor="let item of usuario.user_groups"
+                        >{{ item.groups }},
+                      </span>
+                    </p>
+                  </div>
+                  <div class="row"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- modal editar usuario -->
+
+<div
+  class="modal fade"
+  id="editwassap"
+  data-bs-backdrop="static"
+  tabindex="-1"
+  aria-labelledby="editwassap"
+  aria-hidden="true"
+  #content
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- header modal -->
+      <div class="modal-header">
+        <h5 class="col-12 modal-title text-center" id="editwassap">
+          Editar registro
+          <button
+            type="button"
+            class="close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            #closebutton
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </h5>
+      </div>
+      <!-- end header modal -->
+      <!-- body modal -->
+
+      <div class="modal-body">
+        <form [formGroup]="perfilForm">
+          <div class="row">
+            <!-- derecha-->
+            <div class="col-sm-6">
+              <div class="input-group mb-3">
+                <input
+                  id="txtPassword"
+                  [type]="fieldTextType ? 'text' : 'password'"
+                  class="form-control"
+                  placeholder="contraseña"
+                  formControlName="pasword_user"
+                  [ngClass]="{
+                    'is-invalid': submitte && f['pasword_user1'].errors
+                  }"
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i
+                      class="fa"
+                      [ngClass]="{
+                        'fa-eye-slash': !fieldTextType,
+                        'fa-eye': fieldTextType
+                      }"
+                      (click)="toggleFieldTextType()"
+                    ></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="input-group mb-3">
+                <input
+                  [type]="fieldTextType ? 'text' : 'password'"
+                  class="form-control"
+                  placeholder="contraseña"
+                  formControlName="pasword_user1"
+                  [ngClass]="{
+                    'is-invalid': submitte && f['pasword_user1'].errors
+                  }"
+                />
+                <div class="input-group-append">
+                  <span class="input-group-text">
+                    <i
+                      class="fa"
+                      [ngClass]="{
+                        'fa-eye-slash': !fieldTextType,
+                        'fa-eye': fieldTextType
+                      }"
+                      (click)="toggleFieldTextType()"
+                    ></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div
+              class="drop-area"
+              (dragover)="onDragOver($event)"
+              (drop)="onDrop($event)"
+            >
+              <p>Arrastra y suelta una imagen aquí</p>
+              <p>O</p>
+              <input
+                type="file"
+                (change)="onFileSelected($event)"
+                accept="image/*"
+              />
+              <button (click)="selectFile()">Seleccionar archivo</button>
+            </div>
+            <div class="image-container" *ngIf="imageUrl">
+              <img [src]="imageUrl" alt="Vista previa de la imagen" />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- end body modal -->
+      <!-- modal footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="saveedit(perfilForm.value)"
+        >
+          Editar
+        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+      </div>
+
+      <!-- end modal footer -->
+    </div>
+  </div>
+</div>

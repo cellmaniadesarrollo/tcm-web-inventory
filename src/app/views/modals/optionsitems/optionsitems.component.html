@@ -1,0 +1,44 @@
+<p-dialog
+  header="{{ title }}"
+  [(visible)]="displayDialog"
+  [modal]="true"
+  [breakpoints]="{ '1199px': '75vw', '580px': '90vw' }"
+  [style]="{ width: '60vw'  }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="closeModal({}, true)"
+  styleClass="custom-dialog"
+>
+  <div class="content">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <button ngbNavLink (click)="change()">Salida</button>
+      </li>
+      <li [ngbNavItem]="2">
+        <button ngbNavLink (click)="change()">Editar</button>
+      </li>
+      <li [ngbNavItem]="3">
+        <button ngbNavLink (click)="change()">Historial</button>
+      </li>
+      <li [ngbNavItem]="4">
+        <button ngbNavLink (click)="change()">Ingresos H.</button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="content-container">
+    <div class="row">
+      <div class="row mt-3"> 
+        <app-outs [iditem]="iditem" *ngIf="partialVisible"></app-outs>
+        <app-edititems
+          *ngIf="partialVisible1"
+          [iditem]="iditem"
+          (closePartialEvent)="closePartialedit($event)"
+        >
+        </app-edititems>
+        <app-development *ngIf="partialVisible2"> </app-development>
+        <app-development *ngIf="partialVisible3"> </app-development>
+      </div>
+    </div>
+  </div>
+</p-dialog>
