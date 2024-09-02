@@ -157,11 +157,11 @@ export class ApiService {
         method: 'post',
         url: this.url + 'login',
         data: from,
-      });
+      }); 
       
       return axiosResponse.data;
     } catch (error) {
-      return Promise.reject(this.normalizeError(error));
+      return Promise.reject(this.normalizeError(error)); 
     }
   }
   public async datanewmarca(data: any, inventory: any): Promise<any> {
