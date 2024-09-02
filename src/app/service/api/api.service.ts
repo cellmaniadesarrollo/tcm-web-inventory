@@ -29,13 +29,13 @@ import {
 import { ListincomesIN } from 'src/app/models/income.inteface';
 import { ListsupliersI } from 'src/app/models/supliers.interface';
 import { link } from 'fs'; 
-import { environment } from '../../../environments/environment';
+//import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   private socket: any;
-  private apiUrl = environment.apiUrl;
+ // private apiUrl = environment.apiUrl;
   private axiosClient: AxiosInstance; 
   private axiosClient1: AxiosInstance;
   private errorHandler: ErrorHandler;
@@ -152,7 +152,7 @@ export class ApiService {
 
   public async LoginByEmail(from: LoginI): Promise<ResponseI> {
     try {
-      console.log(this.url,environment)
+     //console.log(this.url,environment)
       var axiosResponse = await this.axiosClient1.request({
         method: 'post',
         url: this.url + 'login',
