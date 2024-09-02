@@ -1,0 +1,44 @@
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .table-responsive table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table-responsive th,
+  .table-responsive td {
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .table-responsive th {
+    font-size: calc(1rem + 0.5vw); /* Ajuste dinámico */
+  }
+  
+  .table-responsive td {
+    font-size: calc(0.9rem + 0.5vw); /* Ajuste dinámico */
+  }
+  
+  /* Opcional: ajuste adicional con media queries */
+  @media (max-width: 600px) {
+    .table-responsive th {
+      font-size: 0.8rem;
+    }
+  
+    .table-responsive td {
+      font-size: 0.7rem;
+    }
+  }
+  
+  @media (max-width: 400px) {
+    .table-responsive th {
+      font-size: 0.7rem;
+    }
+  
+    .table-responsive td {
+      font-size: 0.6rem;
+    }
+  }

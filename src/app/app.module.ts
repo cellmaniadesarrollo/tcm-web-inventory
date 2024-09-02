@@ -43,7 +43,8 @@ import { PrintticketslocalComponent } from './views/modals/printticketslocal/pri
 import { TablemovementsComponent } from './views/partials/tablemovements/tablemovements.component';
 import { ReloadComponent } from './views/partials/reload/reload.component';
 import { ReportwassapincomesComponent } from './views/modals/reportwassapincomes/reportwassapincomes.component';
-import { ReporpricespdfincomesComponent } from './views/modals/reporpricespdfincomes/reporpricespdfincomes.component'; 
+import { ReporpricespdfincomesComponent } from './views/modals/reporpricespdfincomes/reporpricespdfincomes.component';
+import { TableincomerepComponent } from './views/partials/tableincomerep/tableincomerep.component'; 
   
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { ReporpricespdfincomesComponent } from './views/modals/reporpricespdfinc
     PrintticketslocalComponent,
     TablemovementsComponent,
     ReportwassapincomesComponent,
-    ReporpricespdfincomesComponent, 
+    ReporpricespdfincomesComponent,
+    TableincomerepComponent, 
   ],
   imports: [
     

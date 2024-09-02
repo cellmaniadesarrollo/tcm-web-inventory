@@ -290,7 +290,7 @@ export class IncomeComponent {
       numero_documento: ['', Validators.required],
       precioventa: [0, Validators.required],
       cantidad: [1, Validators.required],
-      preciounit: [, Validators.required],
+      preciounit: [0 , Validators.required],
       observaciones: [''],
       porcentaje: [this.taxespercentaje[0]._id, Validators.required],
       inpuesto: [data.nametax, Validators.required],

@@ -431,12 +431,14 @@ loading: boolean = true;
   editar = false;
   history=false;
   incomeH=false;
+  incomeRH=false;
   async salidas() {
     this.submittedoutmovement = false;
     this.editar = false;
     this.salida = true;
     this.history=false;
     this.incomeH=false;
+    this.incomeRH=false;
     this.validationssalidaform();
     await this.listdataout();
     if (this.focus) {
@@ -469,6 +471,7 @@ loading: boolean = true;
     this.editar = true;
     this.history=false;
     this.incomeH=false;
+    this.incomeRH=false;
     this.listdata();
   }
  movementshisto: Listmovementsitem[]=[]
@@ -478,13 +481,28 @@ loading: boolean = true;
     this.salida = false;
     this.editar = false;
     this.incomeH=false;
+    this.incomeRH=false;
     const data= await this.api.listhistoryitems(this.find)
     this.movementshisto=data
    // console.log(data)
   //  this.listdata();
   }
+
+
   async incomeh() {
     this.incomeH=true;
+    this.incomeRH=false;
+    this.history=false;
+    this.salida = false;
+    this.editar = false;
+    const data= await this.api.listincomeshistory(this.find)
+    this.incomeshistory=data
+  //console.log(data)
+  //this.listdata();
+  }
+  async incomehr() {
+    this.incomeH=false;
+    this.incomeRH=true;
     this.history=false;
     this.salida = false;
     this.editar = false;

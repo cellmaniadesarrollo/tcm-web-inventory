@@ -512,7 +512,10 @@
               <button ngbNavLink (click)="histori()">Historial</button>
             </li>
             <li [ngbNavItem]="4" *ngIf="nivel2">
-              <button ngbNavLink (click)="incomeh()">Ingresos H.</button>
+              <button ngbNavLink (click)="incomeh()">In. H.</button>
+            </li>
+            <li [ngbNavItem]="5">
+              <button ngbNavLink (click)="incomehr()">In. R. H.</button>
             </li>
           </ul>
           <button
@@ -1030,6 +1033,12 @@
               </tbody>
             </table>
           </div>
+        </div>
+        <div class="modal-body" *ngIf="incomeRH" >
+          <div class="custom-container">
+            <app-tableincomerep ></app-tableincomerep>
+          </div>
+
         </div>
         <div class="modal-footer">
           <div *ngIf="editar">

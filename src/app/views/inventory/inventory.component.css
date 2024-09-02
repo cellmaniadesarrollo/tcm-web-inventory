@@ -26,3 +26,14 @@ select {
   .spinner-border {
     margin: 20px auto; /* Ajusta el margen para centrar verticalmente la animación */
   }
+
+/* Contenedor personalizado con tamaño específico */
+.custom-container {
+  width: 100%;  /* Ancho máximo relativo al contenedor padre */
+  max-width: 500px;  /* Máximo ancho */
+  height: auto; /* Permitir que el contenedor se ajuste en altura */
+  border: 1px solid #ddd; /* Borde opcional */
+  padding: 15px; /* Espaciado interno */
+  margin: 0 auto; /* Centrar en la página */
+  font-size: 1rem; /* Tamaño base de la fuente */
+}

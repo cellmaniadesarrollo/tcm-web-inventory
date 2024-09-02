@@ -28,18 +28,18 @@ import {
 } from 'src/app/models/movements.interface';
 import { ListincomesIN } from 'src/app/models/income.inteface';
 import { ListsupliersI } from 'src/app/models/supliers.interface';
-import { link } from 'fs';
-//import { environment } from '../../../environments/environment';
+import { link } from 'fs'; 
+import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   private socket: any;
-
+  private apiUrl = environment.apiUrl;
   private axiosClient: AxiosInstance;
   private axiosClient1: AxiosInstance;
   private errorHandler: ErrorHandler;
-  url: string = 'http:' + window.location.origin.split(':')[1] + ':4004/'; //'http://192.168.10.251:4003/' //'http://localhost:4003/'; //'http://35.173.184.192:4002/'//'http://54.159.56.3:4001/';//
+  url: string = this.apiUrl//'http:' + window.location.origin.split(':')[1] + ':4004/'; //'http://192.168.10.251:4003/' //'http://localhost:4003/'; //'http://54.173.37.208/:4004/'//'http://54.159.56.3:4001/';//
   constructor(
     private http: HttpClient,
     errorHandler: ErrorHandler,
