@@ -39,7 +39,7 @@ export class ApiService {
   private axiosClient: AxiosInstance; 
   private axiosClient1: AxiosInstance;
   private errorHandler: ErrorHandler;
-  url: string = this.apiUrl //'http:' + window.location.origin.split(':')[1] + ':4004/'; //'http://192.168.10.251:4003/' //'http://localhost:4003/'; //'http://54.173.37.208/:4004/'//'http://54.159.56.3:4001/';//
+  url: string =  'http:' + window.location.origin.split(':')[1] + ':4004/'; //'http://192.168.10.251:4003/' //'http://localhost:4003/'; //'http://54.173.37.208/:4004/'//'http://54.159.56.3:4001/';//
   constructor(
     private http: HttpClient,
     errorHandler: ErrorHandler,
@@ -152,12 +152,13 @@ export class ApiService {
 
   public async LoginByEmail(from: LoginI): Promise<ResponseI> {
     try {
+      console.log(this.url,environment)
       var axiosResponse = await this.axiosClient1.request({
         method: 'post',
         url: this.url + 'login',
         data: from,
       });
-       console.log(this.url)
+      
       return axiosResponse.data;
     } catch (error) {
       return Promise.reject(this.normalizeError(error));
