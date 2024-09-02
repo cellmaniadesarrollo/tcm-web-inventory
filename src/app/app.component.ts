@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ApiService } from '../app/service/api/api.service';
 import { event } from 'jquery';
 import { SetdataService } from './service/setdata/setdata.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,7 +18,7 @@ export class AppComponent {
   timeoutId: any;
   timeoutDuration: number = 300;
   ngOnInit() {
-    console.log(process.env['API_URL'] ) 
+    console.log(environment.apiUrl ) 
     window.addEventListener('focus', () => {
       if (!this.esRutaLogin()) { this.api.controltoken(); }
 
