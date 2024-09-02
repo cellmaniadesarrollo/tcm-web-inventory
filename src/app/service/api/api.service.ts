@@ -157,7 +157,7 @@ export class ApiService {
         url: this.url + 'login',
         data: from,
       });
-      // console.log(axiosResponse.data)
+       console.log(this.url)
       return axiosResponse.data;
     } catch (error) {
       return Promise.reject(this.normalizeError(error));
