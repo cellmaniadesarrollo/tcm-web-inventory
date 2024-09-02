@@ -12,6 +12,6 @@ fs.writeFile(targetPath, envConfigFile, function (err) {
   if (err) {
     console.log(err);
   } else {
-    console.log(`Output generated at ${targetPath} ${JSON.stringify(process.env)}`);
+    console.log(`Output generated at ${targetPath} ${JSON.stringify(process.env.API_URL)}`);
   }
 });
