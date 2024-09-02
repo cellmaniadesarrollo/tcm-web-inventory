@@ -36,7 +36,7 @@ import { environment } from '../../../environments/environment';
 export class ApiService {
   private socket: any;
   private apiUrl = environment.apiUrl;
-  private axiosClient: AxiosInstance;
+  private axiosClient: AxiosInstance; 
   private axiosClient1: AxiosInstance;
   private errorHandler: ErrorHandler;
   url: string = this.apiUrl //'http:' + window.location.origin.split(':')[1] + ':4004/'; //'http://192.168.10.251:4003/' //'http://localhost:4003/'; //'http://54.173.37.208/:4004/'//'http://54.159.56.3:4001/';//
