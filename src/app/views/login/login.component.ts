@@ -31,7 +31,7 @@ export class LoginComponent {
   nivel2 = false;
   nivel1=false;
   async onLogin(form: LoginI) {
-   console.log(process.env['API_URL'] ) 
+   
     const dataResponse: ResponseI = await this.api.LoginByEmail(form);
     const now = new Date();
     if (dataResponse) {

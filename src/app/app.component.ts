@@ -17,6 +17,7 @@ export class AppComponent {
   timeoutId: any;
   timeoutDuration: number = 300;
   ngOnInit() {
+    console.log(process.env['API_URL'] ) 
     window.addEventListener('focus', () => {
       if (!this.esRutaLogin()) { this.api.controltoken(); }
 
