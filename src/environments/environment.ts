@@ -1,4 +1,7 @@
+ 
+
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:4004',
+  apiUrl: 'https://localhost:4004',
+  webSocket:'wss://localhost:4050',
   };
