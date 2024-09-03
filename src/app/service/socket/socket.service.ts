@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, timer, Subscription } from 'rxjs';
-
+import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class SocketService {
+  private webSocketUrl = environment.webSocket;
   private socket: WebSocket | null = null;
   private socketOpenPromise: Promise<void> = Promise.resolve();
   private reconnectDelay = 5000; // Tiempo de espera antes de intentar reconectar (en milisegundos)
@@ -20,7 +21,7 @@ export class SocketService {
   } 
   private connect() {
     try {
-      this.socket = new WebSocket('ws:'+window.location.origin.split(':')[1] +':4050');
+      this.socket = new WebSocket(this.webSocketUrl);
 
       this.socketOpenPromise = new Promise((resolve, reject) => {
         this.socket!.onopen = () => {
