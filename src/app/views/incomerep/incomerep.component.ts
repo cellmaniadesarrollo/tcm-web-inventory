@@ -84,7 +84,6 @@ export class IncomerepComponent {
 
     // Suscribirse al observable de mensajes para almacenar el mensaje recibido
     this.messageSubscription = this.socketService.message$.subscribe((message) => {
-      console.log(message)
       if (message && message === "RELOAD") {
         console.log('Message stored in component:', message);
         this.listItems(this.datapage);

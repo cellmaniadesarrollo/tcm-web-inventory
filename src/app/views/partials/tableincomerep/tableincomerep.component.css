@@ -1,44 +1,28 @@
-.table-responsive {
-    width: 100%;
-    overflow-x: auto;
-  }
-  
-  .table-responsive table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .table-responsive th,
-  .table-responsive td {
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .table-responsive th {
-    font-size: calc(1rem + 0.5vw); /* Ajuste dinámico */
-  }
-  
-  .table-responsive td {
-    font-size: calc(0.9rem + 0.5vw); /* Ajuste dinámico */
-  }
-  
-  /* Opcional: ajuste adicional con media queries */
-  @media (max-width: 600px) {
-    .table-responsive th {
-      font-size: 0.8rem;
-    }
-  
-    .table-responsive td {
-      font-size: 0.7rem;
-    }
-  }
-  
-  @media (max-width: 400px) {
-    .table-responsive th {
-      font-size: 0.7rem;
-    }
-  
-    .table-responsive td {
-      font-size: 0.6rem;
-    }
-  }
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.styled-table th, .styled-table td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.styled-table th {
+  background-color: #4A90E2; /* Azul amigable para el encabezado */
+  color: white; /* Texto blanco para contraste */
+}
+
+.styled-table tr:nth-child(even) {
+  background-color: #f9f9f9; /* Fondo claro para filas pares */
+}
+
+.styled-table tr:nth-child(odd) {
+  background-color: #eeeeee; /* Fondo ligeramente oscuro para filas impares */
+}
+
+.styled-table tr:hover {
+  background-color: #dddddd;
+}
