@@ -12,7 +12,7 @@ select {
 }
 
 .table-responsive .table-sm1 td {
-  font-size: 8px; /* Reducir tamaño de fuente para las celdas */
+  font-size: 9px; /* Reducir tamaño de fuente para las celdas */
 }
 
 .table-responsive .table-sm1 th {
