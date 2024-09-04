@@ -1,39 +1,70 @@
-<div class="table-responsive">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th  >Cant.</th>
-                <th  >Nombre</th>
-                <th  >Modelo</th>
-                <th  >Calidad</th>
-                <th  >Color</th>
-                <th  >Proveedor</th>
-                <th  >Nº Doc.</th>
-                <th  >Fecha</th>
-                <th  >PvP</th>
-                <th  >Observaciones</th>
-                <th >Estado</th> 
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td> mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td> fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>Bird</td>
-                <td> twitter</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<table class="styled-table">
+    <thead>
+      <tr [ngStyle]="{'font-size': fontSize}">
+        <th>Cant.</th>
+        <th>Nombre</th>
+        <th>Modelo</th>
+        <th>Calidad</th>
+        <th>Color</th>
+        <th>Proveedor</th>
+        <th>Nº Doc.</th>
+        <th>Fecha</th>
+        <th>PvP</th>
+        <th>Observaciones</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody [ngStyle]="{'font-size': fontSize}">
+        <tr
+        *ngFor="let item of incomeslists"
+        [ngClass]="datacolor(item.incomestype?.name_incomestypes)"
+      >
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.inventoryflow?.nameitem }}</td>
+        <td>{{ item.inventoryflow?.modelitem }}</td>
+        <td>{{ item.inventoryflow?.quality }}</td>
+        <td>{{ item.inventoryflow?.colors1 }}</td>
+        <td>
+          {{ item.documentnumberincome?.supplier?.razon_social }}
+        </td>
+        <td>{{ item.documentnumberincome?.document_number }}</td>
+        <td title="{{ item.date_income }}">
+          {{ item.date_income.substring(0, 10) }}
+        </td>
+        <td>{{ item.inventoryflow?.price}}</td>
+        <td>{{ item.observations }}</td>
+
+        <td
+          *ngIf="
+            item.incomestype?.name_incomestypes != 'PENDIENTE';
+            else templateElse
+          "
+        >
+          {{ item.incomestype?.name_incomestypes }}
+        </td>
+        <ng-template #templateElse>
+          <td class="text-center">
+            <tr class="p-1">
+              <td class="p-1">
+                <button
+                  type="button"
+                  class="btn btn-outline-success btn-sm p-1"
+                  (click)="aceptar(item)"
+                >
+                  <i class="bi bi-check-circle p-0"></i>
+                </button>
+              </td>
+              <td class="p-1">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm p-1"
+                  (click)="NOaceptar(item)"
+                >
+                  <i class="bi bi-x-circle p-0"></i>
+                </button>
+              </td>
+            </tr></td
+        ></ng-template>
+      </tr>
+    </tbody>
+  </table>

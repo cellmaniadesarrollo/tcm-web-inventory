@@ -498,7 +498,7 @@
     aria-hidden="true"
     #content
   >
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
@@ -1034,12 +1034,14 @@
             </table>
           </div>
         </div>
-        <div class="modal-body" *ngIf="incomeRH" >
-          <div class="custom-container">
-            <app-tableincomerep ></app-tableincomerep>
+        <div class="modal-body" *ngIf="incomeRH" > 
+          <div class="col-12">
+            <div class="d-flex justify-content-center">
+              <label for="">{{ nameitem }} </label>
+            </div>
           </div>
-
-        </div>
+            <app-tableincomerep [id]="find" [fontSize]="'8px'"></app-tableincomerep>
+          </div> 
         <div class="modal-footer">
           <div *ngIf="editar">
             <button
