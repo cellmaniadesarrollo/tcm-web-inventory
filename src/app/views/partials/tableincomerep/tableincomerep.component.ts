@@ -21,7 +21,7 @@ export class TableincomerepComponent {
   };
   incomeslists: ListincomesI[] = [];
 
-
+  loading: boolean = true;
   ngOnInit(): void { 
       this.datapage.findlike = this.id
       this.listItems(this.datapage); 
@@ -30,8 +30,9 @@ export class TableincomerepComponent {
   async listItems(form: any) {
 
     const data = await this.api.listincomesCSRS(form);
-
+    
     this.incomeslists = data.intake;
+    this.loading=false
   }
 
 

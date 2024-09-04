@@ -1,3 +1,6 @@
+ 
+
+  
 <table class="styled-table">
     <thead>
       <tr [ngStyle]="{'font-size': fontSize}">
@@ -14,6 +17,12 @@
         <th>Estado</th>
       </tr>
     </thead>
+    <tbody *ngIf="loading; else dataLoaded">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+    </tbody>
+    <ng-template #dataLoaded>
     <tbody [ngStyle]="{'font-size': fontSize}">
         <tr
         *ngFor="let item of incomeslists"
@@ -67,4 +76,6 @@
         ></ng-template>
       </tr>
     </tbody>
+</ng-template>
   </table>
+ 
