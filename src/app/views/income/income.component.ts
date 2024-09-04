@@ -116,14 +116,13 @@ export class IncomeComponent {
 
   private subscribedChannel: string = 'income';
   private messageSubscription: Subscription | null = null;
+  myedit:boolean=true
   ngOnInit(): void {
     this.socketService.subscribeToChannel(this.subscribedChannel);
 
     // Suscribirse al observable de mensajes para almacenar el mensaje recibido
     this.messageSubscription = this.socketService.message$.subscribe((message) => {
-      console.log(message)
-      if (message && message === "RELOAD") {
-        console.log('Message stored in component:', message);
+      if (message && message === "RELOAD"&& this.myedit) { 
         this.listItems(this.filterForm.value);
       }
     });
@@ -192,10 +191,12 @@ export class IncomeComponent {
     const inventoryaux = this.filterForm.controls['inventory'].getRawValue() || '0';
     this.filterinit(data.allclients, inventoryaux, 1, data.number_of_records_per_page.toString(), findlikeaux)
     this.onFormChanges()
+    this.myedit=true
   }
   bloquear: boolean = false;
   bloquear1: boolean = false;
   async onSubmitclose(form: any) {
+    
     this.submitted = true;
     this.bloquear = true;
     this.bloquear1 = true;
@@ -208,9 +209,9 @@ export class IncomeComponent {
       // console.log(JSON.stringify(this.nuevoForm.value, null, 2));
       return;
     } else {
-      // console.log(form)
+      this.myedit=false
       const data = await this.api.saveincome(form);
-      //  console.log(data)
+      
       if (data == 'OK') {
 
         this.closebutton.nativeElement.click();
@@ -223,7 +224,7 @@ export class IncomeComponent {
         this.closebutton.nativeElement.click();
         this.submitted = false; 
         this.listItems(this.filterForm.value); 
-      }
+      } 
     }
   }
   async onSubmitcloseoff(form: any) {
@@ -235,11 +236,10 @@ export class IncomeComponent {
       this.bloquear1 = false;
     }, 2000);
     if (this.incomesaveForm.invalid) {
-      //this.postForm(form);
-      // console.log(JSON.stringify(this.nuevoForm.value, null, 2));
+
       return;
     } else {
-      // console.log(form)
+      this.myedit=false
       const data = await this.api.saveincome(form);
       if (data == 'OK') {
         this.listItems(this.filterForm.value);
@@ -263,7 +263,7 @@ export class IncomeComponent {
         this.incomesaveForm.controls['precioventa'].setValue(0);
         this.incomesaveForm.controls['preciounit'].setValue(0);
         this.incomesaveForm.controls['observaciones'].setValue('');
-      }
+      } 
     }
   }
 
@@ -506,7 +506,7 @@ export class IncomeComponent {
     if (this.supplierForm.invalid) {
       return;
     } else {
-      // console.log(form)
+      this.myedit=false
       const dat = await this.api.editincome(data);
       //  console.log(data)
       if (dat == 'OK') {
@@ -514,6 +514,7 @@ export class IncomeComponent {
         this.closebutton1.nativeElement.click();
         this.listItems(this.filterForm.value);
       }
+
     }
   }
 
