@@ -89,10 +89,8 @@ export class IncomerepComponent {
            console.log('Received message from channel:', message);
            this.listItems(this.datapage);
          }
-       });
-    this.loading = true;
-    this.listItems(this.datapage);
-    this.loading = false;
+       }); 
+    this.listItems(this.datapage); 
     // this.getdataincome();
     // this.makechoice('')
     this.numperpagesForm.setValue({
@@ -143,8 +141,7 @@ export class IncomerepComponent {
     this.datapage.findlike = this.searchForm.value.valuesearch || '';
     this.datapage.pagination = 1;
     this.loading = true;
-    this.listItems(this.datapage);
-    this.loading = false;
+    this.listItems(this.datapage); 
   }
   loading: boolean = true;
   async listItems(form: any) {
@@ -160,6 +157,7 @@ export class IncomerepComponent {
     this.stateincomesform.controls['stateincome'].setValue(
       this.datapage.allclients
     );
+    this.loading = false;
   // console.log(this.incomeslists)
   }
   async changeLeagueOwner() {
@@ -167,7 +165,7 @@ export class IncomerepComponent {
     this.datapage.pagination = 1;
     this.loading = true;
     this.listItems(this.datapage);
-    this.loading = false;
+   
   }
 
   async aceptar(data: any) {
