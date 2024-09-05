@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subscription, timer } from 'rxjs';
 import { environment } from '../../../environments/environment';
-
 @Injectable({
   providedIn: 'root'
 })
-export class SocketService {
+export class SocketnotiService {
   private webSocketUrl = environment.webSocket;
   private socket: WebSocket | null = null;
   private socketOpenPromise: Promise<void> = Promise.resolve();
   private currentChannel: string | null = null; // Canal actual
   private messageSubject = new BehaviorSubject<string | null>(null);
   public message$ = this.messageSubject.asObservable();
+
+  private predefinedChannel = 'notification'; // Canal predefinido
 
   constructor() {
     this.connect(); // Iniciar la conexión WebSocket
@@ -21,9 +22,11 @@ export class SocketService {
     this.socket = new WebSocket(this.webSocketUrl);
 
     this.socketOpenPromise = new Promise((resolve, reject) => {
-      this.socket!.onopen = () => {
+      this.socket!.onopen = async () => {
         console.log('WebSocket connection established');
         resolve();
+        // Suscribirse automáticamente al canal predefinido
+        await this.subscribeToChannel(this.predefinedChannel);
       };
 
       this.socket!.onerror = (error) => {

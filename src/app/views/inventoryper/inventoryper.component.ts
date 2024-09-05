@@ -50,12 +50,13 @@ export class InventoryperComponent {
   private subscribedChannel: string = 'invper';
   private messageSubscription: Subscription | null = null;
   ngOnInit(): void {
+    // Suscribirse al canal al iniciar el componente
     this.socketService.subscribeToChannel(this.subscribedChannel);
 
-    // Suscribirse al observable de mensajes para almacenar el mensaje recibido
-    this.messageSubscription = this.socketService.message$.subscribe((message) => { 
-      if (message && message === "RELOAD") {
-        console.log('Message stored in component:', message);
+    // Suscribirse al observable de mensajes para recibir los mensajes del canal
+    this.messageSubscription = this.socketService.message$.subscribe((message) => {
+      if (message && message === 'RELOAD') {
+        console.log('Received message from channel:', message);
         this.listItems(this.datapage);
       }
     });
@@ -74,6 +75,17 @@ export class InventoryperComponent {
       this.loading = false;
     }
   }
+
+  ngOnDestroy() {
+    // Desuscribirse del canal cuando el componente sea destruido
+    this.socketService.unsubscribeFromChannel(this.subscribedChannel);
+
+    // Desuscribir el observable de mensajes
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
+  }
+
   loading: boolean = true; 
  
   Changeserarch(event:any){ 
