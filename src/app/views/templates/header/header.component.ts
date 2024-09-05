@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { VglobalService } from 'src/app/service/vglobal/vglobal.service';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -12,6 +13,7 @@ export class HeaderComponent {
   nivel2 = false;
   user: any;
   ngOnInit(): void {
+  
     this.loadimg()
     // this.checkLocalStorage();
     this.user = localStorage.getItem('User');

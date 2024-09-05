@@ -80,12 +80,15 @@ import { TableincomerepComponent } from './views/partials/tableincomerep/tablein
     FormsModule,
     HttpClientModule,
     RouterModule,
-    BrowserAnimationsModule, // required animations module
-    ToastrModule.forRoot(), // ToastrModule addedng g s se  
+    BrowserAnimationsModule, // Necesario para las animaciones de toast
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
     NgxPaginationModule,
     TagInputModule,
-   SweetAlert2Module,
-    NgToastModule,
+   SweetAlert2Module, 
     NgbModule, 
     MatSelectModule,
     NgbModalModule,

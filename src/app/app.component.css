@@ -1,0 +1,8 @@
+#toast-container > .toast-info{
+    background-color: #f4433686 !important;
+    color: #ffffff !important;
+    border: 1px solid #f4433686;
+  }
+  #toast-container > div {
+    font-size: 11px !important; /* Ajusta el tamaño de las letras */
+  }

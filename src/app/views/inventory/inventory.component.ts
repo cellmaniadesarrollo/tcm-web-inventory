@@ -109,17 +109,18 @@ export class InventoryComponent {
   private subscribedChannel: string = 'invfl';
   private messageSubscription: Subscription | null = null;  
   myedit:boolean=true
-  ngOnInit(): void { 
-// Suscribirse al canal "news"
-this.socketService.subscribeToChannel(this.subscribedChannel);
+  ngOnInit(): void {  
+        // Suscribirse al canal al iniciar el componente
+        this.socketService.subscribeToChannel(this.subscribedChannel);
 
-// Suscribirse al observable de mensajes para almacenar el mensaje recibido
-this.messageSubscription = this.socketService.message$.subscribe((message) => {
-  if (message && message==="RELOAD"&& this.myedit) { 
-    console.log('Message stored in component:', message);
-    this.listItems(this.datapage);
-  }
-});
+        // Suscribirse al observable de mensajes para recibir los mensajes del canal
+        this.messageSubscription = this.socketService.message$.subscribe((message) => {
+          if (message && message === 'RELOAD') {
+            console.log('Received message from channel:', message);
+            this.listItems(this.datapage);
+          }
+        });
+
 
     const group = localStorage.getItem('Groups') || '';
     this.nivel2 = group
@@ -150,12 +151,14 @@ this.messageSubscription = this.socketService.message$.subscribe((message) => {
       });
     }
   }
-  ngOnDestroy(): void { 
-    this.socketService.unsubscribeFromChannel(this.subscribedChannel); 
+  ngOnDestroy() {
+    // Desuscribirse del canal cuando el componente sea destruido
+    this.socketService.unsubscribeFromChannel(this.subscribedChannel);
+
+    // Desuscribir el observable de mensajes
     if (this.messageSubscription) {
       this.messageSubscription.unsubscribe();
-    } 
-      this.socketService.closeConnection();
+    }
   }
  
 

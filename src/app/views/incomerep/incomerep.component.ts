@@ -80,15 +80,16 @@ export class IncomerepComponent {
   private subscribedChannel: string = 'income';
   private messageSubscription: Subscription | null = null;
   ngOnInit(): void {
-    this.socketService.subscribeToChannel(this.subscribedChannel);
+       // Suscribirse al canal al iniciar el componente
+       this.socketService.subscribeToChannel(this.subscribedChannel);
 
-    // Suscribirse al observable de mensajes para almacenar el mensaje recibido
-    this.messageSubscription = this.socketService.message$.subscribe((message) => {
-      if (message && message === "RELOAD") {
-        console.log('Message stored in component:', message);
-        this.listItems(this.datapage);
-      }
-    });
+       // Suscribirse al observable de mensajes para recibir los mensajes del canal
+       this.messageSubscription = this.socketService.message$.subscribe((message) => {
+         if (message && message === 'RELOAD') {
+           console.log('Received message from channel:', message);
+           this.listItems(this.datapage);
+         }
+       });
     this.loading = true;
     this.listItems(this.datapage);
     this.loading = false;
@@ -97,6 +98,15 @@ export class IncomerepComponent {
     this.numperpagesForm.setValue({
       valueperpage: this.numperpagess[1].tems,
     });
+  }
+  ngOnDestroy() {
+    // Desuscribirse del canal cuando el componente sea destruido
+    this.socketService.unsubscribeFromChannel(this.subscribedChannel);
+
+    // Desuscribir el observable de mensajes
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
   }
   blockbusqueda=false
   onKeyDownEvent(event: any) {
