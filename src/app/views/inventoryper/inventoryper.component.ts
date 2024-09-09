@@ -62,7 +62,7 @@ export class InventoryperComponent {
     });
 
 
-    this.listItems(this.datapage);
+    //this.listItems(this.datapage);
     let serverid =  this.setdataService.getData();
     if (serverid !== null &&serverid !==undefined&& serverid.length == 29) {
       this.datapage.findlike = serverid.toUpperCase(); 

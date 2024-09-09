@@ -22,6 +22,7 @@ import {
 
 import { SocketService } from 'src/app/service/socket/socket.service';
 import { Subscription } from 'rxjs';
+import { SetdataService } from 'src/app/service/setdata/setdata.service';
 @Component({
   selector: 'app-incomerep',
   templateUrl: './incomerep.component.html',
@@ -32,13 +33,15 @@ export class IncomerepComponent {
     private api: ApiService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private socketService: SocketService
-  ) {}
+    private socketService: SocketService,
+    private setdataService: SetdataService 
+  ) { }
   datapage = {
     allclients: '0',
     pagination: 1,
     numperpage: '30',
     findlike: '',
+    findid:false
   };
   numperpagess = [
     { tems: '20', value: '20' },
@@ -80,17 +83,24 @@ export class IncomerepComponent {
   private subscribedChannel: string = 'income';
   private messageSubscription: Subscription | null = null;
   ngOnInit(): void {
-       // Suscribirse al canal al iniciar el componente
-       this.socketService.subscribeToChannel(this.subscribedChannel);
+    // Suscribirse al canal al iniciar el componente
+    this.socketService.subscribeToChannel(this.subscribedChannel);
 
-       // Suscribirse al observable de mensajes para recibir los mensajes del canal
-       this.messageSubscription = this.socketService.message$.subscribe((message) => {
-         if (message && message === 'RELOAD') {
-           console.log('Received message from channel:', message);
-           this.listItems(this.datapage);
-         }
-       }); 
-    this.listItems(this.datapage); 
+    // Suscribirse al observable de mensajes para recibir los mensajes del canal
+    this.messageSubscription = this.socketService.message$.subscribe((message) => {
+      if (message && message === 'RELOAD') {
+        this.listItems(this.datapage);
+      }
+    });
+    let serverid =  this.setdataService.getData();
+    if (serverid !== null &&serverid !==undefined&& serverid.length == 29) {
+      this.datapage.findlike = serverid.toUpperCase(); 
+    } else if(serverid !== null &&serverid !==undefined&& serverid.length == 24){
+      this.datapage.findid=true
+      this.datapage.findlike = serverid
+    } 
+    this.listItems(this.datapage);
+    
     // this.getdataincome();
     // this.makechoice('')
     this.numperpagesForm.setValue({
@@ -106,21 +116,22 @@ export class IncomerepComponent {
       this.messageSubscription.unsubscribe();
     }
   }
-  blockbusqueda=false
+  blockbusqueda = false
   onKeyDownEvent(event: any) {
     if (event.key === 'Enter') {
-    if (event.target.value.length > 2) {
-      this.blockbusqueda =true
-       
-      setTimeout(() => {
-        this.blockbusqueda=false
-      }, 1000);
-      this.datapage.findlike = event.target.value;
-      this.datapage.pagination = 1;
-      this.loading = true;
-      this.listItems(this.datapage);
-      this.loading = false;
-    }}
+      if (event.target.value.length > 2) {
+        this.blockbusqueda = true
+
+        setTimeout(() => {
+          this.blockbusqueda = false
+        }, 1000);
+        this.datapage.findlike = event.target.value;
+        this.datapage.pagination = 1;
+        this.loading = true;
+        this.listItems(this.datapage);
+        this.loading = false;
+      }
+    }
     if (event.target.value.length == 0) {
       this.datapage.findlike = event.target.value;
       this.datapage.pagination = 1;
@@ -137,17 +148,17 @@ export class IncomerepComponent {
   supplierslist: ListsuppliersincomeI[] = [];
   statusincomes: ListstatusincomesI[] = [];
   typedocumenttext = '';
-  findbutton(){
+  findbutton() {
     this.datapage.findlike = this.searchForm.value.valuesearch || '';
     this.datapage.pagination = 1;
     this.loading = true;
-    this.listItems(this.datapage); 
+    this.listItems(this.datapage);
   }
   loading: boolean = true;
   async listItems(form: any) {
-    
+
     const data = await this.api.listincomesCSRS(form);
-    
+
     this.statusincomes = data.statuslist || [];
     this.incomeslists = data.intake;
     this.numperpages = data.number_of_records_per_page;
@@ -157,15 +168,18 @@ export class IncomerepComponent {
     this.stateincomesform.controls['stateincome'].setValue(
       this.datapage.allclients
     );
+    if(this.datapage.findid){
+      this.datapage.findid=false
+    }
     this.loading = false;
-  // console.log(this.incomeslists)
+    // console.log(this.incomeslists)
   }
   async changeLeagueOwner() {
     this.datapage.allclients = this.stateincomesform.value.stateincome;
     this.datapage.pagination = 1;
     this.loading = true;
     this.listItems(this.datapage);
-   
+
   }
 
   async aceptar(data: any) {
