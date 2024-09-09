@@ -6,7 +6,7 @@ import { SetdataService } from './service/setdata/setdata.service';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr'
 import { SocketnotiService } from './service/socketnoti/socketnoti.service';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs'; 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -22,23 +22,29 @@ export class AppComponent {
   timeoutId: any;
   timeoutDuration: number = 300;
   private messageSubscription: Subscription | null = null;
-  ngOnInit() {
-    this.showCustomToast()
+  ngOnInit() { 
     // Suscribirse al canal al iniciar el componente
     this.socketService.subscribeToChannel('notification');
 
     // Suscribirse al observable de mensajes para recibir los mensajes del canal
     this.messageSubscription = this.socketService.message$.subscribe((message) => {
       const data = JSON.parse(message || '{}')
+      console.log(data)
       if (data.title) {
 
         this.toastr.info(data.message , data.title, { 
           timeOut: 0,
           progressBar: true,
-          tapToDismiss: false,
+          tapToDismiss: true,
           positionClass: 'toast-top-right',
           closeButton: true,
           extendedTimeOut: 0,
+        }).onTap.subscribe(() => {
+           this.setdataService.setData(data.id)
+          // Navegar a una ruta temporal y luego de vuelta a /inventory
+          this.router.navigateByUrl('/reload', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/incomerep']);  
+          }); 
         });
 
       }
@@ -49,9 +55,7 @@ export class AppComponent {
     });
   }
 
-  showCustomToast() {
-
-  }
+ 
 
 
 
@@ -127,9 +131,6 @@ export class AppComponent {
         this.router.navigate(['/inventoryper']);
       });
     }
-
-
-    console.log(item)
   }
   esRutaLogin(): boolean {
     return this.router.url === '/login';

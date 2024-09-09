@@ -1023,12 +1023,7 @@ export class ApiService {
       var axiosResponse = await this.axiosClient.request({
         method: 'get',
         url: this.url + 'incomeslistCSRS',
-        params: {
-          allclients: data.allclients,
-          numperpage: data.numperpage,
-          pagination: data.pagination,
-          findlike: data.findlike,
-        },
+        params:  data,
       });
       // console.log(axiosResponse.data)
 
