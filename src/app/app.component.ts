@@ -33,12 +33,12 @@ export class AppComponent {
       if (data.title) {
 
         this.toastr.info(data.message , data.title, { 
-          timeOut: 0,
+          timeOut:120000,
           progressBar: true,
           tapToDismiss: true,
           positionClass: 'toast-top-right',
           closeButton: true,
-          extendedTimeOut: 0,
+          extendedTimeOut: 10000,
         }).onTap.subscribe(() => {
            this.setdataService.setData(data.id)
           // Navegar a una ruta temporal y luego de vuelta a /inventory
