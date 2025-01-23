@@ -22,6 +22,7 @@ import { DatePipe } from '@angular/common';
 })
 export class OutsComponent {
   @Input() iditem: any;
+  @Output() closePartialEvent = new EventEmitter<{ reload: any }>();
   constructor(
     // private activerouter: ActivatedRoute,
     private datePipe: DatePipe,
@@ -152,7 +153,12 @@ idinventorys:string=''
        if (data == 'OK') { 
          this.find = '';
          this.submittedoutmovement = false;
+         this.closePartialEvent.emit({ reload: true });
        } 
      }
    }
+
+   cancel() {
+    this.closePartialEvent.emit({ reload: false });
+  }
 }

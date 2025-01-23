@@ -13,6 +13,9 @@ import { InventorypernewComponent } from './views/inventoryper/inventorypernew/i
 import { SuppliersComponent } from './views/suppliers/suppliers.component'; 
 import { MovementsperComponent } from './views/movementsper/movementsper.component';
 import { ReloadComponent } from './views/partials/reload/reload.component';
+import { IncomeperComponent } from './views/incomeper/incomeper.component';
+import { InventorysalesComponent } from './views/inventorysales/inventorysales.component';
+InventorysalesComponent
 const routes: Routes = [
   {path:'',redirectTo:'login',pathMatch:'full'},
   {path:'login',component:LoginComponent},
@@ -24,12 +27,14 @@ const routes: Routes = [
   {path:'movements',component:MovementsComponent },
   {path:'income',component:IncomeComponent },
   {path:'incomerep',component:IncomerepComponent},
+  {path:'incomeper',component:IncomeperComponent},
   {path:'perfil',component:PerfilComponent},
   {path:'inventoryper',component:InventoryperComponent},
   {path:'inventorypernew',component:InventorypernewComponent},
   {path:'suppliers',component:SuppliersComponent }, 
   {path:'movementsper',component:MovementsperComponent},
   {path:'reload',component:ReloadComponent },
+  {path:'inventorysales',component:InventorysalesComponent },
 ];
 
 @NgModule({

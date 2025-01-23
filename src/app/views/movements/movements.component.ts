@@ -11,8 +11,7 @@ import {
   FormControl,
   Validators,
   FormBuilder,
-} from '@angular/forms';
-import printJS from 'print-js';
+} from '@angular/forms'; 
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { formatDate } from '@angular/common';
