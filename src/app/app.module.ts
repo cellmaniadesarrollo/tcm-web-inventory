@@ -22,7 +22,6 @@ import { DatePipe } from '@angular/common';
 import { SidebarComponent } from './views/templates/sidebar/sidebar.component'; 
  
  
-import { MatSelectModule } from '@angular/material/select'; 
  
  
 import { ButtonModule } from 'primeng/button';
@@ -45,6 +44,22 @@ import { ReloadComponent } from './views/partials/reload/reload.component';
 import { ReportwassapincomesComponent } from './views/modals/reportwassapincomes/reportwassapincomes.component';
 import { ReporpricespdfincomesComponent } from './views/modals/reporpricespdfincomes/reporpricespdfincomes.component';
 import { TableincomerepComponent } from './views/partials/tableincomerep/tableincomerep.component'; 
+
+ 
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { IncomeperComponent } from './views/incomeper/incomeper.component';
+import { InventorysalesComponent } from './views/inventorysales/inventorysales.component';
+
   
 @NgModule({
   declarations: [
@@ -69,7 +84,11 @@ import { TableincomerepComponent } from './views/partials/tableincomerep/tablein
     TablemovementsComponent,
     ReportwassapincomesComponent,
     ReporpricespdfincomesComponent,
-    TableincomerepComponent, 
+    TableincomerepComponent,
+    IncomeperComponent,
+    InventorysalesComponent, 
+  
+
   ],
   imports: [
     
@@ -94,6 +113,18 @@ import { TableincomerepComponent } from './views/partials/tableincomerep/tablein
     NgbModalModule,
     ButtonModule,
     DialogModule, 
+
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule, 
+    MatPaginatorModule,
+    MatSortModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+
   ],
   providers: [
     DatePipe,

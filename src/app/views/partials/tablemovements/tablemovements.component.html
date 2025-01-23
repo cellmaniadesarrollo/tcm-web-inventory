@@ -1,1 +1,110 @@
-<p>tablemovements works!</p>
+<section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <mat-card>
+            <mat-card-header>
+              <div class="col-12 p-3">
+                <div class="d-flex justify-content-center">
+                  <h3 class="card-title-content">Movimientos</h3>
+                </div>
+              </div>
+  
+              <!-- Fila de botones y filtros -->
+              <div class="row">
+                <div class="col-sm-2 my-auto">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    matTooltip="Generar Reporte"
+                    aria-label="Generar Reporte" 
+                  >
+                    <mat-icon>bar_chart</mat-icon>
+                  </button>
+                </div>
+  
+                <div class="col-sm-4 justify-content-center">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Buscar</mat-label>
+                    <input
+                      matInput 
+                    />
+                    <button
+                      mat-icon-button
+                      matSuffix 
+                    >
+                      <mat-icon>search</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+  
+                <div class="col-sm-3 my-auto">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Filtrar Por Tipo de Movimiento</mat-label>
+                    <mat-select  >
+                      <mat-option [value]="0">ALL</mat-option>
+                      <mat-option
+                        *ngFor="let typesty of typestypemovements"
+                        [value]="typesty._id"
+                      >
+                        {{ typesty.name_movementtype }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+  
+                <div class="col-sm-3 my-auto">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Filtrar Por Nombre de Movimiento</mat-label>
+                    <mat-select  >
+                      <mat-option [value]="0">ALL</mat-option>
+                      <mat-option
+                        *ngFor="let typesmovement of typesmovements"
+                        [value]="typesmovement._id"
+                      >
+                        {{ typesmovement.name_movement }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-header>
+  
+            <mat-card-content>
+              <div class="row p-3">
+                <div class="col-sm-6 my-auto">
+                  <p class="text-black-50">
+                    Página   mostrando
+                    {{ movements.length }} resultados de  
+                  </p>
+                </div>
+                <div class="col-sm-6 my-auto">
+                  <div class="d-flex justify-content-end">
+                    <mat-form-field appearance="outline" class="w-25">
+                      <mat-label>Resultados por página</mat-label>
+                      <mat-select  >
+                        <mat-option
+                          *ngFor="let numperpag of numperpagess"
+                          [value]="numperpag.tems"
+                        >
+                          {{ numperpag.value }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <pagination-controls  ></pagination-controls>
+                  </div>
+                </div>
+              </div>
+  
+              <mat-progress-spinner *ngIf="loading" mode="indeterminate" color="primary"></mat-progress-spinner>
+  
+              <div class="table-responsive" *ngIf="!loading">
+ 
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </section>
+  

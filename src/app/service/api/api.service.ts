@@ -694,7 +694,7 @@ export class ApiService {
     }
   }
   public async listmovements(data: any): Promise<ListmovementsIN> {
-    //console.log(data);
+      
     try {
       await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
@@ -705,7 +705,7 @@ export class ApiService {
           alltypes: data.alltypes,
           numperpage: data.numperpage,
           pagination: data.pagination,
-          findlike: data.findlike,
+          findlike: data.findlike 
         },
       });
       return axiosResponse.data;
@@ -840,6 +840,28 @@ export class ApiService {
       return axiosResponse.data;
     } catch (error) {
       console.log(error);
+      return Promise.reject(this.normalizeError(error));
+    }
+  }
+
+
+  public async listmovementsper(data: any): Promise<ListmovementsIN> {
+      
+    try {
+      await this.controltoken();
+      var axiosResponse = await this.axiosClient.request({
+        method: 'get',
+        url: this.url + 'movementgetlistper',
+        params: {
+          allclients: data.allclients,
+          alltypes: data.alltypes,
+          numperpage: data.numperpage,
+          pagination: data.pagination,
+          findlike: data.findlike 
+        },
+      });
+      return axiosResponse.data;
+    } catch (error) {
       return Promise.reject(this.normalizeError(error));
     }
   }
@@ -1023,6 +1045,22 @@ export class ApiService {
       var axiosResponse = await this.axiosClient.request({
         method: 'get',
         url: this.url + 'incomeslistCSRS',
+        params:  data,
+      });
+      // console.log(axiosResponse.data)
+
+      return axiosResponse.data;
+    } catch (error) {
+      return Promise.reject(this.normalizeError(error));
+    }
+  }
+  public async listincomesCSRSPER(data: any): Promise<ListincomesIN> {
+    //console.log(data);
+    try {
+      await this.controltoken();
+      var axiosResponse = await this.axiosClient.request({
+        method: 'get',
+        url: this.url + 'incomeslistCSRSPER',
         params:  data,
       });
       // console.log(axiosResponse.data)
@@ -1424,4 +1462,26 @@ export class ApiService {
       return Promise.reject(this.normalizeError(error));
     }
   }
+
+
+/**
+ * UBICACIONES
+ */
+
+public async ubicacionessucursales (data: any): Promise<any> {
+  try {
+    await this.controltoken();
+    var axiosResponse = await this.axiosClient.request({
+      method: 'post',
+      url: this.url + 'ivsaleslist',
+      data,
+    });
+    this.normalizeSuccess(axiosResponse);
+    return axiosResponse.data;
+  } catch (error) {
+    return Promise.reject(this.normalizeError(error));
+  }
 }
+
+}
+
