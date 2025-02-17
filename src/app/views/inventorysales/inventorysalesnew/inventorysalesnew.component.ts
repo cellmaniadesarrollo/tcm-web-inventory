@@ -245,6 +245,18 @@ export class InventorysalesnewComponent {
   // }
   async obtenerUbicacion(): Promise<void> {
     try {
+      // Verificar si ya hay una sucursal asignada en el localStorage
+    const sucursalAsignada = localStorage.getItem('sucursal_asignada');
+    
+    if (sucursalAsignada) {
+      console.log(sucursalAsignada );
+      // Si hay una sucursal asignada, usarla directamente
+      this.sucursal = JSON.parse(sucursalAsignada);
+     
+      this.sucursal_name = this.sucursal.name;
+      this.nuevoForm.get('ubicacion')?.setValue(this.sucursal.ubicacion);
+      return; // Salir de la función
+    }
       // Obtener ubicación
       const ubicacion = await new Promise<{ latitud: number; longitud: number }>(
         (resolve, reject) => {
