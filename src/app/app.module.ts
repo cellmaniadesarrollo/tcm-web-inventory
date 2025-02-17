@@ -59,6 +59,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { IncomeperComponent } from './views/incomeper/incomeper.component';
 import { InventorysalesComponent } from './views/inventorysales/inventorysales.component';
+import { InventorysalesnewComponent } from './views/inventorysales/inventorysalesnew/inventorysalesnew.component';
+import { MovementssalesComponent } from './views/movementssales/movementssales.component';
 
   
 @NgModule({
@@ -86,7 +88,9 @@ import { InventorysalesComponent } from './views/inventorysales/inventorysales.c
     ReporpricespdfincomesComponent,
     TableincomerepComponent,
     IncomeperComponent,
-    InventorysalesComponent, 
+    InventorysalesComponent,
+    InventorysalesnewComponent,
+    MovementssalesComponent, 
   
 
   ],

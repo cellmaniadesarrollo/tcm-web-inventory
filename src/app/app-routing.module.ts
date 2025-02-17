@@ -15,7 +15,9 @@ import { MovementsperComponent } from './views/movementsper/movementsper.compone
 import { ReloadComponent } from './views/partials/reload/reload.component';
 import { IncomeperComponent } from './views/incomeper/incomeper.component';
 import { InventorysalesComponent } from './views/inventorysales/inventorysales.component';
-InventorysalesComponent
+import { InventorysalesnewComponent } from './views/inventorysales/inventorysalesnew/inventorysalesnew.component';
+import { MovementssalesComponent } from './views/movementssales/movementssales.component';
+ 
 const routes: Routes = [
   {path:'',redirectTo:'login',pathMatch:'full'},
   {path:'login',component:LoginComponent},
@@ -35,6 +37,8 @@ const routes: Routes = [
   {path:'movementsper',component:MovementsperComponent},
   {path:'reload',component:ReloadComponent },
   {path:'inventorysales',component:InventorysalesComponent },
+  {path:'inventorysalesnew',component:InventorysalesnewComponent },
+  {path:'movementssales',component:MovementssalesComponent},
 ];
 
 @NgModule({

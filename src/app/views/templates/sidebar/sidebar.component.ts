@@ -107,7 +107,9 @@ export class SidebarComponent {
   open: boolean = false;
   activebut: boolean = false;
   open1: boolean = false;
+  open2: boolean = false;
   activebut1: boolean = false;
+  activebut2: boolean = false;
   // Método para manejar el clic en un ítem del menú
   handleClick() {
     if (this.open) {
@@ -121,6 +123,13 @@ export class SidebarComponent {
       return (this.open1 = false);
     } else {
       return (this.open1 = true);
+    }
+  }
+  handleClick2() {
+    if (this.open1) {
+      return (this.open2 = false);
+    } else {
+      return (this.open2 = true);
     }
   }
   async linksdata() {

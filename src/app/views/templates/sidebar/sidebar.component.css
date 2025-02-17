@@ -1,69 +1,74 @@
-.cursor-poiner{
-    cursor: pointer;
+/* Estilos generales del menú */
+.nav-sidebar { 
+  padding: 10px 15px;
+  border-radius: 8px;
 }
 
+/* Estilo para las opciones principales del menú */
+.nav-item .nav-link {
+  color: #ffffff; /* Texto blanco */
+  font-size: 15px;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
 
+.nav-item .nav-link:hover {
+  background-color: #3a3a4d; /* Fondo al pasar el mouse */
+  color: #00bfff; /* Azul claro al pasar el mouse */
+  transform: translateX(5px); /* Desplazamiento para resaltar interacción */
+}
 
+/* Íconos del menú */
+.nav-link i.nav-icon {
+  margin-right: 10px;
+  font-size: 18px;
+  color: #00bfff; /* Azul claro para íconos */
+}
 
+/* Subniveles */
+.nav-treeview {
+  padding-left: 20px; /* Indentación de subniveles */
+  margin-top: 5px;
+  border-left: 2px solid #00bfff; /* Línea azul clara para conexión jerárquica */
+}
 
-  .btn, .btn2, .btn3, .btn4, .btn5, .btn6, .btn7, .btn10{
+.nav-treeview .nav-item .nav-link {
+  background-color: transparent;
+  color: #b3b3cc; /* Texto gris claro */
+  font-size: 14px;
+  padding: 8px 20px;
+  border-radius: 4px;
+}
 
-    color: #fff;
-    font-family: sans-serif;
-    text-transform: uppercase;
-    text-align: start;
-    position: relative;
-    text-decoration: none;
-    display:inline-block;
-    
-  }
-  
- 
-  
-  /*=======Button 6============= */
-  .btn6{
-    border:1px solid transparent; 
-     -webkit-transition: all 0.4s cubic-bezier(.5, .24, 0, 1);
-    transition: all 0.4s cubic-bezier(.5, .24, 0, 1); 
-    
-  }
-  
-  .btn6::before {
-    content: '';
-    position: absolute;
-    left: 0px;
-    bottom:0px;
-    z-index:-1;
-    width: 0%;
-    height:1px;
-    background: #6098FF;
-    box-shadow: inset 0px 0px 0px #6098FF;
-    display: block;
-    -webkit-transition: all 0.4s cubic-bezier(.5, .24, 0, 1);
-    transition: all 0.4s cubic-bezier(.5, .24, 0, 1)
-  }
-  
-  .btn6:hover::before {
-    width:100%;
-  }
-  
-  .btn6::after {
-    content: '';
-    position: absolute;
-    right: 0px;
-    top:0px;
-    z-index:-1;
-    width: 0%;
-    height:1px;
-    background: #6098FF;
-    -webkit-transition: all 0.4s cubic-bezier(.5, .24, 0, 1);
-    transition: all 0.4s cubic-bezier(.5, .24, 0, 1)
-  }
-  .btn6:hover::after {
-    width:100%;
-  }
-  .btn6:hover{
-    border-left:1px solid #6098FF;
-    border-right:1px solid #6098FF;
-  }
-  
+.nav-treeview .nav-item .nav-link:hover {
+  background-color: #2a2a3a; /* Fondo más oscuro para subniveles */
+  color: #00bfff;
+  transform: translateX(10px);
+}
+
+/* Flechas indicadoras de desplegables */
+.nav-link .right {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.nav-item .nav-link[aria-expanded="true"] .right {
+  transform: rotate(-90deg); /* Gira la flecha al abrir el desplegable */
+}
+
+/* Botones activos */
+.nav-link.active {
+  background-color: #00bfff; /* Fondo azul claro */
+  color: #ffffff; /* Texto blanco */
+  font-weight: bold;
+}
+
+/* Botones activos en subniveles */
+.nav-treeview .nav-link.active {
+  background-color: #004466; /* Azul más oscuro */
+  color: #ffffff;
+}
