@@ -373,9 +373,9 @@ export class InventorysalesnewComponent {
       console.log(JSON.stringify(this.nuevoForm.value, null, 2));
       return;
     } else {
-      const data = await this.api.savenewitem(this.nuevoForm.value);
+      const data = await this.api.savenewitemsales(this.nuevoForm.value);
       if (data == 'OK') {
-        this.router.navigate(['inventory']);
+        this.router.navigate(['inventorysales']);
       } else if (data.id) {
         const params = new URLSearchParams(data.id)
         const url =`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
@@ -388,12 +388,12 @@ export class InventorysalesnewComponent {
         //   base64: true,
         //   showModal: true,
         // });
-        this.router.navigate(['inventory']);
+        this.router.navigate(['inventorysales']);
       }
     }
   }
   cancelar() {
-    this.router.navigate(['inventory']);
+    this.router.navigate(['inventorysales']);
   }
 
   get f(): { [key: string]: AbstractControl } {
