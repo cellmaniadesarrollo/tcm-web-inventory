@@ -66,6 +66,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list'; 
 import { MatExpansionModule } from '@angular/material/expansion';  
 import { MatMenuModule } from '@angular/material/menu';
+import { TicketPrinterComponent } from './views/ticket-printer/ticket-printer.component'; 
+import { MatCheckboxModule } from '@angular/material/checkbox';
 @NgModule({
   declarations: [
     AppComponent,
@@ -93,7 +95,8 @@ import { MatMenuModule } from '@angular/material/menu';
     IncomeperComponent,
     InventorysalesComponent,
     InventorysalesnewComponent,
-    MovementssalesComponent,   
+    MovementssalesComponent,
+    TicketPrinterComponent,   
   
 
   ],
@@ -134,7 +137,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatListModule,
     MatSidenavModule,
     MatExpansionModule,
-    MatMenuModule 
+    MatMenuModule,
+    MatCheckboxModule,MatTableModule
 
   ],
   providers: [
