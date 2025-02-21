@@ -41,6 +41,8 @@ import {
 } from 'src/app/models/movements.interface';
 import { Renderer2 } from '@angular/core';
 import printJS from 'print-js';
+import { ApireportsService } from 'src/app/service/apireports/apireports.service';
+
 declare var window: any;
 declare var dymo: any;
 @Component({
@@ -70,6 +72,7 @@ export class InventorysalesComponent {
   submitted = false;
   constructor(
     private api: ApiService,
+    private apireprt:ApireportsService,
     private router: Router,
     private formBuilder: FormBuilder,
     private socketService: SocketService,
@@ -810,5 +813,17 @@ pvitotal(punit:any,ptax:any,cant:any){
   async closeprintlocal( ) {
     this.modalVisible4 = false;
   }
- 
+  async getreportsalesitems(){
+    const data=await this.apireprt.getreportsaleslistitems(this.datapage)
+    if (data) {
+      this.openPDFInNewTab(data)
+      // printJS({
+      //   printable: data,
+      //   type: 'pdf',
+      //   base64: true,
+      //   showModal: true,
+      // });
+      Swal.close();
+    }
+  }
 }
