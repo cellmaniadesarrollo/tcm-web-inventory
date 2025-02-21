@@ -1,3 +1,102 @@
 <div class="content-wrapper"> 
+    <section class="content-header">
+        <div class="container-fluid">
+        <h2>IMPRESIÓN DE TICKETS</h2>
+        <div class="row mb-3">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Buscar</mat-label>
+                <input matInput [(ngModel)]="datapage.findlike" placeholder="Ingrese término">
+                <mat-icon matSuffix class="search-icon"  >search</mat-icon>
+              </mat-form-field>
+            </div>
  
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Inventario</mat-label>
+                  <mat-select [(ngModel)]="datapage.inventarios">
+                    <mat-option *ngFor="let inv of inventarios" [value]="inv._id">
+                      {{ inv.inventory_name }}
+                    </mat-option>
+                  </mat-select>
+                  <button *ngIf="datapage.inventarios" matSuffix mat-icon-button (click)="datapage.inventarios = ''">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+              
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Sucursal</mat-label>
+                  <mat-select [(ngModel)]="datapage.sucursales">
+                    <mat-option *ngFor="let suc of sucursales" [value]="suc._id">
+                      {{ suc.name }}
+                    </mat-option>
+                  </mat-select>
+                  <button *ngIf="datapage.sucursales" matSuffix mat-icon-button (click)="datapage.sucursales = ''">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </div>
+          </div>
+        </div>
+        </section>
+        <section class="content">
+            <div class="container-fluid">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th><input type="checkbox" (change)="toggleSeleccionarTodos($event)"></th>
+              <th>Código</th>
+              <th>Nombre</th>
+              <th>Modelo</th>
+              <th>Cantidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let producto of productosPaginados">
+              <td><input type="checkbox" [(ngModel)]="producto.seleccionado"></td>
+              <td>{{producto.codigo}}</td>
+              <td>{{producto.nombre}}</td>
+              <td>{{producto.modelo}}</td>
+              <td><input type="number" class="form-control" [(ngModel)]="producto.cantidad"></td>
+            </tr>
+          </tbody>
+        </table>
+      
+        <div class="row p-3">
+          <div class="col-sm-6 my-auto">
+            <p class="text-black-50">
+              Página {{ paginaActual }} mostrando {{ productosPaginados.length }} resultados de {{ productos.length }}
+            </p>
+          </div>
+          <div class="col-sm-6 my-auto">
+            <div class="d-flex justify-content-end">
+              <div class="col-sm-2">
+                <div class="my-auto">
+                  <select class="form-control" style="width: 100%" (change)="cambiarItemsPorPagina($event)">
+                    <option *ngFor="let num of opcionesItemsPorPagina" [value]="num">{{ num }}</option>
+                  </select>
+                </div>
+              </div>
+      
+              <ul class="pagination">
+                <li class="page-item" [class.disabled]="paginaActual === 1">
+                  <a class="page-link" (click)="cambiarPagina(paginaActual - 1)">Anterior</a>
+                </li>
+                <li class="page-item" *ngFor="let num of [].constructor(totalPaginas); let idx = index"
+                    [class.active]="paginaActual === idx + 1">
+                  <a class="page-link" (click)="cambiarPagina(idx + 1)">{{ idx + 1 }}</a>
+                </li>
+                <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+                  <a class="page-link" (click)="cambiarPagina(paginaActual + 1)">Siguiente</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      
+        <button class="btn btn-primary" (click)="imprimirSeleccionados()">Imprimir</button>
+    </div>
+    </section>
 </div>

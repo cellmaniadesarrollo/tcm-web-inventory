@@ -138,7 +138,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatSidenavModule,
     MatExpansionModule,
     MatMenuModule,
-    MatCheckboxModule,MatTableModule
+    MatCheckboxModule,MatSelectModule
 
   ],
   providers: [
