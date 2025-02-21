@@ -1,3 +1,5 @@
+
+
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
@@ -74,7 +76,7 @@
       </ul>
     
       <ul
-        class="nav nav-pills nav-sidebar flex-column"
+        class="nav nav-pills nav-sidebar flex-column" 
         data-widget="treeview"
         role="menu"
         data-accordion="true"
@@ -88,6 +90,7 @@
             role="button"
             aria-expanded="false"
             aria-controls="menuInventoryRep"
+             
           >
             <i class="nav-icon bi bi-tools"></i>
             <p>
@@ -97,7 +100,7 @@
           </a>
           <ul class="nav nav-treeview collapse" id="menuInventoryRep">
             <li class="nav-item" *ngIf="nivel1">
-              <a class="nav-link" routerLink="/inventory" routerLinkActive="active">
+              <a class="nav-link" data-bs-toggle="collapse" routerLink="/inventory" routerLinkActive="active">
                 <i class="nav-icon bi bi-inboxes-fill"></i>
                 <p>Inventario</p>
               </a>
@@ -127,8 +130,7 @@
       >
         <li class="nav-item btn6">
           <a
-            class="nav-link"
-            data-bs-toggle="collapse"
+            class="nav-link" 
             href="#menuInventoryPer"
             role="button"
             aria-expanded="false"
@@ -196,6 +198,8 @@
 
         </li>
       </ul>
+ 
+      
     </nav>
     
 

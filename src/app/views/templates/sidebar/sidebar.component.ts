@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
+import { Router } from '@angular/router'; 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router ) {}
+ 
+
   nivel1 = false;
   nivel2 = false;
   nivel3=false
@@ -40,6 +42,7 @@ export class SidebarComponent {
     }
     this.linksdata();
   }
+ 
   userimg: any = false;
   loadimg() {
     const data = localStorage.getItem('Userimg');

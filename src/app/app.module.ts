@@ -62,7 +62,10 @@ import { InventorysalesComponent } from './views/inventorysales/inventorysales.c
 import { InventorysalesnewComponent } from './views/inventorysales/inventorysalesnew/inventorysalesnew.component';
 import { MovementssalesComponent } from './views/movementssales/movementssales.component';
 
-  
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list'; 
+import { MatExpansionModule } from '@angular/material/expansion';  
+import { MatMenuModule } from '@angular/material/menu';
 @NgModule({
   declarations: [
     AppComponent,
@@ -90,7 +93,7 @@ import { MovementssalesComponent } from './views/movementssales/movementssales.c
     IncomeperComponent,
     InventorysalesComponent,
     InventorysalesnewComponent,
-    MovementssalesComponent, 
+    MovementssalesComponent,   
   
 
   ],
@@ -128,6 +131,10 @@ import { MovementssalesComponent } from './views/movementssales/movementssales.c
     MatSortModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    MatListModule,
+    MatSidenavModule,
+    MatExpansionModule,
+    MatMenuModule 
 
   ],
   providers: [
