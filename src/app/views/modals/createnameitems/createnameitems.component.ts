@@ -46,6 +46,7 @@ export class CreatenameitemsComponent {
   }
   submitted = false;
   async onSubmitclose() {
+     
     this.submitted = true;
     if (this.nameproductform.valid) { 
       const data = await this.api.datanewnameitem(this.nameproductform.value,this.inventory);

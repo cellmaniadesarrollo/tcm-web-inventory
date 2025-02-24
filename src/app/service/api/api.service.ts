@@ -168,20 +168,10 @@ export class ApiService {
     try {
       await this.controltoken();
       var linkdata: string = '';
-      switch (inventory) {
-        case 'invper':
-          linkdata = 'brandnewper';
-          break;
-        case 'invfl':
-          linkdata = 'brandnew';
-          break;
-
-        default:
-          return;
-      }
+ 
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
-        url: this.url + linkdata,
+        url: this.url + "brandnew",
         data,
       });
       // console.log(axiosResponse.data)
@@ -193,20 +183,8 @@ export class ApiService {
   }
   public async datanewmodel(data: any, inventory: any): Promise<any> {
     try {
-      await this.controltoken();
-      var linkdata: string = '';
-      switch (inventory) {
-        case 'invper':
-          linkdata = 'modelnewper';
-          break;
-        case 'invfl':
-          linkdata = 'modelnew';
-          break;
-
-        default:
-          return;
-      }
-      var axiosResponse = await this.axiosClient.request({
+      await this.controltoken(); 
+       var axiosResponse = await this.axiosClient.request({
         method: 'post',
         url: this.url + 'modelnew',
         data,
@@ -222,22 +200,10 @@ export class ApiService {
   public async datanewnameitem(data: any, inventory: any): Promise<any> {
     try {
       var linkdata: string = '';
-      await this.controltoken();
-
-      switch (inventory) {
-        case 'invper':
-          linkdata = 'nameiteminventarionewper';
-          break;
-        case 'invfl':
-          linkdata = 'nameiteminventarionew';
-          break;
-
-        default:
-          return;
-      }
+      await this.controltoken(); 
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
-        url: this.url + linkdata,
+        url: this.url + 'nameiteminventarionew',
         data,
       });
       // console.log(axiosResponse.data)
@@ -249,22 +215,10 @@ export class ApiService {
   }
   public async datanewcolor(data: any,inventory:any): Promise<any> {
     try {
-      await this.controltoken();
-      var linkdata: string = '';
-      switch (inventory) {
-        case 'invper':
-          linkdata = 'colornewper';
-          break;
-        case 'invfl':
-          linkdata = 'colornew';
-          break;
-
-        default:
-          return;
-      }
+      await this.controltoken(); 
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
-        url: this.url + linkdata,
+        url: this.url + 'colornew',
         data,
       });
       // console.log(axiosResponse.data)
@@ -278,21 +232,10 @@ export class ApiService {
   public async datanewtype(data: any, inventory: any): Promise<any> {
     try {
       await this.controltoken();
-      var linkdata: string = '';
-      switch (inventory) {
-        case 'invper':
-          linkdata = 'tipoinventarionewper';
-          break;
-        case 'invfl':
-          linkdata = 'tipoinventarionew';
-          break;
-
-        default:
-          return;
-      }
+ 
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
-        url: this.url + linkdata,
+        url: this.url + 'tipoinventarionew',
         data,
       });
       // console.log(axiosResponse.data)
@@ -304,22 +247,10 @@ export class ApiService {
   }
   public async datanewquality(data: any,inventory:any): Promise<any> {
     try {
-      await this.controltoken();
-      var linkdata: string = '';
-      switch (inventory) {
-        case 'invper':
-          linkdata = 'qualityinventarionewper';
-          break;
-        case 'invfl':
-          linkdata = 'qualityinventarionew';
-          break;
-
-        default:
-          return;
-      }
+      await this.controltoken(); 
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
-        url: this.url + linkdata,
+        url: this.url + 'qualityinventarionew',
         data,
       });
       // console.log(axiosResponse.data)
@@ -331,22 +262,10 @@ export class ApiService {
   }
   public async datanewstateproduct(data: any,inventory:any): Promise<any> {
     try {
-      await this.controltoken();
-      var linkdata: string = '';
-      switch (inventory) {
-        case 'invper':
-          linkdata = 'stateproductinventarionewper';
-          break;
-        case 'invfl':
-          linkdata = 'stateproductinventarionew';
-          break;
-
-        default:
-          return;
-      }
+      await this.controltoken(); 
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
-        url: this.url + linkdata,
+        url: this.url + 'stateproductinventarionew',
         data,
       });
       // console.log(axiosResponse.data)
@@ -470,6 +389,20 @@ export class ApiService {
       return Promise.reject(this.normalizeError(error));
     }
   }
+  public async savenewitemsales(data: any): Promise<any> {
+    try {
+      await this.controltoken();
+      var axiosResponse = await this.axiosClient.request({
+        method: 'post',
+        url: this.url + 'ivsalnew',
+        data,
+      });
+      this.normalizeSuccess(axiosResponse);
+      return axiosResponse.data;
+    } catch (error) {
+      return Promise.reject(this.normalizeError(error));
+    }
+  }
 
   public async listitems(data: any): Promise<ListitemsIN> {
     //console.log(data);
@@ -492,6 +425,30 @@ export class ApiService {
       return Promise.reject(this.normalizeError(error));
     }
   }
+
+  public async listitemssales(data: any): Promise<ListitemsIN> {
+    //console.log(data);
+    try {
+      await this.controltoken();
+      var axiosResponse = await this.axiosClient.request({
+        method: 'get',
+        url: this.url + 'listitemsinventariosales',
+        params: {
+          allclients: data.allclients,
+          numperpage: data.numperpage,
+          pagination: data.pagination,
+          findlike: data.findlike,
+        },
+      });
+      // console.log(axiosResponse.data)
+
+      return axiosResponse.data;
+    } catch (error) {
+      return Promise.reject(this.normalizeError(error));
+    }
+  }
+
+
   public async getimgbase64(data: any): Promise<Getimgbase64> {
     //console.log(data);
     try {

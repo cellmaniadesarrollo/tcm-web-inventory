@@ -1,17 +1,25 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { VglobalService } from 'src/app/service/vglobal/vglobal.service';
+import { ApiService } from '../../../service/api/api.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
+
+
 export class HeaderComponent {
-  constructor(private router: Router, private global: VglobalService) {}
+  constructor(private router: Router, private global: VglobalService,private api: ApiService,) {}
   nivel1 = false;
   nivel2 = false;
-  user: any;
+  ubicacion: { latitud: number; longitud: number } | null = null;
+sucursal: any;
+ sucursal_name:string='DESCONOCIDA'
+user: any;
+
+
   ngOnInit(): void {
   
     this.loadimg()
@@ -37,7 +45,46 @@ export class HeaderComponent {
       localStorage.removeItem('Groups');
       this.router.navigate(['login']);
     }
+    this.obtenerUbicacion();
+  
   }
+  async obtenerUbicacion(): Promise<void> {
+    try {
+      // Obtener ubicación
+      const ubicacion = await new Promise<{ latitud: number; longitud: number }>(
+        (resolve, reject) => {
+          if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                resolve({
+                  latitud: position.coords.latitude,
+                  longitud: position.coords.longitude
+                });
+              },
+              (error) => {
+                reject('No se pudo obtener la ubicación: ' + error.message);
+              }
+            );
+          } else {
+            reject('La geolocalización no está soportada en este navegador.');
+          }
+        }
+      );
+  
+      // Guardar ubicación en la variable
+      this.ubicacion = ubicacion;
+  
+      // Llamar al API con la ubicación
+      this.sucursal = await this.api.ubicacionessucursales(this.ubicacion);
+      this.sucursal_name=this.sucursal.name 
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  
+  }
+
+
+
 userimg:any=false
 loadimg(){
   const data= localStorage.getItem('Userimg');

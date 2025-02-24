@@ -80,6 +80,10 @@ export interface ListItemsnameI{
 export interface ListstockI{
   _id?: any;
   stock?: any;
+  branch: {
+    _id?: any,
+    name?: any
+  }
 }
 export interface ListitemsI{
   _id?: any;

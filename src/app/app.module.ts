@@ -59,8 +59,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { IncomeperComponent } from './views/incomeper/incomeper.component';
 import { InventorysalesComponent } from './views/inventorysales/inventorysales.component';
+import { InventorysalesnewComponent } from './views/inventorysales/inventorysalesnew/inventorysalesnew.component';
+import { MovementssalesComponent } from './views/movementssales/movementssales.component';
 
-  
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list'; 
+import { MatExpansionModule } from '@angular/material/expansion';  
+import { MatMenuModule } from '@angular/material/menu';
+import { TicketPrinterComponent } from './views/ticket-printer/ticket-printer.component'; 
+import { MatCheckboxModule } from '@angular/material/checkbox';
 @NgModule({
   declarations: [
     AppComponent,
@@ -86,7 +93,10 @@ import { InventorysalesComponent } from './views/inventorysales/inventorysales.c
     ReporpricespdfincomesComponent,
     TableincomerepComponent,
     IncomeperComponent,
-    InventorysalesComponent, 
+    InventorysalesComponent,
+    InventorysalesnewComponent,
+    MovementssalesComponent,
+    TicketPrinterComponent,   
   
 
   ],
@@ -124,6 +134,11 @@ import { InventorysalesComponent } from './views/inventorysales/inventorysales.c
     MatSortModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    MatListModule,
+    MatSidenavModule,
+    MatExpansionModule,
+    MatMenuModule,
+    MatCheckboxModule,MatSelectModule
 
   ],
   providers: [

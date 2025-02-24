@@ -1,0 +1,121 @@
+<div class="content-wrapper"> 
+  <section class="content-header">
+      <div class="container-fluid">
+      <h2>IMPRESIÓN DE TICKETS</h2>
+      <div class="row mb-3">
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Buscar</mat-label>
+              <input matInput [(ngModel)]="datapage.findlike" placeholder="Ingrese término" (keyup.enter)="getdata()">
+              <mat-icon matSuffix class="search-icon">search</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Inventario</mat-label>
+                <mat-select [(ngModel)]="datapage.inventarios" (selectionChange)="getdata()">
+                  <mat-option *ngFor="let inv of inventarios" [value]="inv._id">
+                    {{ inv.inventory_name }}
+                  </mat-option>
+                </mat-select>
+                <button *ngIf="datapage.inventarios" matSuffix mat-icon-button (click)="datapage.inventarios = ''; getdata()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+            
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Sucursal</mat-label>
+                <mat-select [(ngModel)]="datapage.sucursales" (selectionChange)="getdata()">
+                  <mat-option *ngFor="let suc of sucursales" [value]="suc._id">
+                    {{ suc.name }}
+                  </mat-option>
+                </mat-select>
+                <button *ngIf="datapage.sucursales" matSuffix mat-icon-button (click)="datapage.sucursales = ''; getdata()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+        </div>
+      </div>
+      </section>
+      <section class="content">
+          <div class="container-fluid">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" (change)="toggleSeleccionarTodos($event)"></th>
+                  <th class="cantidad-column">Cantidad</th>
+                  <th>Código</th>
+                  <th class="align-left">Nombre</th>
+                  <th class="align-left">Modelo</th>
+                  <th class="align-left">Color</th>
+                  <th class="align-left">Estado</th>
+                  <th class="align-left">Calidad</th>
+                  <th class="align-left">Sucursal</th>
+                  <th>Precio</th>
+                  <th class="align-left">Observaciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let producto of productos">
+                  <td><input type="checkbox" [(ngModel)]="producto.seleccionado"></td>
+                  <td class="cantidad-column">
+                    <input type="number" class="form-control cantidad-input" [(ngModel)]="producto.stocks">
+                  </td>
+                  <td>{{producto.sku}}</td>
+                  <td class="align-left">{{producto.name}}</td>
+                  <td class="align-left">{{producto.model}}</td>
+                  <td class="align-left">{{producto.color}}</td>
+                  <td class="align-left">{{producto.state}}</td>
+                  <td class="align-left">{{producto.qualitys}}</td>
+                  <td class="align-left">{{producto.branches}}</td>
+                  <td>{{producto.price}}</td>
+                  <td class="align-left">{{producto.observations}}</td>
+                </tr>
+              </tbody>
+            </table>
+    
+      <div class="row p-3">
+        <div class="col-sm-6 my-auto">
+          <p class="text-black-50">
+            Página {{ datapage.pagination }} mostrando {{ productos.length }} resultados
+          </p>
+        </div>
+        <div class="col-sm-6 my-auto">
+          <div class="d-flex justify-content-end">
+            <div class="col-sm-2">
+              <select class="form-control" style="width: 100%" [(ngModel)]="datapage.numperpage" (change)="getdata()">
+                <option *ngFor="let num of opcionesItemsPorPagina" [value]="num">{{ num }}</option>
+              </select>
+            </div>
+    
+            <ul class="pagination">
+              <li class="page-item" [class.disabled]="datapage.pagination === 1">
+                <a class="page-link" (click)="cambiarPagina(datapage.pagination - 1)">Anterior</a>
+              </li>
+              <li class="page-item" *ngIf="totalPaginas > 7 && datapage.pagination > 3">
+                <a class="page-link" (click)="cambiarPagina(1)">1</a>
+                <span class="page-link">...</span>
+              </li>
+              <li class="page-item" *ngFor="let num of getPaginasVisibles()" [class.active]="datapage.pagination === num">
+                <a class="page-link" (click)="cambiarPagina(num)">{{ num }}</a>
+              </li>
+              <li class="page-item" *ngIf="totalPaginas > 7 && datapage.pagination < totalPaginas - 2">
+                <span class="page-link">...</span>
+                <a class="page-link" (click)="cambiarPagina(totalPaginas)">{{ totalPaginas }}</a>
+              </li>
+              <li class="page-item" [class.disabled]="datapage.pagination === totalPaginas">
+                <a class="page-link" (click)="cambiarPagina(datapage.pagination + 1)">Siguiente</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+      <button class="btn btn-primary" (click)="imprimirSeleccionados()">Imprimir</button>
+  </div>
+  </section>
+</div>

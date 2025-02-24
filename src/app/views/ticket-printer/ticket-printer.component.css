@@ -1,0 +1,52 @@
+.custom-table {
+    font-size: 0.80rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .custom-table thead {
+    background-color: #343a40;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  .custom-table thead th {
+    padding: 12px;
+    text-align: center;
+  }
+
+  .custom-table tbody tr {
+    background-color: white;
+    transition: background 0.3s ease-in-out;
+  }
+
+  .custom-table tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+
+  .custom-table td, .custom-table th {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+  }
+
+  .custom-table input[type="checkbox"], .custom-table input[type="number"] {
+    transform: scale(0.9);
+  }
+    /* Ajuste para la columna de "Cantidad" */
+    .cantidad-column {
+        width: 80px;
+      }
+    
+      .cantidad-input {
+        width: 100%;
+        text-align: center;
+      }
+      .align-left {
+        text-align: left !important;
+      }
