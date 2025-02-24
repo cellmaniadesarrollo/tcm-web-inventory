@@ -162,6 +162,22 @@ export class ApireportsService {
       return Promise.reject(this.normalizeError(error));
     }
   }
-
-
+  
+  public async pdfprintticketsall(data: any): Promise<any> {
+    try {
+      await this.controltoken();
+      var linkdata: string = '';
+ 
+      var axiosResponse = await this.axiosClient.request({
+        method: 'post',
+        url: this.url + "pdfticketsallitems",
+        data,
+      });
+      // console.log(axiosResponse.data)
+     // this.normalizeSuccess(axiosResponse);
+      return axiosResponse.data;
+    } catch (error) {
+      return Promise.reject(this.normalizeError(error));
+    }
+  }
 }
