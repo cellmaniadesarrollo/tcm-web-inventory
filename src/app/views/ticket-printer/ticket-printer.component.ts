@@ -31,7 +31,7 @@ interface Inventarionombre {
 })
 export class TicketPrinterComponent {
   constructor(private apireports: ApireportsService) { }
-
+  loading: boolean = false;
   inventarios: Inventarionombre[] = [];
   sucursales: Sucursales[] = [];
   productos: Producto[] = [];
@@ -53,13 +53,16 @@ export class TicketPrinterComponent {
 
   async getdata() {
     try {
+      this.loading = true;
       const data = await this.apireports.getitemsinventorys(this.datapage);
       this.productos = data.items.intake;
       this.totalProductos = data.items.number_of_records;
       this.sucursales = data.branches;
       this.inventarios = data.inventorysnames;
+      this.loading = false;
     } catch (error) {
       console.error('Error al obtener los datos', error);
+      this.loading = false;
     }
   }
 
