@@ -68,6 +68,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
 import { TicketPrinterComponent } from './views/ticket-printer/ticket-printer.component'; 
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { IncomesalesComponent } from './views/incomesales/incomesales.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -96,7 +97,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     InventorysalesComponent,
     InventorysalesnewComponent,
     MovementssalesComponent,
-    TicketPrinterComponent,   
+    TicketPrinterComponent,
+    IncomesalesComponent,   
   
 
   ],
