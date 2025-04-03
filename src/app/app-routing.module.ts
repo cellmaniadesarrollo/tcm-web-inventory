@@ -18,6 +18,7 @@ import { InventorysalesComponent } from './views/inventorysales/inventorysales.c
 import { InventorysalesnewComponent } from './views/inventorysales/inventorysalesnew/inventorysalesnew.component';
 import { MovementssalesComponent } from './views/movementssales/movementssales.component';
 import { TicketPrinterComponent } from './views/ticket-printer/ticket-printer.component';
+import { IncomesalesComponent } from './views/incomesales/incomesales.component';
  
 const routes: Routes = [
   {path:'',redirectTo:'login',pathMatch:'full'},
@@ -31,6 +32,7 @@ const routes: Routes = [
   {path:'income',component:IncomeComponent },
   {path:'incomerep',component:IncomerepComponent},
   {path:'incomeper',component:IncomeperComponent},
+  {path:'incomesales',component:IncomesalesComponent},
   {path:'perfil',component:PerfilComponent},
   {path:'inventoryper',component:InventoryperComponent},
   {path:'inventorypernew',component:InventorypernewComponent},

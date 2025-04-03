@@ -1027,6 +1027,22 @@ export class ApiService {
       return Promise.reject(this.normalizeError(error));
     }
   }
+  public async listincomesCSRSSALE(data: any): Promise<ListincomesIN> {
+    //console.log(data);
+    try {
+      await this.controltoken();
+      var axiosResponse = await this.axiosClient.request({
+        method: 'get',
+        url: this.url + 'incomeslistCSRSSALE',
+        params:  data,
+      });
+      // console.log(axiosResponse.data)
+
+      return axiosResponse.data;
+    } catch (error) {
+      return Promise.reject(this.normalizeError(error));
+    }
+  }
   public async savesuppliersincome(data: any): Promise<any> {
     //console.log(data);
     try {
