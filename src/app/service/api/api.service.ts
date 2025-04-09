@@ -20,7 +20,7 @@ import {
   Getpdfbase64,
   Getxmlticket,
   Getoneitem,
-} from 'src/app/models/item.inteface';
+} from 'src/app/models/item.inteface'; 
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import {
   ListmovementsIN,
