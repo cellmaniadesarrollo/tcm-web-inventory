@@ -50,6 +50,8 @@ user: any;
   }
   async obtenerUbicacion(): Promise<void> {
     try {
+    const ubucasionlocal= await this.api.ubicacionessucursaleslocal()
+    console.log(ubucasionlocal)
       // Obtener ubicación
       const ubicacion = await new Promise<{ latitud: number; longitud: number }>(
         (resolve, reject) => {

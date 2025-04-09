@@ -1455,6 +1455,18 @@ public async ubicacionessucursales (data: any): Promise<any> {
     return Promise.reject(this.normalizeError(error));
   }
 }
-
+public async ubicacionessucursaleslocal (): Promise<any> {
+  try {
+    await this.controltoken();
+    var axiosResponse = await this.axiosClient.request({
+      method: 'get',
+      url: 'https://localhost:5001/coords', 
+    });
+    this.normalizeSuccess(axiosResponse);
+    return axiosResponse.data;
+  } catch (error) {
+    return Promise.reject(this.normalizeError(error));
+  }
+}
 }
 
