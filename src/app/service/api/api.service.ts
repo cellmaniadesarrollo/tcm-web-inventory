@@ -20,7 +20,7 @@ import {
   Getpdfbase64,
   Getxmlticket,
   Getoneitem,
-} from 'src/app/models/item.inteface';
+} from 'src/app/models/item.inteface'; 
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import {
   ListmovementsIN,
@@ -30,6 +30,7 @@ import { ListincomesIN } from 'src/app/models/income.inteface';
 import { ListsupliersI } from 'src/app/models/supliers.interface';
 import { link } from 'fs'; 
  import { environment } from '../../../environments/environment';
+ import https from 'https'; // Importar el módulo https
 @Injectable({
   providedIn: 'root',
 })
@@ -1455,13 +1456,26 @@ public async ubicacionessucursales (data: any): Promise<any> {
     return Promise.reject(this.normalizeError(error));
   }
 }
-public async ubicacionessucursaleslocal (): Promise<any> {
+
+public async ubicacionessucursaleslocal(): Promise<any> {
   try {
     await this.controltoken();
+    
+    // Configurar agente HTTPS para ignorar errores de certificado (solo desarrollo)
+    const httpsAgent = new https.Agent({
+      rejectUnauthorized: false // Ignorar errores de certificado SSL
+    });
+    
     var axiosResponse = await this.axiosClient.request({
       method: 'get',
-      url: 'https://localhost:5001/coords', 
+      url: 'https://localhost:5001/coords',
+      httpsAgent: httpsAgent, // Añadir el agente configurado
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
     });
+    
     this.normalizeSuccess(axiosResponse);
     return axiosResponse.data;
   } catch (error) {
