@@ -1458,24 +1458,11 @@ public async ubicacionessucursales (data: any): Promise<any> {
 }
 
 public async ubicacionessucursaleslocal(): Promise<any> {
-  try {
-    await this.controltoken();
-    
-    // Configurar agente HTTPS para ignorar errores de certificado (solo desarrollo)
-    const httpsAgent = new https.Agent({
-      rejectUnauthorized: false // Ignorar errores de certificado SSL
-    });
-    
+  try { 
     var axiosResponse = await this.axiosClient.request({
       method: 'get',
-      url: 'https://localhost:5001/coords',
-      httpsAgent: httpsAgent, // Añadir el agente configurado
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
-    
+      url: 'https://localhost:5001/coords',  
+    }); 
     this.normalizeSuccess(axiosResponse);
     return axiosResponse.data;
   } catch (error) {

@@ -19,6 +19,9 @@ import { InventorysalesnewComponent } from './views/inventorysales/inventorysale
 import { MovementssalesComponent } from './views/movementssales/movementssales.component';
 import { TicketPrinterComponent } from './views/ticket-printer/ticket-printer.component';
 import { IncomesalesComponent } from './views/incomesales/incomesales.component';
+import { OutgoingTransfersComponent } from './views/outgoing-transfers/outgoing-transfers.component';
+import { NewTransferComponent } from './views/outgoing-transfers/new-transfer/new-transfer.component';
+import { ReceivingTransfersComponent } from './views/receiving-transfers/receiving-transfers.component';
  
 const routes: Routes = [
   {path:'',redirectTo:'login',pathMatch:'full'},
@@ -42,7 +45,10 @@ const routes: Routes = [
   {path:'inventorysales',component:InventorysalesComponent },
   {path:'inventorysalesnew',component:InventorysalesnewComponent },
   {path:'movementssales',component:MovementssalesComponent},
-  {path:'ticket-printing',component:TicketPrinterComponent}
+  {path:'ticket-printing',component:TicketPrinterComponent},
+  {path:'outgoing-transfers',component:OutgoingTransfersComponent},
+  {path:'new-transfers',component:NewTransferComponent},
+  {path:'receiving-transfers',component:ReceivingTransfersComponent},
 ];
 
 @NgModule({

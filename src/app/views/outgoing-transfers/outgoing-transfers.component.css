@@ -1,0 +1,31 @@
+/* Alinear verticalmente los botones con inputs/selects */
+.botones-fijos button {
+    height: 56px; /* igual al mat-form-field */
+    font-size: 0.9rem;
+    display: flex;
+    align-items: top;
+    gap: 0.25rem;
+  }
+  
+  /* Tamaño de íconos dentro de botones */
+  .botones-fijos mat-icon {
+    font-size: 27px;         /* Tamaño deseado */
+    width: 28px;             /* Asegura el ancho */
+    height: 24px;            /* Asegura la altura */
+    line-height: 24px;       /* Centra verticalmente */
+    vertical-align: middle;  /* Ajuste fino */
+    display: inline-block;   /* Evita que se rompa el layout */
+  }
+  
+  /* Ajuste de padding de botones Material */
+  .mat-mdc-raised-button {
+    padding: 0 16px;
+  }
+  
+  /* Estética general para mantener un layout limpio */
+  .mat-form-field {
+    font-size: 0.85rem;
+  }
+  
+ 
+  

@@ -245,21 +245,20 @@ export class InventorysalesnewComponent {
   // }
   async obtenerUbicacion(): Promise<void> {
     try {
-      // Verificar si ya hay una sucursal asignada en el localStorage
-    const sucursalAsignada = localStorage.getItem('sucursal_asignada');
-    
-    if (sucursalAsignada) {
-      console.log(sucursalAsignada );
-      // Si hay una sucursal asignada, usarla directamente
-      this.sucursal = JSON.parse(sucursalAsignada);
-     
-      this.sucursal_name = this.sucursal.name;
-      this.nuevoForm.get('ubicacion')?.setValue(this.sucursal.ubicacion);
-      return; // Salir de la función
-    }
-      // Obtener ubicación
-      const ubicacion = await new Promise<{ latitud: number; longitud: number }>(
-        (resolve, reject) => {
+      // Intentar obtener la ubicación local desde el backend
+      const ubicacionLocal = await this.api.ubicacionessucursaleslocal(); 
+  
+      let coordenadas: { latitud: number; longitud: number } | null = null;
+  
+      // Verificar si la respuesta local tiene las coordenadas
+      if (ubicacionLocal && ubicacionLocal.latitude && ubicacionLocal.longitude) {
+        coordenadas = {
+          latitud: ubicacionLocal.latitude,
+          longitud: ubicacionLocal.longitude
+        };
+      } else {
+        // Si no hay coordenadas locales, obtenerlas del navegador 
+        coordenadas = await new Promise<{ latitud: number; longitud: number }>((resolve, reject) => {
           if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(
               (position) => {
@@ -275,21 +274,21 @@ export class InventorysalesnewComponent {
           } else {
             reject('La geolocalización no está soportada en este navegador.');
           }
-        }
-        
-      );
+        });
+      }
   
-      // Guardar ubicación en la variable
-      this.ubicacion = ubicacion;
-     
-      // Llamar al API con la ubicación
+      // Guardar la ubicación final
+      this.ubicacion = coordenadas;
+  
+      // Consultar sucursal con esa ubicación
       this.sucursal = await this.api.ubicacionessucursales(this.ubicacion);
-      this.sucursal_name=this.sucursal.name 
+      this.sucursal_name = this.sucursal.name;
+  
+      // Asignar valor al formulario
       this.nuevoForm.get('ubicacion')?.setValue(this.ubicacion);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error al obtener la ubicación:', error);
     }
-  
   }
   validations() {
     this.nuevoForm = this.formBuilder.group({

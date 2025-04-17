@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { VglobalService } from 'src/app/service/vglobal/vglobal.service';
 import { ApiService } from '../../../service/api/api.service';
+import { CoordinateServiceService } from 'src/app/service/CoordinateService/coordinate-service.service';
 
 @Component({
   selector: 'app-header',
@@ -11,7 +12,7 @@ import { ApiService } from '../../../service/api/api.service';
 
 
 export class HeaderComponent {
-  constructor(private router: Router, private global: VglobalService,private api: ApiService,) {}
+  constructor(private router: Router, private global: VglobalService,private api: ApiService,private coodinates: CoordinateServiceService ) {}
   nivel1 = false;
   nivel2 = false;
   ubicacion: { latitud: number; longitud: number } | null = null;
@@ -49,42 +50,18 @@ user: any;
   
   }
   async obtenerUbicacion(): Promise<void> {
-    try {
-    const ubucasionlocal= await this.api.ubicacionessucursaleslocal()
-    console.log(ubucasionlocal)
-      // Obtener ubicación
-      const ubicacion = await new Promise<{ latitud: number; longitud: number }>(
-        (resolve, reject) => {
-          if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                resolve({
-                  latitud: position.coords.latitude,
-                  longitud: position.coords.longitude
-                });
-              },
-              (error) => {
-                reject('No se pudo obtener la ubicación: ' + error.message);
-              }
-            );
-          } else {
-            reject('La geolocalización no está soportada en este navegador.');
-          }
-        }
-      );
+    try { 
+      this.sucursal = await this.api.ubicacionessucursales(await this.getcoodinates());
+      this.sucursal_name = this.sucursal.name;
   
-      // Guardar ubicación en la variable
-      this.ubicacion = ubicacion;
-  
-      // Llamar al API con la ubicación
-      this.sucursal = await this.api.ubicacionessucursales(this.ubicacion);
-      this.sucursal_name=this.sucursal.name 
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error al obtener la ubicación:', error);
     }
-  
   }
 
+  async getcoodinates() {
+    return await this.coodinates.obtenerUbicacion()
+  }
 
 
 userimg:any=false

@@ -27,28 +27,28 @@ export class AppComponent {
     this.socketService.subscribeToChannel('notification');
 
     // Suscribirse al observable de mensajes para recibir los mensajes del canal
-    this.messageSubscription = this.socketService.message$.subscribe((message) => {
-      const data = JSON.parse(message || '{}')
-      console.log(data)
-      if (data.title) {
+    // this.messageSubscription = this.socketService.message$.subscribe((message) => {
+    //   const data = JSON.parse(message || '{}')
+    //   console.log(data)
+    //   if (data.title) {
 
-        this.toastr.info(data.message , data.title, { 
-          timeOut:120000,
-          progressBar: true,
-          tapToDismiss: true,
-          positionClass: 'toast-top-right',
-          closeButton: true,
-          extendedTimeOut: 10000,
-        }).onTap.subscribe(() => {
-           this.setdataService.setData(data.id)
-          // Navegar a una ruta temporal y luego de vuelta a /inventory
-          this.router.navigateByUrl('/reload', { skipLocationChange: true }).then(() => {
-            this.router.navigate(['/incomerep']);  
-          }); 
-        });
+    //     this.toastr.info(data.message , data.title, { 
+    //       timeOut:120000,
+    //       progressBar: true,
+    //       tapToDismiss: true,
+    //       positionClass: 'toast-top-right',
+    //       closeButton: true,
+    //       extendedTimeOut: 10000,
+    //     }).onTap.subscribe(() => {
+    //        this.setdataService.setData(data.id)
+    //       // Navegar a una ruta temporal y luego de vuelta a /inventory
+    //       this.router.navigateByUrl('/reload', { skipLocationChange: true }).then(() => {
+    //         this.router.navigate(['/incomerep']);  
+    //       }); 
+    //     });
 
-      }
-    });
+    //   }
+    // });
     window.addEventListener('focus', () => {
       if (!this.esRutaLogin()) { this.api.controltoken(); }
 
@@ -59,54 +59,54 @@ export class AppComponent {
 
 
 
-  @HostListener('document:keydown', ['$event'])
-  handleKeyDown(event: KeyboardEvent): void {
+  // @HostListener('document:keydown', ['$event'])
+  // handleKeyDown(event: KeyboardEvent): void {
 
-    const currentTime = Date.now();
-    const elapsedTime = currentTime - this.lastTime;
+  //   const currentTime = Date.now();
+  //   const elapsedTime = currentTime - this.lastTime;
 
-    if (this.lastKeyTime !== 0) {
-      this.timeDifference = currentTime - this.lastKeyTime;
-    }
-    this.lastKeyTime = currentTime;
-    this.resetTimeout();
-    if (this.isValidCharacter(event)) {
-      this.inputBuffer += event.key;
-    }
-  }
-  private isValidCharacter(event: KeyboardEvent): boolean {
-    return !event.ctrlKey && !event.altKey && !event.metaKey &&
-      event.key.length === 1 && event.key !== 'Enter' && event.key !== '"';
-  }
+  //   if (this.lastKeyTime !== 0) {
+  //     this.timeDifference = currentTime - this.lastKeyTime;
+  //   }
+  //   this.lastKeyTime = currentTime;
+  //   this.resetTimeout();
+  //   if (this.isValidCharacter(event)) {
+  //     this.inputBuffer += event.key;
+  //   }
+  // }
+  // private isValidCharacter(event: KeyboardEvent): boolean {
+  //   return !event.ctrlKey && !event.altKey && !event.metaKey &&
+  //     event.key.length === 1 && event.key !== 'Enter' && event.key !== '"';
+  // }
 
-  resetTimeout() {
-    // Cancela cualquier temporizador anterior
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-    }
+  // resetTimeout() {
+  //   // Cancela cualquier temporizador anterior
+  //   if (this.timeoutId) {
+  //     clearTimeout(this.timeoutId);
+  //   }
 
-    // Inicia un nuevo temporizador
-    this.timeoutId = setTimeout(() => {
-      this.printConstant();
-    }, this.timeoutDuration);
-  }
+  //   // Inicia un nuevo temporizador
+  //   this.timeoutId = setTimeout(() => {
+  //     this.printConstant();
+  //   }, this.timeoutDuration);
+  // }
 
-  printConstant() {
-    if (this.inputBuffer.length === 29) {
-      this.find(this.inputBuffer)
-    } else if (this.inputBuffer.length > 29) {
-      // Expresiones regulares para encontrar los valores de D y B
-      const matchD = this.inputBuffer.match(/D:\s*([^,]*)/);
-      const matchB = this.inputBuffer.match(/B:\s*(\w+)/);
+  // printConstant() {
+  //   if (this.inputBuffer.length === 29) {
+  //     this.find(this.inputBuffer)
+  //   } else if (this.inputBuffer.length > 29) {
+  //     // Expresiones regulares para encontrar los valores de D y B
+  //     const matchD = this.inputBuffer.match(/D:\s*([^,]*)/);
+  //     const matchB = this.inputBuffer.match(/B:\s*(\w+)/);
 
-      // Extraer los valores encontrados
-      const valueD = matchD ? matchD[1].trim() : '';
-      const valueB = matchB ? matchB[1].trim() : 'false';
-      this.find(valueD, this.stringToBoolean(valueB))
-    }
+  //     // Extraer los valores encontrados
+  //     const valueD = matchD ? matchD[1].trim() : '';
+  //     const valueB = matchB ? matchB[1].trim() : 'false';
+  //     this.find(valueD, this.stringToBoolean(valueB))
+  //   }
 
-    this.inputBuffer = ""
-  }
+  //   this.inputBuffer = ""
+  // }
   stringToBoolean(value: string): boolean {
     try {
       return value.toLowerCase() === 'true';
@@ -115,23 +115,23 @@ export class AppComponent {
     }
 
   }
-  async find(data: any, income: boolean = false) {
-    const item = await this.api.findinventoryitem({ dat: data, inc: income })
-    if (item.inventory_name === 'INVENTORYFLOW') {
-      this.setdataService.setData(item.sku)
-      // Navegar a una ruta temporal y luego de vuelta a /inventory
-      this.router.navigateByUrl('/reload', { skipLocationChange: true }).then(() => {
-        this.router.navigate(['/inventory']);
-      });
-      //this.router.navigate(['/inventory', item.sku]);
-    } else if (item.inventory_name === 'INVENTORYPER') {
-      this.setdataService.setData(item.sku)
-      // Navegar a una ruta temporal y luego de vuelta a /inventory
-      this.router.navigateByUrl('/reload', { skipLocationChange: true }).then(() => {
-        this.router.navigate(['/inventoryper']);
-      });
-    }
-  }
+  // async find(data: any, income: boolean = false) {
+  //   const item = await this.api.findinventoryitem({ dat: data, inc: income })
+  //   if (item.inventory_name === 'INVENTORYFLOW') {
+  //     this.setdataService.setData(item.sku)
+  //     // Navegar a una ruta temporal y luego de vuelta a /inventory
+  //     this.router.navigateByUrl('/reload', { skipLocationChange: true }).then(() => {
+  //       this.router.navigate(['/inventory']);
+  //     });
+  //     //this.router.navigate(['/inventory', item.sku]);
+  //   } else if (item.inventory_name === 'INVENTORYPER') {
+  //     this.setdataService.setData(item.sku)
+  //     // Navegar a una ruta temporal y luego de vuelta a /inventory
+  //     this.router.navigateByUrl('/reload', { skipLocationChange: true }).then(() => {
+  //       this.router.navigate(['/inventoryper']);
+  //     });
+  //   }
+  // }
   esRutaLogin(): boolean {
     return this.router.url === '/login';
   }

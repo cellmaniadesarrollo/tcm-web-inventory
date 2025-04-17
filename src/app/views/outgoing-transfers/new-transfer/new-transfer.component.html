@@ -1,0 +1,117 @@
+<div class="content-wrapper">
+    <div class="container mt-4">
+      <h2 class="mb-3">Transferencia de Productos</h2> 
+      <form [formGroup]="form">
+        <div class="row">
+          <div class="col-md-12">
+            <mat-form-field class="w-100" appearance="fill">
+                <mat-label>Buscar producto</mat-label>
+              
+                <!-- Icono de lupa al inicio -->
+                <button mat-icon-button matPrefix (click)="onSearchClick()" aria-label="Buscar">
+                  <mat-icon>search</mat-icon>
+                </button>
+              
+                <input
+                  type="text"
+                  matInput
+                  [formControl]="productCtrl"
+                  [matAutocomplete]="auto"
+                  (keydown.enter)="onSearchEnter()"
+                >
+              
+                <!-- Botón de limpiar texto cuando hay algo escrito -->
+                <button
+                  *ngIf="productCtrl.value"
+                  mat-icon-button
+                  matSuffix
+                  (click)="clearSearch()"
+                  aria-label="Limpiar búsqueda"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              
+                <mat-autocomplete 
+                #auto="matAutocomplete" 
+                [displayWith]="displayFn"
+                (optionSelected)="addProduct($event.option.value)"
+              >
+                <mat-option *ngIf="loading" class="text-center" disabled>
+                  <mat-spinner diameter="24"></mat-spinner>
+                </mat-option>
+              
+                <ng-container *ngIf="!loading">
+                  <mat-option *ngFor="let product of products" [value]="product">
+                   {{product.upc}}-{{ product.name }}-{{product.model}}-{{product.color}}-{{product.quality}}-{{product.state}}                  </mat-option>
+                </ng-container>
+              </mat-autocomplete>
+              </mat-form-field>
+          </div>
+        </div>
+      </form>
+  
+      <div class="row mt-3" >
+        <div class="col-12">
+          <h5 class="mb-3">Productos Seleccionados</h5>
+          <table class="table table-bordered table-striped table-sm" style="font-size: 0.75rem;">
+            <thead>
+              <tr>
+                <th>Cod</th>
+                <th>Producto</th>
+                <th>Modelo</th>
+                <th>Calidad</th>
+                <th>Stock</th>                
+                <th>Cantidad</th>
+                <th>Sucursal Destino</th>
+                <th>Dest. Stock</th>
+                <th>Observaciones</th> 
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of selectedProducts; let i = index" [class.table-danger]="hasError(i)">
+                <td>{{ p.product.sku }}</td>
+                <td>{{ p.product.name }}</td>
+                <td>{{ p.product.model }}</td>                
+                <td>{{ p.product.quality }}</td>
+                <td>{{ p.product.stocks }}</td>
+                <td>
+                  <input
+                  #qtyInput
+                  type="number"
+                  min="1"
+                  class="form-control form-control-sm"
+                  style="width: 70px;"
+                  [(ngModel)]="p.quantity"
+                  [max]="p.product.stocks" 
+                  (ngModelChange)="validateQuantity(p, qtyInput)"
+                  (input)="validateQuantity(p, qtyInput)"
+                />
+                </td>
+                <td>
+                  <select class="form-select form-select-sm" [(ngModel)]="p.destination_branch_id" (ngModelChange)="onBranchChange(p)">
+                    <option *ngFor="let b of branches" [value]="b.id">{{ b.name }}</option>
+                  </select>
+                </td>
+                <td>{{ p.destination_stock !== undefined ? p.destination_stock : '-' }}</td>
+                <td>
+                  <textarea      class="form-control form-control-sm" rows="2" [(ngModel)]="p.observation" placeholder="Opcional"></textarea>
+                </td>
+                <td>
+                  <button class="btn btn-danger btn-sm" (click)="removeProduct(i)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+  
+          <div class="text-end mt-3" *ngIf="selectedProducts.length > 0">
+            <button class="btn btn-primary" (click)="submit()">Confirmar Transferencia</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

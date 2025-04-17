@@ -57,11 +57,14 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 import { IncomeperComponent } from './views/incomeper/incomeper.component';
 import { InventorysalesComponent } from './views/inventorysales/inventorysales.component';
 import { InventorysalesnewComponent } from './views/inventorysales/inventorysalesnew/inventorysalesnew.component';
 import { MovementssalesComponent } from './views/movementssales/movementssales.component';
 
+ 
+import { MatAutocompleteModule } from '@angular/material/autocomplete'; 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list'; 
 import { MatExpansionModule } from '@angular/material/expansion';  
@@ -69,6 +72,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { TicketPrinterComponent } from './views/ticket-printer/ticket-printer.component'; 
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { IncomesalesComponent } from './views/incomesales/incomesales.component';
+import { OutgoingTransfersComponent } from './views/outgoing-transfers/outgoing-transfers.component';
+import { NewTransferComponent } from './views/outgoing-transfers/new-transfer/new-transfer.component';
+import { ReceivingTransfersComponent } from './views/receiving-transfers/receiving-transfers.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -98,7 +104,10 @@ import { IncomesalesComponent } from './views/incomesales/incomesales.component'
     InventorysalesnewComponent,
     MovementssalesComponent,
     TicketPrinterComponent,
-    IncomesalesComponent,   
+    IncomesalesComponent,
+    OutgoingTransfersComponent,
+    NewTransferComponent,
+    ReceivingTransfersComponent,   
   
 
   ],
@@ -120,8 +129,7 @@ import { IncomesalesComponent } from './views/incomesales/incomesales.component'
     NgxPaginationModule,
     TagInputModule,
    SweetAlert2Module, 
-    NgbModule, 
-    MatSelectModule,
+    NgbModule,
     NgbModalModule,
     ButtonModule,
     DialogModule, 
@@ -130,8 +138,7 @@ import { IncomesalesComponent } from './views/incomesales/incomesales.component'
     MatButtonModule,
     MatIconModule,
     MatInputModule,
-    MatFormFieldModule,
-    MatSelectModule, 
+    MatFormFieldModule, 
     MatPaginatorModule,
     MatSortModule,
     MatCardModule,
@@ -140,7 +147,10 @@ import { IncomesalesComponent } from './views/incomesales/incomesales.component'
     MatSidenavModule,
     MatExpansionModule,
     MatMenuModule,
-    MatCheckboxModule,MatSelectModule
+    MatCheckboxModule,
+    MatSelectModule,
+    MatChipsModule,
+    MatAutocompleteModule
 
   ],
   providers: [
