@@ -9,7 +9,7 @@
             <!-- BOTONES IZQUIERDA -->
             <div class="col-md-4 d-flex gap-2 botones-fijos">
 
-                <button mat-raised-button color="primary" matTooltip="Nueva Transacción" routerLink="/new-transfers">
+                <button mat-raised-button color="primary" matTooltip="Nueva Transacción" routerLink="/new-transfers" >
                     <mat-icon class="me-1">add_circle</mat-icon>
                     Nueva Transacción
                 </button>
@@ -90,7 +90,8 @@
                         <th>Cantidad</th>
                         <th>Sucursal Destino</th>
                         <th>Creado</th>
-                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>                        
                         <th>Observaciones</th>
                         <th>Por</th>
                         
@@ -105,6 +106,7 @@
                         <td>{{ t.quantity }}</td>
                         <td>{{ t.destinationbranche }}</td>
                         <td>{{ t.createuser }}</td>
+                        <td>{{ t.date | relativeDate }}</td>
                         <td>{{ t.status}}</td>
                         <td>{{ t.observation}}</td>
                         <td>{{ t.status_historyuser }}</td>
@@ -143,3 +145,5 @@
     </div>
 
 </div>
+
+ 

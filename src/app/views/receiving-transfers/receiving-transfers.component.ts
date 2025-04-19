@@ -15,6 +15,7 @@ export interface Transfer {
   createuser: string;
   status: string;
   observation: string;
+  date:string;
 }
 @Component({
   selector: 'app-receiving-transfers',

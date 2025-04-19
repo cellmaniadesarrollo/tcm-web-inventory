@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CoordinateServiceService } from 'src/app/service/CoordinateService/coordinate-service.service';
 import { InventoryTransfersApiService } from 'src/app/service/inventory-transfers-api/inventory-transfers-api.service';
+import { Router } from '@angular/router';
+
 export interface Transfer {
   _id: string;
   quantity: number;
@@ -14,6 +16,7 @@ export interface Transfer {
   createuser: string;
   status: string;
   observation: string;
+  date:string;
 }
 @Component({
   selector: 'app-outgoing-transfers',
@@ -21,7 +24,7 @@ export interface Transfer {
   styleUrls: ['./outgoing-transfers.component.css']
 })
 export class OutgoingTransfersComponent {
-  constructor(private backendapi:InventoryTransfersApiService,private coodinates:CoordinateServiceService){}
+  constructor(private backendapi:InventoryTransfersApiService,private coodinates:CoordinateServiceService,private router: Router){}
   datapage = {
     allclients: '0',
     pagination: 1,
@@ -41,8 +44,8 @@ export class OutgoingTransfersComponent {
  async buscar() {
     // Aquí se llama al backend con datapage
     const data=await this.backendapi.listitem({data:this.datapage,coodinates:await this.getcoodinates()})
-    this.transacciones=data.data
-    console.log(data.data);
+    this.transacciones=data.data 
+    console.log(data.data )
     // Tu servicio llamaría al backend y llenaría `transacciones` y `paginas`
   }
   
@@ -57,10 +60,7 @@ export class OutgoingTransfersComponent {
       this.buscar();
     }
   }
-  
-  nuevaTransaccion() {
-    // tu lógica
-  }
+ 
   
   nuevaSolicitud() {
     // tu lógica
@@ -68,4 +68,5 @@ export class OutgoingTransfersComponent {
   async getcoodinates() {
     return await this.coodinates.obtenerUbicacion()
   }
+ 
 }

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { VglobalService } from 'src/app/service/vglobal/vglobal.service';
 import { ApiService } from '../../../service/api/api.service';
 import { CoordinateServiceService } from 'src/app/service/CoordinateService/coordinate-service.service';
+import { SharedServiceService } from 'src/app/service/SharedService/shared-service.service';
 
 @Component({
   selector: 'app-header',
@@ -12,7 +13,7 @@ import { CoordinateServiceService } from 'src/app/service/CoordinateService/coor
 
 
 export class HeaderComponent {
-  constructor(private router: Router, private global: VglobalService,private api: ApiService,private coodinates: CoordinateServiceService ) {}
+  constructor(private router: Router, private global: VglobalService,private api: ApiService,private coodinates: CoordinateServiceService,private sharedService:SharedServiceService ) {}
   nivel1 = false;
   nivel2 = false;
   ubicacion: { latitud: number; longitud: number } | null = null;
@@ -53,7 +54,7 @@ user: any;
     try { 
       this.sucursal = await this.api.ubicacionessucursales(await this.getcoodinates());
       this.sucursal_name = this.sucursal.name;
-  
+      this.sharedService.setData( this.sucursal_name);
     } catch (error) {
       console.error('Error al obtener la ubicación:', error);
     }

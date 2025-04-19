@@ -1,20 +1,25 @@
 import { Component, AfterViewInit, ElementRef, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router'; 
+import { SharedServiceService } from 'src/app/service/SharedService/shared-service.service';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent {
-  constructor(private router: Router ) {}
+  constructor(private router: Router,private sharedService:SharedServiceService ) {}
  
 
   nivel1 = false;
   nivel2 = false;
   nivel3=false
   user: any;
+  datoRecibido: any;
   ngOnInit(): void {
     this.loadimg();
+    this.sharedService.currentData$.subscribe(data => {
+      this.datoRecibido = data; 
+    });
     // this.checkLocalStorage();
     this.user = localStorage.getItem('User');
     const group = localStorage.getItem('Groups') || '';

@@ -93,6 +93,7 @@
                         <td>{{ t.quantity }}</td>
                         <td>{{ t.originbranche }}</td>
                         <td>{{ t.createuser }}</td>
+                        <td>{{ t.date | relativeDate }}</td>
                         <td>
                             <ng-container *ngIf="t.status === 'ENVIADO'; else statusLabel">
                                 <div style="display: flex; gap: 4px;">
