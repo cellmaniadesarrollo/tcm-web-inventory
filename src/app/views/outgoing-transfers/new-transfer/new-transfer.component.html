@@ -111,7 +111,12 @@
           
   
           <div class="text-end mt-3" *ngIf="selectedProducts.length > 0">
-            <button class="btn btn-primary" (click)="submit()">Confirmar Transferencia</button>
+            <button 
+  class="btn btn-primary" 
+  (click)="submit()" 
+  [disabled]="isButtonDisabled">
+  Confirmar Transferencia
+</button>
           </div>
         </div>
       </div>

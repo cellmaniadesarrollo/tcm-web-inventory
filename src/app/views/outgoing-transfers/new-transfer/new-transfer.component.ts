@@ -40,6 +40,7 @@ interface SelectedProduct {
   styleUrls: ['./new-transfer.component.css']
 })
 export class NewTransferComponent {  
+  isButtonDisabled = false;
   form: FormGroup;
   products: Product[] = [];
   branches: Branch[] = [];
@@ -186,6 +187,7 @@ export class NewTransferComponent {
     if (invalid) {
       return;
     }
+    this.isButtonDisabled = true;
     const payload = this.selectedProducts.map(item => ({
       product_id: item.product.id,
       quantity: item.quantity,
@@ -200,8 +202,10 @@ export class NewTransferComponent {
         text: 'La operación se realizó correctamente.',
         confirmButtonText: 'Aceptar'
       }).then(() => {
+
         // Redirigir después de que el usuario presiona "Aceptar"
         this.router.navigate(['/outgoing-transfers']);
+        this.isButtonDisabled = false;
       }); 
     } catch (error) {
       console.log(error)
@@ -210,6 +214,8 @@ export class NewTransferComponent {
         title: 'Error',
         text: 'Ocurrió un error al realizar la operación.',
         confirmButtonText: 'Cerrar'
+      }).then(()=>{
+        this.isButtonDisabled = false;
       });
     }
     
