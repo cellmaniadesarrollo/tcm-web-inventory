@@ -18,6 +18,7 @@ export interface Transfer {
   status: string;
   observation: string;
   date: string;
+  datechange:string;
 }
 export interface Status {
   id: string;
@@ -44,6 +45,8 @@ export class ReceivingTransfersComponent {
   estados: Status[] = [];
   ubicasion: any = ''
   transacciones: Transfer[] = []
+  totalentries: any;
+  isLoading = true;
   ngOnInit() {
     this.subscriptions.add(
       this.ubicacionService.coordenadas$.subscribe(coords => {
@@ -60,11 +63,17 @@ export class ReceivingTransfersComponent {
     );
 
   }
+  renderPage(event:any){
+    this.datapage.pagination=event  
+    this.buscar()
+  }
   async buscar() {
-
+    this.isLoading = true;
     const data = await this.backendapi.incomelistitem({ data: this.datapage, coodinates: this.ubicasion })
     this.transacciones = data.items.data
     this.estados = data.status
+    this.totalentries=data.items.pagination.total 
+    this.isLoading = false;
     // Tu servicio llamaría al backend y llenaría `transacciones` y `paginas`
   }
 
@@ -72,13 +81,7 @@ export class ReceivingTransfersComponent {
     this.datapage.findlike = '';
     this.buscar();
   }
-
-  cambiarPagina(pagina: number) {
-    if (pagina >= 1 && pagina <= this.paginas.length) {
-      this.datapage.pagination = pagina;
-      this.buscar();
-    }
-  } 
+ 
   aprobar(id: string) {
     Swal.fire({
       title: '¿Estás seguro de aprobar?',

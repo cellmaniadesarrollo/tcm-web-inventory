@@ -18,6 +18,11 @@ export interface Transfer {
   status: string;
   observation: string;
   date: string;
+  datechange:string;
+}
+export interface Status {
+  id: string;
+  name: string;
 }
 @Component({
   selector: 'app-outgoing-transfers',
@@ -34,11 +39,13 @@ export class OutgoingTransfersComponent {
     numperpage: '30',
     findlike: '',
   };
+  isLoading = true;
+  totalentries: any;
   estadoSeleccionado: string = '';
   filtroBusqueda: string = '';
   paginaActual = 1;
   paginas = [1, 2, 3]; // Generar dinámicamente según total
-  estados: string[] = ['Pendiente', 'Aprobado', 'Rechazado'];
+   estados: Status[] = [];
   ubicasion: any = ''
   transacciones: Transfer[] = []
   ngOnInit() {
@@ -56,24 +63,25 @@ export class OutgoingTransfersComponent {
       })
     );
   }
+  renderPage(event:any){
+    this.datapage.pagination=event  
+    this.buscar()
+  }
   async buscar() {
     // Aquí se llama al backend con datapage
+    this.isLoading = true;
     const data = await this.backendapi.listitem({ data: this.datapage, coodinates: this.ubicasion })
-    this.transacciones = data.data 
+    this.transacciones = data.items.data
+    this.estados = data.status
+    this.totalentries=data.items.pagination.total 
+    this.isLoading = false
     // Tu servicio llamaría al backend y llenaría `transacciones` y `paginas`
   }
 
   limpiarBusqueda() {
     this.datapage.findlike = '';
     this.buscar();
-  }
-
-  cambiarPagina(pagina: number) {
-    if (pagina >= 1 && pagina <= this.paginas.length) {
-      this.datapage.pagination = pagina;
-      this.buscar();
-    }
-  }
+  } 
 
 
   nuevaSolicitud() {

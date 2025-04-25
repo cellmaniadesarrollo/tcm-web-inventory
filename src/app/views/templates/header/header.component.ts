@@ -127,10 +127,10 @@ this.userimg=data
   }
   async obtenerUbicacion(): Promise<void> {
     try { 
-      const coords=await this.getcoodinates()
+     const coords=await this.getcoodinates()
       this.ubicacionService.actualizarCoordenadas(coords);
       this.sucursal = await this.api.ubicacionessucursales( coords  );
-       this.sucursal_name = this.sucursal.name;
+      this.sucursal_name = this.sucursal.name;
       this.ubicacionService.actualizarNombreSucursal(this.sucursal.name);
     
     } catch (error) {
