@@ -30,8 +30,8 @@
                     <mat-label>Estado</mat-label>
                     <mat-select [(ngModel)]="datapage.allclients" (selectionChange)="buscar()">
                         <mat-option value="0">Todos</mat-option>
-                        <mat-option *ngFor="let estado of estados" [value]="estado">
-                            {{ estado }}
+                        <mat-option *ngFor="let estado of estados" [value]="estado.id">
+                            {{ estado.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

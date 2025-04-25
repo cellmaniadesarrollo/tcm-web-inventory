@@ -6,6 +6,9 @@ import { ResponseI } from 'src/app/models/response.interface';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertsService } from 'src/app/alerts/alerts.service';
 import { VglobalService } from 'src/app/service/vglobal/vglobal.service';
+import { CoordinateServiceService } from 'src/app/service/CoordinateService/coordinate-service.service';
+import { UbicacionCompartidaService } from 'src/app/service/ubicacion-compartida/ubicacion-compartida.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -21,13 +24,15 @@ export class LoginComponent {
     private api: ApiService,
     private router: Router,
     private alerts: AlertsService,
-    private global: VglobalService
+    private global: VglobalService, 
+
   ) {}
   errorStatus: boolean = false;
   erroMsj: any = '';
   ngOnInit(): void {
     // console.log('dataResponse')
   }
+  
   nivel2 = false;
   nivel1=false;
   async onLogin(form: LoginI) {
@@ -60,4 +65,9 @@ export class LoginComponent {
   toggleFieldTextType() {
     this.fieldTextType = !this.fieldTextType;
   }
+
+
+
+
+
 }

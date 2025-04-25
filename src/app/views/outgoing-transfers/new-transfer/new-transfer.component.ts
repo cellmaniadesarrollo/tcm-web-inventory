@@ -2,14 +2,14 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { debounceTime, map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { InventoryTransfersApiService } from 'src/app/service/inventory-transfers-api/inventory-transfers-api.service';
-import { CoordinateServiceService } from 'src/app/service/CoordinateService/coordinate-service.service';
+import { InventoryTransfersApiService } from 'src/app/service/inventory-transfers-api/inventory-transfers-api.service'; 
 import { ApiService } from 'src/app/service/api/api.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { BarcodeScannerService } from 'src/app/service/barcode-scanner/barcode-scanner.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'; 
+import { UbicacionCompartidaService } from 'src/app/service/ubicacion-compartida/ubicacion-compartida.service';
 interface Product {
   id: string;
   sku: string;
@@ -40,6 +40,7 @@ interface SelectedProduct {
   styleUrls: ['./new-transfer.component.css']
 })
 export class NewTransferComponent {  
+  private subscriptions: Subscription = new Subscription();
   isButtonDisabled = false;
   form: FormGroup;
   products: Product[] = [];
@@ -51,14 +52,29 @@ export class NewTransferComponent {
   isInputLocked: boolean = false;
   private inputLockTimeout: any;
   private subscription!: Subscription;
-  constructor(private barcodeScannerService: BarcodeScannerService, private cdr: ChangeDetectorRef, private fb: FormBuilder, private inventorytransferapi: InventoryTransfersApiService, private coodinates: CoordinateServiceService, private api: ApiService,private router: Router) {
+  constructor(private barcodeScannerService: BarcodeScannerService, private cdr: ChangeDetectorRef,
+     private fb: FormBuilder, private inventorytransferapi: InventoryTransfersApiService, 
+      private api: ApiService,private router: Router,
+     private ubicacionService: UbicacionCompartidaService) {
     this.form = this.fb.group({
       productCtrl: [''],
     });
   }
-
-  ngOnInit() {
-    this.getdata(); 
+ubicasion: any = ''
+  ngOnInit() {this.subscriptions.add(
+    this.ubicacionService.coordenadas$.subscribe(coords => {
+      this.ubicasion = coords
+      if (this.ubicasion &&
+        this.ubicasion !== '' &&
+        this.ubicasion.latitud &&
+        this.ubicasion.longitud &&
+        this.ubicasion.latitud !== 0 &&
+        this.ubicasion.longitud !== 0) {
+          this.getdata(); 
+      }
+    })
+  );
+    
     this.barcodeScannerService.listenForScan(28, 29) // mínimo y máximo
       .subscribe(code => { 
         this.productCtrl.setValue(code);
@@ -88,13 +104,10 @@ export class NewTransferComponent {
   }
 
   async getdata() {
-    const data = await this.inventorytransferapi.getnewdata(await this.getcoodinates())
+    const data = await this.inventorytransferapi.getnewdata(this.ubicasion)
     this.branches = data.branches
 
-  }
-  async getcoodinates() {
-    return await this.coodinates.obtenerUbicacion()
-  }
+  } 
 
   displayFn(product?: Product): string {
     return product ? product.name : '';
@@ -123,7 +136,7 @@ export class NewTransferComponent {
         try {
           const data = await this.inventorytransferapi.finditem({
             value,
-            coordinates: await this.getcoodinates()
+            coordinates: this.ubicasion
           });
           
           // Si la respuesta llega antes, cancelamos el timeout
@@ -195,7 +208,7 @@ export class NewTransferComponent {
       observation:item.observation
     }));
     try {
-      await this.inventorytransferapi.saveitem({payload,coordinates: await this.getcoodinates()})
+      await this.inventorytransferapi.saveitem({payload,coordinates: this.ubicasion})
       Swal.fire({
         icon: 'success',
         title: 'Éxito',

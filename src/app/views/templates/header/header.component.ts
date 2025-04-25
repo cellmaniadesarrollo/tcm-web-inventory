@@ -4,6 +4,7 @@ import { VglobalService } from 'src/app/service/vglobal/vglobal.service';
 import { ApiService } from '../../../service/api/api.service';
 import { CoordinateServiceService } from 'src/app/service/CoordinateService/coordinate-service.service';
 import { SharedServiceService } from 'src/app/service/SharedService/shared-service.service';
+import { UbicacionCompartidaService } from 'src/app/service/ubicacion-compartida/ubicacion-compartida.service';
 
 @Component({
   selector: 'app-header',
@@ -13,17 +14,18 @@ import { SharedServiceService } from 'src/app/service/SharedService/shared-servi
 
 
 export class HeaderComponent {
-  constructor(private router: Router, private global: VglobalService,private api: ApiService,private coodinates: CoordinateServiceService,private sharedService:SharedServiceService ) {}
+  constructor(private router: Router, private global: VglobalService,private api: ApiService,    private coodinates: CoordinateServiceService,
+    private ubicacionService:UbicacionCompartidaService ) {}
   nivel1 = false;
   nivel2 = false;
   ubicacion: { latitud: number; longitud: number } | null = null;
-sucursal: any;
+  sucursal: any;
  sucursal_name:string='DESCONOCIDA'
 user: any;
 
 
   ngOnInit(): void {
-  
+    this.obtenerUbicacion()
     this.loadimg()
     // this.checkLocalStorage();
     this.user = localStorage.getItem('User');
@@ -46,23 +48,10 @@ user: any;
       localStorage.removeItem('User');
       localStorage.removeItem('Groups');
       this.router.navigate(['login']);
-    }
-    this.obtenerUbicacion();
+    } 
   
   }
-  async obtenerUbicacion(): Promise<void> {
-    try { 
-      this.sucursal = await this.api.ubicacionessucursales(await this.getcoodinates());
-      this.sucursal_name = this.sucursal.name;
-      this.sharedService.setData( this.sucursal_name);
-    } catch (error) {
-      console.error('Error al obtener la ubicación:', error);
-    }
-  }
 
-  async getcoodinates() {
-    return await this.coodinates.obtenerUbicacion()
-  }
 
 
 userimg:any=false
@@ -135,5 +124,21 @@ this.userimg=data
   // Método para manejar el clic en un ítem del menú
   handleClick() {
     this.nivel12 = false; // Cierra el menú cuando se hace clic en un ítem
+  }
+  async obtenerUbicacion(): Promise<void> {
+    try { 
+      const coords=await this.getcoodinates()
+      this.ubicacionService.actualizarCoordenadas(coords);
+      this.sucursal = await this.api.ubicacionessucursales( coords  );
+       this.sucursal_name = this.sucursal.name;
+      this.ubicacionService.actualizarNombreSucursal(this.sucursal.name);
+    
+    } catch (error) {
+      console.error('Error al obtener la ubicación:', error);
+    }
+  }
+
+  async getcoodinates() {
+    return await this.coodinates.obtenerUbicacion()
   }
 }

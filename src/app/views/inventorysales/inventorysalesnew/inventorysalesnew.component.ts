@@ -22,7 +22,8 @@ import {
   ListsstateinventoryI,
 } from 'src/app/models/item.inteface';
 import printJS from 'print-js';
-
+import { UbicacionCompartidaService } from 'src/app/service/ubicacion-compartida/ubicacion-compartida.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-inventorysalesnew',
   templateUrl: './inventorysalesnew.component.html',
@@ -30,12 +31,14 @@ import printJS from 'print-js';
 })
 export class InventorysalesnewComponent {
  @ViewChild('ngselects') ngselect: any;
+ private subscriptions: Subscription = new Subscription();
   constructor(
     private api: ApiService,
     private activerouter: ActivatedRoute,
     private router: Router,
     private config: NgSelectConfig,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private ubicacionService:UbicacionCompartidaService
   ) {}
   nuevoForm: FormGroup = new FormGroup({
     cod_upc: new FormControl(''),
@@ -71,14 +74,24 @@ export class InventorysalesnewComponent {
   weights: ListsweightI[] = [];
   volumes: ListsvolumeI[] = [];
   // comesfroms: ListscomesfromI[] = [];
-  stateinventoryflows: ListsstateinventoryI[] = [];
-  ubicacion: { latitud: number; longitud: number } | null = null;
+  stateinventoryflows: ListsstateinventoryI[] = []; 
   sucursal: any;user: any;
   sucursal_name:string='DESCONOCIDA'
   ngOnInit(): void {
     this.validations(); 
-    this.listdata();
-    this.obtenerUbicacion();
+    this.listdata(); 
+    this.subscriptions.add(
+      this.ubicacionService.coordenadas$.subscribe(coords => {
+        this.nuevoForm.patchValue({
+          ubicacion:coords
+        });
+      })
+    );
+    this.subscriptions.add(
+      this.ubicacionService.nombreSucursal$.subscribe(nombre => {
+        this.sucursal_name = nombre;
+      })
+    );
   }
   
   modalVisible: boolean = false;
@@ -235,61 +248,15 @@ export class InventorysalesnewComponent {
       id_stateinventoryflow: this.stateinventoryflows[0]._id,
       //id_comesfrom: null,
       get_print: false,
-      ubicacion: this.ubicacion
+      ubicacion:{       latitud: null, 
+      longitud: null }
     });
   }
 
   // async onSubmit(form: any) {
   //   const data = 's'//await this.api.savecustomer(form);
   //   console.log(data);
-  // }
-  async obtenerUbicacion(): Promise<void> {
-    try {
-      // Intentar obtener la ubicación local desde el backend
-      const ubicacionLocal = await this.api.ubicacionessucursaleslocal(); 
-  
-      let coordenadas: { latitud: number; longitud: number } | null = null;
-  
-      // Verificar si la respuesta local tiene las coordenadas
-      if (ubicacionLocal && ubicacionLocal.latitude && ubicacionLocal.longitude) {
-        coordenadas = {
-          latitud: ubicacionLocal.latitude,
-          longitud: ubicacionLocal.longitude
-        };
-      } else {
-        // Si no hay coordenadas locales, obtenerlas del navegador 
-        coordenadas = await new Promise<{ latitud: number; longitud: number }>((resolve, reject) => {
-          if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                resolve({
-                  latitud: position.coords.latitude,
-                  longitud: position.coords.longitude
-                });
-              },
-              (error) => {
-                reject('No se pudo obtener la ubicación: ' + error.message);
-              }
-            );
-          } else {
-            reject('La geolocalización no está soportada en este navegador.');
-          }
-        });
-      }
-  
-      // Guardar la ubicación final
-      this.ubicacion = coordenadas;
-  
-      // Consultar sucursal con esa ubicación
-      this.sucursal = await this.api.ubicacionessucursales(this.ubicacion);
-      this.sucursal_name = this.sucursal.name;
-  
-      // Asignar valor al formulario
-      this.nuevoForm.get('ubicacion')?.setValue(this.ubicacion);
-    } catch (error) {
-      console.error('Error al obtener la ubicación:', error);
-    }
-  }
+  // } 
   validations() {
     this.nuevoForm = this.formBuilder.group({
       cod_upc: ['', Validators.required],
