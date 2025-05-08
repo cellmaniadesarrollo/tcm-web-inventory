@@ -164,11 +164,13 @@ export class InventoryperComponent {
   name2:string=''
   name3:string=''
   cantid:string=''
-  async printlocal(n1: any,n2:any,n3:any, can: any) {
+  price:any=null
+  async printlocal(n1: any,n2:any,n3:any, can: any,pri:any) {
     this.name1=n1
     this.name2=n2
     this.name3=n3
     this.cantid=can
+    this.price=pri
     this.modalVisible4 = true;
   }
   async closeprintlocal( ) {

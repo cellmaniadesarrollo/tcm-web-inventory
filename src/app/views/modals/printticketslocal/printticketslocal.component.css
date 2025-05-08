@@ -48,4 +48,14 @@
     /* Estilo cuando está marcado */
     border: none; /* Quita el borde cuando está marcado */
   }
-  
+  /* En tu archivo de estilos (styles.css o component.css) */
+.ng-invalid.ng-touched:not(form),
+.input-error {
+  border: 1px solid red !important;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}

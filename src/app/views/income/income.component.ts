@@ -229,7 +229,7 @@ export class IncomeComponent {
         this.listItems(this.filterForm.value); 
       } else if (data.id) {
         const params = new URLSearchParams(data.id)
-        const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
+        const url =`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; // 
         window.open(url, '_blank');
         this.closebutton.nativeElement.click();
         this.submitted = false; 
@@ -633,6 +633,7 @@ export class IncomeComponent {
   name3: string = ''
   cantid: string = ''
   qrtext: string = ''
+  price: any=null
   modalVisible4: boolean = false;
   async printlocal(id: any) {
     const data = await this.api.ticketsincomes({ id })
@@ -641,6 +642,7 @@ export class IncomeComponent {
     this.name3 = data.bottomText1
     this.qrtext = data.qrText
     this.cantid = data.cant
+    this.price=data.price
     this.modalVisible4 = true;
   }
   async closeprintlocal() {

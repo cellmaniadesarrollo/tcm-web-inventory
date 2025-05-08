@@ -275,7 +275,7 @@
                           ></abbr> -->
 
                           <abbr title="Imprimir normal" class="p-1"
-                            (click)="printlocal(item.items.models?.business_model, item.items.inventoryfownameitem?.name_nameitems+' ' +item.items.quality.quality_inventoryflow ,item.sku,item.stock.stock)"><a
+                            (click)="printlocal(item.items.models?.business_model, item.items.inventoryfownameitem?.name_nameitems+' ' +item.items.quality.quality_inventoryflow ,item.sku,item.stock.stock,item.items.item_price )"><a
                               class="btn btn-outline-dark p-1"><i class="fa fa-ticket"></i></a></abbr>
                           <!-- <abbr
                         title="Imprimir Ticket"
@@ -799,4 +799,4 @@
 </div>
 
 <app-printticketslocal *ngIf="modalVisible4" [namet1]="name1" [namet2]="name2" [nameb]="name3" [can]="cantid"
-  [qrdata]="name3" (closeModalEvent)="closeprintlocal()"></app-printticketslocal>
+  [qrdata]="name3" [price]="price" (closeModalEvent)="closeprintlocal()"></app-printticketslocal>

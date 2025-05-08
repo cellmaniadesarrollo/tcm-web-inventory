@@ -20,6 +20,7 @@ export class PrintticketslocalComponent {
   @Input() nameb: any;
   @Input() can: any; 
   @Input() qrdata: any; 
+  @Input() price: any; 
   @Output() closeModalEvent = new EventEmitter< any>();
   constructor(
     private api: ApiService,
@@ -45,16 +46,16 @@ export class PrintticketslocalComponent {
     bottomText1:new FormControl(''),
      cant:new FormControl(''),
       qrText: new FormControl(''), 
-      reset:new FormControl(false),
+      price:new FormControl(null),
   });
   validationsname() {
     this.printform = this.formBuilder.group({  
       topText1:[this.namet1, Validators.required], 
       topText2:[this.namet2, Validators.required], 
       bottomText1:[this.nameb, Validators.required],
-       cant:[this.can, Validators.required],
+       cant:[this.can, [Validators.required, Validators.min(1)]],
         qrText:[this.qrdata, Validators.required], 
-        reset:[false, Validators.required], 
+        price:[this.price, Validators.required], 
     });
   }
   submitted = false;
@@ -66,9 +67,7 @@ export class PrintticketslocalComponent {
       this.loading=true; 
       const params = new URLSearchParams(this.printform.value)
       const url =`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
-      window.open(url, '_blank');
-  //  const data= await this.api.printticketlocal(this.printform.value)
-  //  console.log(data)
+      window.open(url, '_blank'); 
     this.closeModal( )
     }
   } 
