@@ -20,6 +20,18 @@
     <ng-template #dataLoaded>
         <div class="col">
             <form [formGroup]="printform"> 
+<!-- Mostrar solo labels para los textos -->
+<div class="row mb-2">
+  <div class="col-12">
+    <label><strong> </strong> {{ namet1 }}</label>
+  </div>
+  <div class="col-12">
+    <label><strong> </strong> {{ namet2 }}</label>
+  </div>
+  <div class="col-12">
+    <label><strong> </strong> {{ nameb }}</label>
+  </div>
+</div>
               <div class="row mt-3">
       
                 <div class="custom-form-group">
@@ -44,6 +56,22 @@
                   </div>
                 </div>
               </div> 
+              <div class="form-check mt-3">
+                <input
+                  type="checkbox"
+                  id="iva"
+                  class="form-check-input"
+                  formControlName="iva"
+                />
+                <label class="form-check-label" for="iva">Incluir IVA</label>
+              </div>
+              <!-- Precio mostrado según IVA -->
+<div class="mt-2">
+  <strong>Precio Final:</strong>
+  <span>
+    {{ getPrecioConIva() | currency:'USD':'symbol':'1.2-2' }}
+  </span>
+</div>
             </form>
             <div class="row mt-3 justify-content-center">
               <div class="col-3">

@@ -34,7 +34,7 @@ export class PrintticketslocalComponent {
 
   displayDialog: boolean = false;
   ngOnInit(): void { 
-    this.validationsname();
+    this.validationsname(); 
     this.showDialog();
   }
   showDialog() {
@@ -47,6 +47,7 @@ export class PrintticketslocalComponent {
      cant:new FormControl(''),
       qrText: new FormControl(''), 
       price:new FormControl(null),
+      iva: new FormControl(true)
   });
   validationsname() {
     this.printform = this.formBuilder.group({  
@@ -56,6 +57,7 @@ export class PrintticketslocalComponent {
        cant:[this.can, [Validators.required, Validators.min(1)]],
         qrText:[this.qrdata, Validators.required], 
         price:[this.price, Validators.required], 
+        iva: [true]
     });
   }
   submitted = false;
@@ -85,4 +87,15 @@ export class PrintticketslocalComponent {
   onFocus(event: any) { 
     event.target.select();
   }
+  getPrecioConIva(): number {
+    const price = this.printform.get('price')?.value || 0;
+    const conIva = this.printform.get('iva')?.value;
+  
+    if (!conIva) {
+      return price;
+    } else {
+      return price * 1.15; // suma el 15%
+    }
+  }
+ 
 }

@@ -442,8 +442,8 @@
       </div>
       <!-- end header modal -->
       <!-- body modal -->
-      <div class="modal-body" *ngIf="!newproveedor">
-        <form [formGroup]="incomesaveForm">
+      <div class="modal-body" *ngIf="!newproveedor"> 
+        <form *ngIf="incomesaveForm"  [formGroup]="incomesaveForm">
 
 
           <div class="row">
@@ -593,6 +593,7 @@
                 </label>
               </div>
             </div>
+
             <!-- derecha-->
             <div class="col-sm-3">
               <div class="form-group">
@@ -650,7 +651,7 @@
           </div>
           <div class="row">
             <!-- derecha-->
-            <div class="col-sm-6">
+            <div class="col-sm-3">
               <div class="form-group">
                 <label class="border-lable-flt">
                   <input
@@ -669,6 +670,21 @@
                 </label>
               </div>
             </div>
+                        <!-- Checkbox IVA -->
+                         
+                        <div class="col-sm-3 d-flex align-items-center">
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              id="ivaCheckbox"
+                              formControlName="iva"
+                            />
+                            <label class="form-check-label" for="ivaCheckbox">
+                              Más IVA
+                            </label>
+                          </div>
+                        </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="border-lable-flt">
@@ -709,7 +725,7 @@
             </div>
           </div>
         </form>
-      </div>
+      </div> 
       <!-- nuevo proveedor -->
       <div class="modal-body" *ngIf="newproveedor">
         <form [formGroup]="supplierForm">

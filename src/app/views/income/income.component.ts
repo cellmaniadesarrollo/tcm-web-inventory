@@ -9,6 +9,7 @@ import {
   FormControl,
   Validators,
   FormBuilder,
+  FormControlName,
 } from '@angular/forms';
 import {
   ListitemsincomeI,
@@ -86,6 +87,7 @@ export class IncomeComponent {
     inpuesto: new FormControl(''),
     item: new FormControl(''),
     get_print: new FormControl(true),
+    iva:new FormControl(true),
   });
   incomeseditForm: FormGroup = new FormGroup({
     id: new FormControl(null),
@@ -309,7 +311,8 @@ export class IncomeComponent {
         Validators.required,
       ],
       item: [''],
-      get_print: [true, Validators.required]
+      get_print: [true, Validators.required],
+      iva: [true, Validators.required]
     });
 
     this.typedocumenttext = this.typedocument[0].name_type_document;
