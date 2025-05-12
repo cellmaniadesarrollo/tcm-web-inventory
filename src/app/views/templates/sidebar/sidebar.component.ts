@@ -13,6 +13,7 @@ export class SidebarComponent {
   nivel1 = false;
   nivel2 = false;
   nivel3=false
+  nivel4=false
   user: any;
   datoRecibido: any;
   ngOnInit(): void {
@@ -23,15 +24,10 @@ export class SidebarComponent {
     // this.checkLocalStorage();
     this.user = localStorage.getItem('User');
     const group = localStorage.getItem('Groups') || '';
-    this.nivel2 = group
-      .split(',')
-      .some((x: any) => x == 'IFE' || x == 'ADMINS');
-    this.nivel1 = group
-      .split(',')
-      .some((x: any) => x == 'CSRS' || x == 'ADMINS');
-      this.nivel3 = group
-      .split(',')
-      .some((x: any) => x == 'CSRSPER' || x == 'ADMINS');
+    this.nivel2 = group.split(',').some((x: any) => x == 'IFE' || x == 'ADMINS');
+    this.nivel1 = group.split(',').some((x: any) => x == 'CSRS' || x == 'ADMINS');
+    this.nivel3 = group.split(',').some((x: any) => x == 'CSRSPER' || x == 'ADMINS');
+    this.nivel4 = group.split(',').some((x: any) => x == 'CSRSSALE' || x == 'ADMINS');
     if (group != '') {
       if (!this.nivel2 && this.urlnivel2()) {
         this.router.navigate(['dashboard']);
@@ -46,7 +42,7 @@ export class SidebarComponent {
       this.router.navigate(['login']);
     }
     this.linksdata();
-  }
+  } 
  
   userimg: any = false;
   loadimg() {
