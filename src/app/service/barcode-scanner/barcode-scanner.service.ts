@@ -35,8 +35,7 @@ private listenToKeyboard() {
       clearTimeout(this.timer);
       this.timer = setTimeout(() => {
         const rawCode = this.buffer;
-        this.buffer = '';
-        console.log('Raw code:', rawCode);
+        this.buffer = ''; 
 
         if (this.isPseudoJsonFormat(rawCode)) {
           const parsed = this.parseRawCodeToObject(rawCode);
