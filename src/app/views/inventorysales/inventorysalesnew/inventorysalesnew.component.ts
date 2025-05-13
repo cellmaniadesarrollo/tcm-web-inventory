@@ -80,13 +80,27 @@ export class InventorysalesnewComponent {
   ngOnInit(): void {
     this.validations(); 
     this.listdata(); 
-    this.subscriptions.add(
-      this.ubicacionService.coordenadas$.subscribe(coords => {
-        this.nuevoForm.patchValue({
-          ubicacion:coords
-        });
-      })
-    );
+this.subscriptions.add(
+  this.ubicacionService.coordenadas$.subscribe(coords => {
+    const { latitud, longitud } = coords;
+
+    // Verificar si las coordenadas recibidas son válidas
+    const esUbicacionInvalida = latitud === 0 && longitud === 0;
+
+    // Obtener el valor actual del formulario
+    const ubicacionActual = this.nuevoForm.get('ubicacion')?.value;
+
+    // Verificar si ya hay una ubicación válida establecida
+    const yaTieneUbicacion = ubicacionActual?.latitud !== null && ubicacionActual?.longitud !== null;
+
+    if (!esUbicacionInvalida && !yaTieneUbicacion) {
+      console.log(coords)
+      this.nuevoForm.patchValue({
+        ubicacion: coords
+      });
+    }
+  })
+);
     this.subscriptions.add(
       this.ubicacionService.nombreSucursal$.subscribe(nombre => {
         this.sucursal_name = nombre;
@@ -234,6 +248,12 @@ export class InventorysalesnewComponent {
     this.datainit();
   }
   datainit() {
+      // Obtener coordenadas actuales del observable o del form
+  const ubicacionActual = this.nuevoForm.get('ubicacion')?.value;
+
+  const coordenadasValidas = (ubicacionActual?.latitud !== null && ubicacionActual?.longitud !== null)
+    ? ubicacionActual
+    : { latitud: null, longitud: null };
     this.nuevoForm.setValue({
       cod_upc: false,
       name_items: null,
@@ -248,8 +268,7 @@ export class InventorysalesnewComponent {
       id_stateinventoryflow: this.stateinventoryflows[0]._id,
       //id_comesfrom: null,
       get_print: false,
-      ubicacion:{       latitud: null, 
-      longitud: null }
+ubicacion: coordenadasValidas
     });
   }
 
@@ -295,8 +314,7 @@ export class InventorysalesnewComponent {
   submittedstateproduct = false;
   //submittedcomesfrom = false;
   onSubmit(form: any): void {
-    this.submitted = true;
-
+    this.submitted = true; 
     if (this.nuevoForm.invalid) {
       //this.postForm(form);
       // console.log(JSON.stringify(this.nuevoForm.value, null, 2));
@@ -309,6 +327,7 @@ export class InventorysalesnewComponent {
   }
 
   async postForm(form: any) {
+    
     const get = await this.api.savenewitemsales(form);
 
     if (get == 'OK') {
@@ -317,16 +336,7 @@ export class InventorysalesnewComponent {
     } else if (get.id) {
       const params = new URLSearchParams(get.id)
       const url =`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
-      window.open(url, '_blank');
-      // const dataget = await this.api.getpdfbase64(get.id);
-      // this.openPDFInNewTab(dataget.pdfbase64);
-      //console.log(dataget)
-      // printJS({
-      //   printable: dataget.pdfbase64,
-      //   type: 'pdf',
-      //   base64: true,
-      //   showModal: true,
-      // });
+      window.open(url, '_blank'); 
       this.datainit();
       this.submitted = false;
     }
@@ -335,8 +345,8 @@ export class InventorysalesnewComponent {
 
   async onSubmitclose() {
     this.submitted = true;
-    if (this.nuevoForm.invalid) {
-      console.log(JSON.stringify(this.nuevoForm.value, null, 2));
+    console.log(this.nuevoForm.value)
+    if (this.nuevoForm.invalid) { 
       return;
     } else {
       const data = await this.api.savenewitemsales(this.nuevoForm.value);
@@ -345,15 +355,7 @@ export class InventorysalesnewComponent {
       } else if (data.id) {
         const params = new URLSearchParams(data.id)
         const url =`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
-        window.open(url, '_blank');
-        // const dataget = await this.api.getpdfbase64(data.id);
-        // this.openPDFInNewTab(dataget.pdfbase64);
-        // printJS({
-        //   printable: dataget.pdfbase64,
-        //   type: 'pdf',
-        //   base64: true,
-        //   showModal: true,
-        // });
+        window.open(url, '_blank'); 
         this.router.navigate(['inventorysales']);
       }
     }
