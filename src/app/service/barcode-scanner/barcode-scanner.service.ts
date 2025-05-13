@@ -17,32 +17,61 @@ export class BarcodeScannerService {
 
   private keyListeners: ((code: string) => void)[] = [];
 
-  private listenToKeyboard() {
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-      this.zone.run(() => {
-        const currentTime = Date.now();
-        const timeDiff = currentTime - this.lastKeyTime;
-        this.lastKeyTime = currentTime;
+private listenToKeyboard() {
+  document.addEventListener('keydown', (event: KeyboardEvent) => {
+    this.zone.run(() => {
+      const currentTime = Date.now();
+      const timeDiff = currentTime - this.lastKeyTime;
+      this.lastKeyTime = currentTime;
 
-        if (timeDiff > this.TIMEOUT) {
-          this.buffer = '';
-        }
+      if (timeDiff > this.TIMEOUT) {
+        this.buffer = '';
+      }
 
-        if (event.key.length === 1) {
-          this.buffer += event.key;
-        }
+      if (event.key.length === 1) {
+        this.buffer += event.key;
+      }
 
-        clearTimeout(this.timer);
-        this.timer = setTimeout(() => {
-          const rawCode = this.buffer;
-          this.buffer = '';
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        const rawCode = this.buffer;
+        this.buffer = '';
+        console.log('Raw code:', rawCode);
 
+        if (this.isPseudoJsonFormat(rawCode)) {
+          const parsed = this.parseRawCodeToObject(rawCode);
+          const normalizedCode = parsed['S'] || '';
+          this.emitToListeners(normalizedCode);
+        } else {
           const normalizedCode = this.normalizeCode(rawCode);
           this.emitToListeners(normalizedCode);
-        }, this.TIMEOUT);
-      });
+        }
+      }, this.TIMEOUT);
     });
+  });
+}
+
+// Detecta si es un formato tipo clave:valor (pseudo JSON)
+private isPseudoJsonFormat(str: string): boolean {
+  const pairs = str.split(',');
+  return pairs.length > 1 && pairs.every(pair => pair.includes(':'));
+}
+
+// Convierte el formato clave:valor a un objeto
+private parseRawCodeToObject(rawCode: string): { [key: string]: string } {
+  const result: { [key: string]: string } = {};
+  const entries = rawCode.split(',');
+
+  for (let entry of entries) {
+    const [key, ...rest] = entry.split(':');
+    if (key && rest.length > 0) {
+      result[key.trim()] = rest.join(':').trim();
+    }
   }
+
+  return result;
+}
+
 
   private emitToListeners(code: string) {
     for (const listener of this.keyListeners) {
@@ -80,3 +109,6 @@ export class BarcodeScannerService {
       .trim();
   }
 }
+//  va a venir de estas dos formas los strings si viene de la segunda seria de devolver solo S la segunda parte seria de convertila en json ya que es un string aplicar filtros 
+// PER-AMA-AMA-INS00000000000742
+// F: 2025-05-09 ,D:681e22c16efb8d02514005ea,S:INS-APP-ROS-INF00000000002028,P:A. C. L. J. C. B:true, el codigo que te di esta solo para el primer string
