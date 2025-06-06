@@ -719,16 +719,30 @@
               <span lass="widget-title  shop-sidebar" *ngIf="!mostrarSugerencias">Observaciones</span>
             </label>
           </div>
-          <div class="row">
-            <div class="col-sm-12" align="center">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                formControlName="get_print"
-              />
-              <label for="">Imprimir etiqueta</label>
-            </div>
-          </div>
+<div class="row">
+  <div class="col-sm-12" align="center">
+    <div class="form-check form-check-inline">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        formControlName="get_print"
+        id="printLabelCheckbox"
+      />
+      <label class="form-check-label" for="printLabelCheckbox">
+        Imprimir etiqueta
+      </label>
+    </div>
+
+    <select
+      class="form-select w-auto d-inline-block ms-2"
+      formControlName="selected_printer"
+      *ngIf="incomesaveForm.get('get_print')?.value"
+    >
+      <option [ngValue]="'dymo'">Dymo</option>
+      <option [ngValue]="'zebra'">Zebra</option>
+    </select>
+  </div>
+</div>
         </form>
       </div> 
       <!-- nuevo proveedor -->

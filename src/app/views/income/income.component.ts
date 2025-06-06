@@ -30,6 +30,7 @@ import printJS from 'print-js';
 import { SetdataService } from 'src/app/service/setdata/setdata.service';
 import { SocketService } from 'src/app/service/socket/socket.service';
 import { Subscription } from 'rxjs';
+import { DymoserviceService } from 'src/app/service/dymoservice/dymoservice.service';
 @Component({
   selector: 'app-income',
   templateUrl: './income.component.html',
@@ -46,7 +47,8 @@ export class IncomeComponent {
     private pdfViewerService: PdfViewerService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private apiticketdymmo: DymoserviceService
   ) { }
 
   numperpagess = [
@@ -87,7 +89,8 @@ export class IncomeComponent {
     inpuesto: new FormControl(''),
     item: new FormControl(''),
     get_print: new FormControl(true),
-    iva:new FormControl(true),
+    iva: new FormControl(true),
+    selected_printer: new FormControl('')
   });
   incomeseditForm: FormGroup = new FormGroup({
     id: new FormControl(null),
@@ -118,18 +121,18 @@ export class IncomeComponent {
 
   private subscribedChannel: string = 'income';
   private messageSubscription: Subscription | null = null;
-  myedit:boolean=true
-  ngOnInit(): void { 
-        // Suscribirse al canal al iniciar el componente
-        this.socketService.subscribeToChannel(this.subscribedChannel);
+  myedit: boolean = true
+  ngOnInit(): void {
+    // Suscribirse al canal al iniciar el componente
+    this.socketService.subscribeToChannel(this.subscribedChannel);
 
-        // Suscribirse al observable de mensajes para recibir los mensajes del canal
-        this.messageSubscription = this.socketService.message$.subscribe((message) => {
-          if (message && message === 'RELOAD') {
-            console.log('Received message from channel:', message);
-            this.listItems(this.filterForm.value);
-          }
-        });
+    // Suscribirse al observable de mensajes para recibir los mensajes del canal
+    this.messageSubscription = this.socketService.message$.subscribe((message) => {
+      if (message && message === 'RELOAD') {
+        console.log('Received message from channel:', message);
+        this.listItems(this.filterForm.value);
+      }
+    });
     this.listItemsstart(this.filterForm.value);
   }
   ngOnDestroy() {
@@ -192,9 +195,9 @@ export class IncomeComponent {
   }
   loading: boolean = true;
   async listItems(form: any) {
-    
+
     const data = await this.api.listincomes(form);
-   
+
     this.incomeslists = data.intake;
     this.numperpages = data.number_of_records_per_page;
     this.totalentries = data.number_of_records;
@@ -203,12 +206,12 @@ export class IncomeComponent {
     const inventoryaux = this.filterForm.controls['inventory'].getRawValue() || '0';
     this.filterinit(data.allclients, inventoryaux, 1, data.number_of_records_per_page.toString(), findlikeaux)
     this.onFormChanges()
-    this.myedit=true
+    this.myedit = true
   }
   bloquear: boolean = false;
   bloquear1: boolean = false;
   async onSubmitclose(form: any) {
-    
+
     this.submitted = true;
     this.bloquear = true;
     this.bloquear1 = true;
@@ -221,22 +224,27 @@ export class IncomeComponent {
       // console.log(JSON.stringify(this.nuevoForm.value, null, 2));
       return;
     } else {
-      this.myedit=false
+      this.myedit = false
       const data = await this.api.saveincome(form);
-      
+
       if (data == 'OK') {
 
         this.closebutton.nativeElement.click();
-        this.submitted = false; 
-        this.listItems(this.filterForm.value); 
+        this.submitted = false;
+        this.listItems(this.filterForm.value);
       } else if (data.id) {
-        const params = new URLSearchParams(data.id)
-        const url =`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; // 
-        window.open(url, '_blank');
+        if (data.printer === 'dymo') {
+          const datat = await this.apiticketdymmo.printTickets(data.id)
+          console.log(datat)
+        } else {
+          const params = new URLSearchParams(data.id)
+          const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
+          window.open(url, '_blank');
+        }
         this.closebutton.nativeElement.click();
-        this.submitted = false; 
-        this.listItems(this.filterForm.value); 
-      } 
+        this.submitted = false;
+        this.listItems(this.filterForm.value);
+      }
     }
   }
   async onSubmitcloseoff(form: any) {
@@ -251,7 +259,7 @@ export class IncomeComponent {
 
       return;
     } else {
-      this.myedit=false
+      this.myedit = false
       const data = await this.api.saveincome(form);
       if (data == 'OK') {
         this.listItems(this.filterForm.value);
@@ -263,11 +271,15 @@ export class IncomeComponent {
         this.incomesaveForm.controls['preciounit'].setValue(0);
         this.incomesaveForm.controls['observaciones'].setValue('');
       } else if (data.id) {
-        //console.log(data)
-        const params = new URLSearchParams(data.id)
-        const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
-        window.open(url, '_blank');
 
+        if (data.printer === 'dymo') {
+          const datat = await this.apiticketdymmo.printTickets(data.id)
+          console.log(datat)
+        } else {
+          const params = new URLSearchParams(data.id)
+          const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
+          window.open(url, '_blank');
+        }
         this.terminoDeBusqueda = ''
         this.submitted = false;
         this.incomesaveForm.controls['id_item'].setValue(null);
@@ -275,7 +287,7 @@ export class IncomeComponent {
         this.incomesaveForm.controls['precioventa'].setValue(0);
         this.incomesaveForm.controls['preciounit'].setValue(0);
         this.incomesaveForm.controls['observaciones'].setValue('');
-      } 
+      }
     }
   }
 
@@ -284,6 +296,8 @@ export class IncomeComponent {
     return this.incomesaveForm.controls;
   }
   async getdataincome() {
+const user = localStorage.getItem('User');
+ 
     this.mostrarSugerencias = false;
     this.blockbusquedapro = false;
     this.bloquear = false;
@@ -302,7 +316,7 @@ export class IncomeComponent {
       numero_documento: ['', Validators.required],
       precioventa: [0, Validators.required],
       cantidad: [1, Validators.required],
-      preciounit: [0 , Validators.required],
+      preciounit: [0, Validators.required],
       observaciones: [''],
       porcentaje: [this.taxespercentaje[0]._id, Validators.required],
       inpuesto: [data.nametax, Validators.required],
@@ -312,7 +326,9 @@ export class IncomeComponent {
       ],
       item: [''],
       get_print: [true, Validators.required],
-      iva: [true, Validators.required]
+      iva: [true, Validators.required],
+      selected_printer: [user && user === 'byronp' ? 'dymo' : 'zebra']
+
     });
 
     this.typedocumenttext = this.typedocument[0].name_type_document;
@@ -458,7 +474,7 @@ export class IncomeComponent {
     );
     this.loading = true;
     this.listItems(this.filterForm.value);
-    this.loading = false; 
+    this.loading = false;
   }
 
 
@@ -519,7 +535,7 @@ export class IncomeComponent {
     if (this.supplierForm.invalid) {
       return;
     } else {
-      this.myedit=false
+      this.myedit = false
       const dat = await this.api.editincome(data);
       //  console.log(data)
       if (dat == 'OK') {
@@ -621,13 +637,13 @@ export class IncomeComponent {
         }, 1000);
         this.loading = true;
         this.listItems(this.filterForm.value);
-        this.loading = false; 
+        this.loading = false;
       }
     }
     if (event.target.value.length == 0) {
       this.loading = true;
       this.listItems(this.filterForm.value);
-      this.loading = false; 
+      this.loading = false;
     }
   }
 
@@ -636,18 +652,18 @@ export class IncomeComponent {
   name3: string = ''
   cantid: string = ''
   qrtext: string = ''
-  price: any=null
-  printlocalt:any = ''
+  price: any = null
+  printlocalt: any = ''
   modalVisible4: boolean = false;
-  async printlocal(id: any,print:any=null) {
+  async printlocal(id: any, print: any = null) {
     const data = await this.api.ticketsincomes({ id })
     this.name1 = data.topText1
     this.name2 = data.topText2
     this.name3 = data.bottomText1
     this.qrtext = data.qrText
     this.cantid = data.cant
-    this.printlocalt=print
-    this.price=data.price
+    this.printlocalt = print
+    this.price = data.price
     this.modalVisible4 = true;
   }
   async closeprintlocal() {
