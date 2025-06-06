@@ -216,7 +216,7 @@ export class InventorynewComponent {
     this.nuevoForm.setValue({
       cod_upc: false,
       name_items: null,
-      stock: null,
+      stock: 0,
       id_brand: null,
       id_model: null,
       id_type: null,
