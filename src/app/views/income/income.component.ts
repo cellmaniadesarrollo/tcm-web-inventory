@@ -637,14 +637,16 @@ export class IncomeComponent {
   cantid: string = ''
   qrtext: string = ''
   price: any=null
+  printlocalt:any = ''
   modalVisible4: boolean = false;
-  async printlocal(id: any) {
+  async printlocal(id: any,print:any=null) {
     const data = await this.api.ticketsincomes({ id })
     this.name1 = data.topText1
     this.name2 = data.topText2
     this.name3 = data.bottomText1
     this.qrtext = data.qrText
     this.cantid = data.cant
+    this.printlocalt=print
     this.price=data.price
     this.modalVisible4 = true;
   }

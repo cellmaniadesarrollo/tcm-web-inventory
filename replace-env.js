@@ -5,7 +5,8 @@ const envConfigFile = `
 export const environment = {
   production: true,
   apiUrl: '${process.env.API_URL}',
-  webSocket: '${process.env.WEB_SOCKET}'
+  webSocket: '${process.env.WEB_SOCKET}',
+  apidymo: '${process.env.APIDYMO}'
 };
 `;
 

@@ -7,14 +7,16 @@ import {
   FormControl,
   Validators,
   FormBuilder,
-} from '@angular/forms'; 
-import printJS from 'print-js';
+} from '@angular/forms';  
+import { DymoserviceService } from 'src/app/service/dymoservice/dymoservice.service';
+ 
 @Component({
   selector: 'app-printticketslocal',
   templateUrl: './printticketslocal.component.html',
   styleUrls: ['./printticketslocal.component.css']
 })
 export class PrintticketslocalComponent {
+  @Input() printtype:any
   @Input() namet1: any;
   @Input() namet2: any;
   @Input() nameb: any;
@@ -26,7 +28,8 @@ export class PrintticketslocalComponent {
     private api: ApiService,
     private activerouter: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private apidymo:DymoserviceService
   ) {}
   closeModal( ) { 
     this.closeModalEvent.emit();
@@ -38,6 +41,7 @@ export class PrintticketslocalComponent {
     this.showDialog();
   }
   showDialog() {
+  
     this.displayDialog = true;
   }
   printform: FormGroup = new FormGroup({
@@ -67,9 +71,15 @@ export class PrintticketslocalComponent {
     this.submitted = true;
     if (this.printform.valid) {
       this.loading=true; 
+      if(this.printtype==='dymo'){
+     const data= await this.apidymo.printTickets(this.printform.value)
+     console.log(data)
+      }else {
       const params = new URLSearchParams(this.printform.value)
-      const url =`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
-      window.open(url, '_blank'); 
+      const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
+     window.open(url, '_blank'); 
+      }
+      
     this.closeModal( )
     }
   } 

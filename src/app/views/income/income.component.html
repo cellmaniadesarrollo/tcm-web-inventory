@@ -347,6 +347,11 @@
                         ><a class="btn btn-outline-dark p-1" (click)="printlocal(item._id)" 
                           ><i class="fa fa-ticket"></i></a
                       ></abbr> 
+                      <abbr title="Imprimir en Dymo" class="p-1">
+  <a class="btn btn-outline-dark p-1" (click)="printlocal(item._id,'dymo')" style="border-color: #0054D2; color: #0054D2;">
+    <i class="fa fa-print"></i> 
+  </a>
+</abbr>
                       </td>
                     </tr>
                   </tbody>
@@ -1170,6 +1175,7 @@
 [can]="cantid"
 [qrdata]="qrtext"
 [price]="price"
+[printtype]="printlocalt"
 (closeModalEvent)="closeprintlocal()"></app-printticketslocal>
 <app-reportwassapincomes
 *ngIf="wassapmodal"
