@@ -28,4 +28,22 @@
   }
   
  
-  
+  .status-solicitado td {
+  background-color: #e0f7fa; /* celeste claro */
+}
+.status-enviado td {
+  background-color: #d1c4e9; /* lila claro */
+}
+.status-rechazado td {
+  background-color: #ffcdd2; /* rojo claro */
+}
+.status-en-proceso td {
+  background-color: #fff9c4; /* amarillo claro */
+}
+.status-completado td {
+  background-color: #c8e6c9; /* verde claro */
+}
+.status-cancelado td {
+  background-color: #eeeeee; /* gris claro */
+}
+ 

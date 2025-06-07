@@ -105,7 +105,15 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let t of transacciones | paginate : { itemsPerPage: datapage.numperpage, currentPage: datapage.pagination, totalItems: totalentries }">
+                <tr *ngFor="let t of transacciones | paginate : { itemsPerPage: datapage.numperpage, currentPage: datapage.pagination, totalItems: totalentries }"
+                    [ngClass]="{
+      'status-solicitado': t.status === 'SOLICITADO',
+      'status-enviado': t.status === 'ENVIADO',
+      'status-rechazado': t.status === 'RECHAZADO',
+      'status-en-proceso': t.status === 'EN PROCESO',
+      'status-completado': t.status === 'COMPLETADO',
+      'status-cancelado': t.status === 'CANCELADO'
+    }">
                   <td>{{ t.cod }}</td>
                   <td>{{ t.name }}</td>
                   <td>{{ t.model }}</td>
