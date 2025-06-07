@@ -45,7 +45,7 @@ const routes: Routes = [
   {path:'inventorysales',component:InventorysalesComponent },
   {path:'inventorysalesnew',component:InventorysalesnewComponent },
   {path:'movementssales',component:MovementssalesComponent},
-  {path:'ticket-printing',component:TicketPrinterComponent},
+  // {path:'ticket-printing',component:TicketPrinterComponent},
   {path:'outgoing-transfers',component:OutgoingTransfersComponent},
   {path:'new-transfers',component:NewTransferComponent},
   {path:'receiving-transfers',component:ReceivingTransfersComponent},
