@@ -258,7 +258,7 @@ loading: boolean = true;
     this.datapage.findlike = this.searchForm.value.valuesearch || '';
     
     if (event.key === 'Enter') {
-    if (event.target.value.length > 2) {
+    if (event.target.value.length > 0) {
       this.blockbusqueda =true
        
       setTimeout(() => {
