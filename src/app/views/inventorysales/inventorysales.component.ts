@@ -340,8 +340,7 @@ loading: boolean = true;
     id_stateproduct_inventoryflow: new FormControl(''),
     observations: new FormControl(''),
     id_stateinventoryflow: new FormControl(''),
-   // id_comesfrom: new FormControl(''),
-    get_print: new FormControl(''),
+    price: new FormControl(''),  
   });
 
   salidaForm: FormGroup = new FormGroup({
@@ -397,22 +396,9 @@ loading: boolean = true;
   async datainit() {
     //  this.validationssalidaform()
     const data: any = await this.api.findoneitem(this.find);
- // console.log(data)
-  //   await this.changeLeagueOwner1(data.items.model.id_brands);
-  //   this.color = await this.colors.find((_id) => _id > data.id_color)
-  //     ?.color_name;
+  console.log(data) 
     this.tipo = await this.types.find((_id) => _id > data.id_type)
-      ?.type_inventoryflow;
-  //   // this.procedencia = await this.comesfroms.find(
-  //   //   (_id) => _id > data.id_comesfrom
-  //   // )?.comesfrom;
-  //   this.calidad = await this.qualitys.find((_id) => _id > data.id_color)
-  //     ?.quality_inventoryflow;
-  //   this.estado = await this.stateproducts.find(
-  //     (_id) => _id > data.id_stateproduct_inventoryflow
-  //   )?.stateproduct_inventoryflow;
-   // console.log(data)
-  //  this.upc = data.sku;
+      ?.type_inventoryflow; 
     this.nuevoForm.setValue({
       _id: data._id,
       cod_upc: data.upc,
@@ -425,8 +411,8 @@ loading: boolean = true;
       id_quality: data.items.quality.quality_inventoryflow,
       id_stateproduct_inventoryflow: data.items.stateproductinventoryflow.stateproduct_inventoryflow,
       observations: data.observations,
-      id_stateinventoryflow: data.id_state, 
-      get_print: true,
+      id_stateinventoryflow: data.id_state,  
+      price:data.items.item_price
     });
   }
 
@@ -444,8 +430,7 @@ loading: boolean = true;
       id_stateproduct_inventoryflow: null,
       observations: null,
       id_stateinventoryflow: null,
-    //  id_comesfrom: null,
-      get_print: null,
+    //  id_comesfrom: null, 
     });
   }
   get f(): { [key: string]: AbstractControl } {

@@ -505,183 +505,179 @@
           </form>
         </div>
         <div class="modal-body" *ngIf="editar">
-          <form [formGroup]="nuevoForm">
-            <div class="row">
-              <div class="d-flex justify-content-center">
-                <label for=""> {{ upc }}</label>
-              </div>
+<form [formGroup]="nuevoForm">
+  <div class="row">
+    <div class="d-flex justify-content-center">
+      <label for=""> {{ upc }}</label>
+    </div>
 
-              <div class="col-sm-6">
-                <div class="row">
-                  <!-- izquierda -->
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <label class="border-lable-flt">
-                        <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
-                          formControlName="name_items" placeholder="nombre" [ngClass]="{
-                            'is-invalid': submitted && f['name_items'].errors
-                          }" readonly />
-                        <span lass="widget-title  shop-sidebar">Nombre </span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
+    <div class="col-sm-6">
+      <div class="row">
+        <!-- izquierda -->
+        <div class="col-sm-10">
+          <div class="form-group">
+            <label class="border-lable-flt">
+              <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
+                formControlName="name_items" placeholder="nombre" [ngClass]="{
+                  'is-invalid': submitted && f['name_items'].errors
+                }" readonly />
+              <span lass="widget-title  shop-sidebar">Nombre </span>
+            </label>
+          </div>
+        </div>
+      </div>
 
-                <div class="row">
-                  <!-- izquierda -->
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <label class="border-lable-flt">
-                        <input type="number" class="form-control" formControlName="stock" placeholder="Stock" [ngClass]="{
-                            'is-invalid': submitted && f['stock'].errors
-                          }" required />
-                        <span lass="widget-title  shop-sidebar">Stock *</span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
+      <div class="row">
+        <!-- izquierda -->
+        <div class="col-sm-10">
+          <div class="form-group">
+            <label class="border-lable-flt">
+              <input type="number" class="form-control" formControlName="stock" placeholder="Stock" [ngClass]="{
+                  'is-invalid': submitted && f['stock'].errors
+                }" required />
+              <span lass="widget-title  shop-sidebar">Stock *</span>
+            </label>
+          </div>
+        </div>
+      </div>
 
-                <div class="row">
-                  <!-- izquierda -->
-                  <!-- derecha-->
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <label class="border-lable-flt">
-                        <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
-                          formControlName="id_brand" placeholder="nombre" [ngClass]="{
-                            'is-invalid': submitted && f['id_brand'].errors
-                          }" readonly />
-                        <span lass="widget-title  shop-sidebar">Marca</span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
+      <div class="row">
+        <!-- izquierda -->
+        <!-- derecha-->
+        <div class="col-sm-10">
+          <div class="form-group">
+            <label class="border-lable-flt">
+              <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
+                formControlName="id_brand" placeholder="nombre" [ngClass]="{
+                  'is-invalid': submitted && f['id_brand'].errors
+                }" readonly />
+              <span lass="widget-title  shop-sidebar">Marca</span>
+            </label>
+          </div>
+        </div>
+      </div>
 
-                <div class="row">
-                  <!-- derecha-->
-                  <!-- izquierda -->
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <label class="border-lable-flt">
-                        <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
-                          formControlName="id_model" placeholder="nombre" [ngClass]="{
-                            'is-invalid': submitted && f['id_model'].errors
-                          }" readonly />
-                        <span lass="widget-title  shop-sidebar">Modelo</span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <!-- derecha-->
-                  <!-- izquierda -->
-                  <div class="col-sm-10">
-                    <ng-select placeholder="Selecionar estado inventario*" formControlName="id_type" [ngClass]="{
-                      'is-invalid':
-                        submitted && f['id_type'].errors
-                    }">
-                      <ng-option *ngFor="let type of types" [value]="type._id">{{ type.type_inventoryflow }}
-                      </ng-option>
-                    </ng-select>
-                    <div *ngIf="submitted && f['id_type'].errors" class="invalid-feedback">
-                      <div *ngIf="f['id_type'].errors['required']">
-                        Tipo de producto requerido
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <!-- derecha-->
-
-                  <!-- izquierda -->
-                  <!-- <div class="col-sm-10">
-                    <label class="border-lable-flt">
-                      <input
-                        type="text"
-                        class="form-control"
-                        placeholder="Procedencia"
-                        value="{{ procedencia }}"
-                        readonly
-                      />
-                      <span lass="widget-title  shop-sidebar">Procedencia</span>
-                    </label>
-                  </div> -->
-                </div>
-
-                <div class="row">
-                  <!-- derecha-->
-                  <!-- izquierda -->
-                  <div class="col-sm-10">
-                    <label class="border-lable-flt">
-                      <input type="text" class="form-control" placeholder="Color" formControlName="id_color" readonly />
-                      <span lass="widget-title  shop-sidebar">Color</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <!-- derecha -->
-              <div class="col-sm-6">
-                <div class="row">
-                  <!-- derecha-->
-
-                  <!-- izquierda -->
-                  <div class="col-sm-10">
-                    <label class="border-lable-flt">
-                      <input type="text" class="form-control" placeholder="Calidad" formControlName="id_quality"
-                        readonly />
-                      <span lass="widget-title  shop-sidebar">Calidad</span>
-                    </label>
-                  </div>
-                </div>
-                <div class="row">
-                  <!-- derecha-->
-
-                  <!-- izquierda -->
-                  <div class="col-sm-10">
-                    <label class="border-lable-flt">
-                      <input type="text" class="form-control" placeholder="Estado del producto"
-                        formControlName="id_stateproduct_inventoryflow" readonly />
-                      <span lass="widget-title  shop-sidebar">Estado del producto</span>
-                    </label>
-                  </div>
-                </div>
-                <div class="row">
-                  <!-- izquierda -->
-                  <div class="col-sm-10">
-                    <div class="form-group">
-                      <label class="border-lable-flt">
-                        <textarea class="form-control" formControlName="observations"
-                          placeholder="Observaciones"></textarea>
-
-                        <span lass="widget-title  shop-sidebar">Observaciones</span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <!-- derecha-->
-                  <!-- izquierda -->
-                  <div class="col-sm-10">
-                    <ng-select placeholder="Selecionar estado inventario*" formControlName="id_stateinventoryflow"
-                      [ngClass]="{
-                        'is-invalid':
-                          submitted && f['id_stateinventoryflow'].errors
-                      }">
-                      <ng-option *ngFor="let stateinventoryflow of stateinventoryflows"
-                        [value]="stateinventoryflow._id">{{ stateinventoryflow.state_inventoryflow }}
-                      </ng-option>
-                    </ng-select>
-                    <div *ngIf="submitted && f['id_stateinventoryflow'].errors" class="invalid-feedback">
-                      <div *ngIf="f['id_stateinventoryflow'].errors['required']">
-                        Estado del inventario requerido
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      <div class="row">
+        <!-- derecha-->
+        <!-- izquierda -->
+        <div class="col-sm-10">
+          <div class="form-group">
+            <label class="border-lable-flt">
+              <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
+                formControlName="id_model" placeholder="nombre" [ngClass]="{
+                  'is-invalid': submitted && f['id_model'].errors
+                }" readonly />
+              <span lass="widget-title  shop-sidebar">Modelo</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- derecha-->
+        <!-- izquierda -->
+        <div class="col-sm-10">
+          <ng-select placeholder="Selecionar estado inventario*" formControlName="id_type" [ngClass]="{
+            'is-invalid':
+              submitted && f['id_type'].errors
+          }">
+            <ng-option *ngFor="let type of types" [value]="type._id">{{ type.type_inventoryflow }}
+            </ng-option>
+          </ng-select>
+          <div *ngIf="submitted && f['id_type'].errors" class="invalid-feedback">
+            <div *ngIf="f['id_type'].errors['required']">
+              Tipo de producto requerido
             </div>
-          </form>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- derecha-->
+        <!-- izquierda -->
+      </div>
+
+      <div class="row">
+        <!-- derecha-->
+        <!-- izquierda -->
+        <div class="col-sm-10">
+          <label class="border-lable-flt">
+            <input type="text" class="form-control" placeholder="Color" formControlName="id_color" readonly />
+            <span lass="widget-title  shop-sidebar">Color</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <!-- derecha -->
+    <div class="col-sm-6">
+      <div class="row">
+        <!-- derecha-->
+        <!-- izquierda -->
+        <div class="col-sm-10">
+          <div class="form-group">
+            <label class="border-lable-flt">
+              <input type="number" class="form-control" formControlName="price" placeholder="Precio" [ngClass]="{
+                'is-invalid': submitted && f['price'].errors
+              }" step="0.01" min="0" />
+              <span lass="widget-title  shop-sidebar">Precio</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <!-- derecha-->
+        <!-- izquierda -->
+        <div class="col-sm-10">
+          <label class="border-lable-flt">
+            <input type="text" class="form-control" placeholder="Calidad" formControlName="id_quality" readonly />
+            <span lass="widget-title  shop-sidebar">Calidad</span>
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <!-- derecha-->
+        <!-- izquierda -->
+        <div class="col-sm-10">
+          <label class="border-lable-flt">
+            <input type="text" class="form-control" placeholder="Estado del producto"
+              formControlName="id_stateproduct_inventoryflow" readonly />
+            <span lass="widget-title  shop-sidebar">Estado del producto</span>
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <!-- izquierda -->
+        <div class="col-sm-10">
+          <div class="form-group">
+            <label class="border-lable-flt">
+              <textarea class="form-control" formControlName="observations" placeholder="Observaciones"></textarea>
+              <span lass="widget-title  shop-sidebar">Observaciones</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- derecha-->
+        <!-- izquierda -->
+        <div class="col-sm-10">
+          <ng-select placeholder="Selecionar estado inventario*" formControlName="id_stateinventoryflow" [ngClass]="{
+            'is-invalid':
+              submitted && f['id_stateinventoryflow'].errors
+          }">
+            <ng-option *ngFor="let stateinventoryflow of stateinventoryflows" [value]="stateinventoryflow._id">
+              {{ stateinventoryflow.state_inventoryflow }}
+            </ng-option>
+          </ng-select>
+          <div *ngIf="submitted && f['id_stateinventoryflow'].errors" class="invalid-feedback">
+            <div *ngIf="f['id_stateinventoryflow'].errors['required']">
+              Estado del inventario requerido
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
         </div>
 
         <div class="modal-body" *ngIf="history">

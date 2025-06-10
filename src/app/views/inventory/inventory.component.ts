@@ -290,6 +290,7 @@ loading: boolean = true;
     id_stateproduct_inventoryflow: new FormControl(''),
     observations: new FormControl(''),
     id_stateinventoryflow: new FormControl(''),
+    
    // id_comesfrom: new FormControl(''),
     get_print: new FormControl(''),
   });
@@ -348,22 +349,10 @@ loading: boolean = true;
   async datainit() {
     //  this.validationssalidaform()
     const data: any = await this.api.findoneitem(this.find);
- // console.log(data)
-  //   await this.changeLeagueOwner1(data.items.model.id_brands);
-  //   this.color = await this.colors.find((_id) => _id > data.id_color)
-  //     ?.color_name;
+ 
+ 
     this.tipo = await this.types.find((_id) => _id > data.id_type)
-      ?.type_inventoryflow;
-  //   // this.procedencia = await this.comesfroms.find(
-  //   //   (_id) => _id > data.id_comesfrom
-  //   // )?.comesfrom;
-  //   this.calidad = await this.qualitys.find((_id) => _id > data.id_color)
-  //     ?.quality_inventoryflow;
-  //   this.estado = await this.stateproducts.find(
-  //     (_id) => _id > data.id_stateproduct_inventoryflow
-  //   )?.stateproduct_inventoryflow;
-   // console.log(data)
-  //  this.upc = data.sku;
+      ?.type_inventoryflow; 
     this.nuevoForm.setValue({
       _id: data._id,
       cod_upc: data.upc,
