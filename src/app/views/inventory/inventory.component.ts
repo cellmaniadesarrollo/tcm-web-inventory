@@ -209,28 +209,7 @@ loading: boolean = true;
     Swal.close();
   }
 
-  async print2(data: any) {
-    const dataget = await this.api.getxmlticket(data);
-    var printers = dymo.label.framework.getPrinters();
-    if (printers.length == 0)
-      throw 'No DYMO printers are installed. Install DYMO printers.';
-
-    dymo.label.framework
-      .getPrintersAsync()
-      .then(function (printers: any) {
-        // Successful result, printers variable has a list of all supported by the DYMO Label Framework
-        console.log(printers);
-      })
-      .thenCatch(function (error: any) {
-        // Error
-      });
-
-    var labelXml = dataget.xml.toString();
-    //console.log(labelXml)
-    var label = dymo.label.framework.openLabelXml(labelXml);
-    //label.setObjectText("BARCODE", '000220200');
-    label.print('DYMO LabelWriter 450 Twin Turbo');
-  }
+ 
 
   async downloadpdf(data: any) {
     const dataget = await this.api.getpdfbase64(data);
@@ -324,6 +303,7 @@ loading: boolean = true;
     entrega_a: new FormControl(null),
     observaciones: new FormControl(''),
     fecha: new FormControl(new Date()),
+    print: new FormControl(false),
   });
 
   async onSubmitclose() {
