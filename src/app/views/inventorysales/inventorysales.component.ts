@@ -396,9 +396,8 @@ loading: boolean = true;
   async datainit() {
     //  this.validationssalidaform()
     const data: any = await this.api.findoneitem(this.find);
-  console.log(data) 
-    this.tipo = await this.types.find((_id) => _id > data.id_type)
-      ?.type_inventoryflow; 
+     
+ 
     this.nuevoForm.setValue({
       _id: data._id,
       cod_upc: data.upc,
@@ -408,7 +407,8 @@ loading: boolean = true;
       id_model: data.items.model.business_model,
       id_type: data.typeinventoryflow._id,
       id_color: data.items.colors.color_name,
-      id_quality: data.items.quality.quality_inventoryflow,
+     // id_quality: data.items.quality.quality_inventoryflow,
+      id_quality: data.items.quality._id,
       id_stateproduct_inventoryflow: data.items.stateproductinventoryflow.stateproduct_inventoryflow,
       observations: data.observations,
       id_stateinventoryflow: data.id_state,  

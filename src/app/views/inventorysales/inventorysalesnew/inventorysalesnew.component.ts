@@ -93,8 +93,7 @@ this.subscriptions.add(
     // Verificar si ya hay una ubicación válida establecida
     const yaTieneUbicacion = ubicacionActual?.latitud !== null && ubicacionActual?.longitud !== null;
 
-    if (!esUbicacionInvalida && !yaTieneUbicacion) {
-      console.log(coords)
+    if (!esUbicacionInvalida && !yaTieneUbicacion) { 
       this.nuevoForm.patchValue({
         ubicacion: coords
       });
