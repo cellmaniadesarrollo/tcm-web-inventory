@@ -536,7 +536,7 @@ pvitotal(punit:any,ptax:any,cant:any){
  }
 
   async listdata() {
-    const data = await this.api.datanewitem('invfl');
+    const data = await this.api.datanewitem('invsal');
     
     this.brands = data.brand;
     this.colors = data.color;
