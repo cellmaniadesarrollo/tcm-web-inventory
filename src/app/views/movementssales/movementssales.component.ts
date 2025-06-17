@@ -153,7 +153,7 @@ export class MovementssalesComponent {
   async listmovements(datain: any) {
     this.loading = true;
  
-    const data = await this.api.listmovementsper(datain);
+    const data = await this.api.listmovementssal(datain);
     this.loading = false;
     this.movements = data.intake;
     this.numperpages = data.number_of_records_per_page;

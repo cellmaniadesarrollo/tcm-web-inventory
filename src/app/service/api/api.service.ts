@@ -823,6 +823,26 @@ export class ApiService {
       return Promise.reject(this.normalizeError(error));
     }
   }
+    public async listmovementssal(data: any): Promise<ListmovementsIN> {
+      
+    try {
+      await this.controltoken();
+      var axiosResponse = await this.axiosClient.request({
+        method: 'get',
+        url: this.url + 'movementgetlistsal',
+        params: {
+          allclients: data.allclients,
+          alltypes: data.alltypes,
+          numperpage: data.numperpage,
+          pagination: data.pagination,
+          findlike: data.findlike 
+        },
+      });
+      return axiosResponse.data;
+    } catch (error) {
+      return Promise.reject(this.normalizeError(error));
+    }
+  }
   /**
    *
    * Dashboard
