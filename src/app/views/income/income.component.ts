@@ -238,7 +238,7 @@ export class IncomeComponent {
           console.log(datat)
         } else {
           const params = new URLSearchParams(data.id)
-          const url = `https://9bc8-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
+          const url = `https://82d3-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
           window.open(url, '_blank');
         }
         this.closebutton.nativeElement.click();
@@ -277,7 +277,7 @@ export class IncomeComponent {
           console.log(datat)
         } else {
           const params = new URLSearchParams(data.id)
-          const url = `https://9bc8-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
+          const url = `https://82d3-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
           window.open(url, '_blank');
         }
         this.terminoDeBusqueda = ''
