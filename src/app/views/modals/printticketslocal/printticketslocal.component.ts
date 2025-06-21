@@ -23,6 +23,7 @@ export class PrintticketslocalComponent {
   @Input() can: any; 
   @Input() qrdata: any; 
   @Input() price: any; 
+  @Input() f: any;
   @Output() closeModalEvent = new EventEmitter< any>();
   constructor(
     private api: ApiService,
@@ -51,7 +52,8 @@ export class PrintticketslocalComponent {
      cant:new FormControl(''),
       qrText: new FormControl(''), 
       price:new FormControl(null),
-      iva: new FormControl(true)
+      iva: new FormControl(true),
+      f: new FormControl(''), 
   });
   validationsname() {
     this.printform = this.formBuilder.group({  
@@ -61,7 +63,8 @@ export class PrintticketslocalComponent {
        cant:[this.can, [Validators.required, Validators.min(1)]],
         qrText:[this.qrdata, Validators.required], 
         price:[this.price, Validators.required], 
-        iva: [true]
+        iva: [true],
+      f: [this.f],
     });
   }
   submitted = false;
@@ -76,7 +79,7 @@ export class PrintticketslocalComponent {
      console.log(data)
       }else {
       const params = new URLSearchParams(this.printform.value)
-      const url =  `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`;// `https://82d3-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//
+      const url =  `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;// `http://localhost:5000/api/printtikets?${params.toString()}`;//`https://82d3-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//
      window.open(url, '_blank'); 
       }
       

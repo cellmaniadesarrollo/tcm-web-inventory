@@ -654,6 +654,7 @@ const user = localStorage.getItem('User');
   qrtext: string = ''
   price: any = null
   printlocalt: any = ''
+  ff:any = ''
   modalVisible4: boolean = false;
   async printlocal(id: any, print: any = null) {
     const data = await this.api.ticketsincomes({ id })
@@ -664,6 +665,8 @@ const user = localStorage.getItem('User');
     this.cantid = data.cant
     this.printlocalt = print
     this.price = data.price
+    this.ff = data.f
+
     this.modalVisible4 = true;
   }
   async closeprintlocal() {
