@@ -40,6 +40,7 @@ export interface ListincomesI {
   incomestype?: ListSatatusincomesI;
   inventoryflow?: ListitemsincomeI;
   documentnumberincome?: ListnumberincomeI;
+  firstStatus?:{createduser?: any};
 }
 export interface ListstatusincomesI {
   _id?: any;

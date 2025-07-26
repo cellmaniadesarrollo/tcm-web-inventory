@@ -1003,6 +1003,7 @@
                   <th>PI</th>
                   <th>PT</th>
                   <th>Observaciones</th>
+                  <th>Crea.</th>
                   <th>Estado</th>
                 </tr>
               </thead>
@@ -1028,6 +1029,9 @@
                     }}
                   </td>
                   <td>{{ dato.observations }}</td>
+                          <td>
+          {{ dato.firstStatus?.createduser }}
+        </td>
                   <td>{{ dato.status }}</td>
                 </tr>
               </tbody>

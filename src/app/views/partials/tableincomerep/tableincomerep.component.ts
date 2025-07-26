@@ -30,7 +30,7 @@ export class TableincomerepComponent {
   async listItems(form: any) {
 
     const data = await this.api.listincomesCSRS(form);
-    
+   // console.log(data)
     this.incomeslists = data.intake;
     this.loading=false
   }

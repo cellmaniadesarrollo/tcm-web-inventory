@@ -157,5 +157,5 @@ export interface Listincomeshistory{
   supplier:any;
   status:any;
   taxpercentaje:any;
-
+firstStatus?:{createduser?: any};
 }

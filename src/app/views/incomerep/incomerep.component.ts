@@ -158,7 +158,7 @@ export class IncomerepComponent {
   async listItems(form: any) {
 
     const data = await this.api.listincomesCSRS(form);
-
+console.log(data)
     this.statusincomes = data.statuslist || [];
     this.incomeslists = data.intake;
     this.numperpages = data.number_of_records_per_page;

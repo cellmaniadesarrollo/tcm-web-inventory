@@ -469,7 +469,7 @@ loading: boolean = true;
     this.editar = false;
     const data= await this.api.listincomeshistory(this.find)
     this.incomeshistory=data
-  //console.log(data)
+  console.log(data)
   //this.listdata();
   }
   async incomehr() {

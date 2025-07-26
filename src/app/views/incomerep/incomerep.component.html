@@ -157,6 +157,7 @@
                     <th>Fecha</th>
                     <th>PvP</th>
                     <th>Observaciones</th>
+                     <th>Crea.</th>
                     <th>Estado</th>
                   </tr>
                 </thead>
@@ -187,7 +188,9 @@
                     </td>
                     <td>{{ item.inventoryflow?.price}}</td>
                     <td>{{ item.observations }}</td>
-
+                                                <td>
+                          {{ item.firstStatus?.createduser }}
+                        </td>
                     <td
                       *ngIf="
                         item.incomestype?.name_incomestypes != 'PENDIENTE';

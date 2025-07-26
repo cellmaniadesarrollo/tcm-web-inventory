@@ -8,9 +8,7 @@
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item">
-              <a class="cursor-poiner text-primary" (click)="inicio()"
-                ><u>Inicio</u></a
-              >
+              <a class="cursor-poiner text-primary" (click)="inicio()"><u>Inicio</u></a>
             </li>
             <li class="breadcrumb-item active">Ingresos</li>
           </ol>
@@ -35,57 +33,27 @@
                 <div class="col-sm-3 my-auto">
                   <div class="row">
                     <div class="col-sm-3">
-                      <button
-                        type="button"
-                        class="btn btn-block bg-gradient-primary"
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        title="Nuevo ingreso"
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal2 "
-                        (click)="getdataincome()"
-                      >
+                      <button type="button" class="btn btn-block bg-gradient-primary" data-toggle="tooltip"
+                        data-placement="bottom" title="Nuevo ingreso" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal2 " (click)="getdataincome()">
                         <i class="fa fa-plus fa-xl" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-sm-3">
-                      <button
-                        type="button"
-                        class="btn btn-block bg-gradient-success"
-         (click)="openwassapmodal()"
-                      >
+                      <button type="button" class="btn btn-block bg-gradient-success" (click)="openwassapmodal()">
                         <i class="bi bi-whatsapp fa-xl" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-sm-3">
-                      <button
-                        type="button"
-                        class="btn btn-block bg-gradient-primary"
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        title="Reportes de precios por fecha" 
-                        (click)="openreportpdfmodal()"
-                      > 
-                        <i
-                          class="bi-file-text fa-xl"
-                          aria-hidden="true"
-                        ></i>
+                      <button type="button" class="btn btn-block bg-gradient-primary" data-toggle="tooltip"
+                        data-placement="bottom" title="Reportes de precios por fecha" (click)="openreportpdfmodal()">
+                        <i class="bi-file-text fa-xl" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-sm-3">
-                      <button
-                        type="button"
-                        class="btn btn-block bg-gradient-primary"
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        title="Ayuda"
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal7 "
-                      >
-                        <i
-                          class="bi bi-question-diamond fa-xl"
-                          aria-hidden="true"
-                        ></i>
+                      <button type="button" class="btn btn-block bg-gradient-primary" data-toggle="tooltip"
+                        data-placement="bottom" title="Ayuda" data-bs-toggle="modal" data-bs-target="#exampleModal7 ">
+                        <i class="bi bi-question-diamond fa-xl" aria-hidden="true"></i>
                       </button>
                     </div>
 
@@ -94,23 +62,12 @@
                 <div class="col-sm-3 justify-content-center">
                   <form [formGroup]="filterForm">
                     <div class="input-group">
-                      <input
-                        type="search"
-                        oninput="this.value = this.value.toUpperCase()"
-                        (keyup)="onKeyDownEvent($event)"
-                        (input)="onKeyDownEvent($event)"
-                        [readonly]="blockbusqueda"
-                        class="form-control form-control-lg"
-                        placeholder="Buscar"
-                        formControlName="findlike"
-                      />
+                      <input type="search" oninput="this.value = this.value.toUpperCase()"
+                        (keyup)="onKeyDownEvent($event)" (input)="onKeyDownEvent($event)" [readonly]="blockbusqueda"
+                        class="form-control form-control-lg" placeholder="Buscar" formControlName="findlike" />
                       <div class="input-group-append">
-                        <button
-                          type="button"
-                          [disabled]="blockbusqueda"
-                          class="btn btn-lg btn-default"
-                          (click)="findbutton()"
-                        >
+                        <button type="button" [disabled]="blockbusqueda" class="btn btn-lg btn-default"
+                          (click)="findbutton()">
                           <i class="fa fa-search"></i>
                         </button>
                       </div>
@@ -121,22 +78,11 @@
                   <form [formGroup]="filterForm">
                     <div class="d-flex flex-row-reverse bd-highlight">
                       <div class="col-sm">
-                        <div
-                          class="form-group my-auto"
-                          data-toggle="tooltip"
-                          data-placement="bottom"
-                          title="Inventario"
-                        >
-                          <select
-                            class="form-control select2"
-                            style="width: 100%"
-                            formControlName="inventory" 
-                          >
+                        <div class="form-group my-auto" data-toggle="tooltip" data-placement="bottom"
+                          title="Inventario">
+                          <select class="form-control select2" style="width: 100%" formControlName="inventory">
                             <option [value]="0">ALL</option>
-                            <option
-                              *ngFor="let item of namesinventory"
-                              [ngValue]="item._id"
-                            >
+                            <option *ngFor="let item of namesinventory" [ngValue]="item._id">
                               {{ item.inventory_name }}
                             </option>
                           </select>
@@ -152,22 +98,11 @@
                   <form [formGroup]="filterForm">
                     <div class="d-flex flex-row-reverse bd-highlight">
                       <div class="col-sm">
-                        <div
-                          class="form-group my-auto"
-                          data-toggle="tooltip"
-                          data-placement="bottom"
-                          title="Filtrar Por"
-                        >
-                          <select
-                            class="form-control select2"
-                            style="width: 100%"
-                            formControlName="allclients" 
-                          >
+                        <div class="form-group my-auto" data-toggle="tooltip" data-placement="bottom"
+                          title="Filtrar Por">
+                          <select class="form-control select2" style="width: 100%" formControlName="allclients">
                             <option [value]="0">ALL</option>
-                            <option
-                              *ngFor="let item of statusincomes"
-                              [ngValue]="item._id"
-                            >
+                            <option *ngFor="let item of statusincomes" [ngValue]="item._id">
                               {{ item.name_incomestypes }}
                             </option>
                           </select>
@@ -195,21 +130,9 @@
                   <div class="d-flex justify-content-end">
                     <div class="col-sm-2">
                       <form [formGroup]="filterForm">
-                        <div
-                          class="my-auto"
-                          data-toggle="tooltip"
-                          data-placement="bottom"
-                          title="Numero de paginas"
-                        >
-                          <select
-                            class="form-control select2"
-                            style="width: 100%"
-                            formControlName="numperpage" 
-                          >
-                            <option
-                              *ngFor="let numperpag of numperpagess"
-                              [ngValue]="numperpag.tems"
-                            >
+                        <div class="my-auto" data-toggle="tooltip" data-placement="bottom" title="Numero de paginas">
+                          <select class="form-control select2" style="width: 100%" formControlName="numperpage">
+                            <option *ngFor="let numperpag of numperpagess" [ngValue]="numperpag.tems">
                               {{ numperpag.value }}
                             </option>
                           </select>
@@ -233,33 +156,30 @@
 
               <ng-template #dataLoaded>
 
-              <div class="table-responsive">
-                <table
-                  id="example2"
-                  class="table table-bordered table-hover table-striped table-sm1"
-                >
-                  <thead>
-                    <tr>
-                      <th>Cant</th>
-                      <th>Nombre</th>
-                      <th>Modelo</th>
-                      <th>Calidad</th>
-                      <th>Color</th>
-                      <th>Proveedor</th>
-                      <th>Nº Doc.</th>
-                      <th>Fecha</th>
-                      <th>PU</th>
-                      <th>PT</th>
-                      <th>PI</th>
-                      <th>PvP</th>
-                      <th>Observaciones</th>
-                      <th>Est.</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      *ngFor="
+                <div class="table-responsive">
+                  <table id="example2" class="table table-bordered table-hover table-striped table-sm1">
+                    <thead>
+                      <tr>
+                        <th>Cant</th>
+                        <th>Nombre</th>
+                        <th>Modelo</th>
+                        <th>Calidad</th>
+                        <th>Color</th>
+                        <th>Proveedor</th>
+                        <th>Nº Doc.</th>
+                        <th>Fecha</th>
+                        <th>PU</th>
+                        <th>PT</th>
+                        <th>PI</th>
+                        <th>PvP</th>
+                        <th>Observaciones</th>
+                        <th>Est.</th>
+                        <th>Crea.</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="
                         let item of incomeslists
                           | paginate
                             : {
@@ -267,97 +187,79 @@
                                 currentPage:  pagination,
                                 totalItems: totalentries
                               }
-                      "
-                      [ngClass]="datacolor(item.incomestype?.name_incomestypes)"
-                    >
-                      <td>{{ item.quantity }}</td>
-                      <td
-                        data-bs-toggle="modal"
-                        data-bs-target="#exampleModal6"
-                        (click)="
+                      " [ngClass]="datacolor(item.incomestype?.name_incomestypes)">
+                        <td>{{ item.quantity }}</td>
+                        <td data-bs-toggle="modal" data-bs-target="#exampleModal6" (click)="
                           reportnamevalueinit(
                             item.inventoryflow?.idname,
                             item.inventoryflow?.nameitem
                           )
-                        "
-                      >
-                        {{ item.inventoryflow?.nameitem }}
-                      </td>
-                      <td>{{ item.inventoryflow?.modelitem }}</td>
-                      <td>{{ item.inventoryflow?.quality }}</td>
-                      <td>{{ item.inventoryflow?.colors1 }}</td>
-                      <td>
-                        {{ item.documentnumberincome?.supplier?.razon_social }}
-                      </td>
-                      <td
-                        (click)="reportsselect(item.documentnumberincome?._id)"
-                      >
-                        {{ item.documentnumberincome?.document_number }}
-                      </td>
-                      <td title="{{ item.date_income }}">
-                        {{ item.date_income.substring(0, 10) }}
-                      </td>
-                      <td
-                        (click)="editgetdata(item._id)"
-                        data-bs-toggle="modal"
-                        data-bs-target="#editwassap"
-                      >
-                        {{ item.unit_price }}
-                      </td>
-                      <td>
-                        {{
+                        ">
+                          {{ item.inventoryflow?.nameitem }}
+                        </td>
+                        <td>{{ item.inventoryflow?.modelitem }}</td>
+                        <td>{{ item.inventoryflow?.quality }}</td>
+                        <td>{{ item.inventoryflow?.colors1 }}</td>
+                        <td>
+                          {{ item.documentnumberincome?.supplier?.razon_social }}
+                        </td>
+                        <td (click)="reportsselect(item.documentnumberincome?._id)">
+                          {{ item.documentnumberincome?.document_number }}
+                        </td>
+                        <td title="{{ item.date_income }}">
+                          {{ item.date_income.substring(0, 10) }}
+                        </td>
+                        <td (click)="editgetdata(item._id)" data-bs-toggle="modal" data-bs-target="#editwassap">
+                          {{ item.unit_price }}
+                        </td>
+                        <td>
+                          {{
                           taxestabletotal(
-                            item.documentnumberincome?.taxpercentaje
-                              ?.percentaje,
-                            item.unit_price,
-                            item.quantity
+                          item.documentnumberincome?.taxpercentaje
+                          ?.percentaje,
+                          item.unit_price,
+                          item.quantity
                           )
-                        }}
-                      </td>
-                      <td>
-                        {{
+                          }}
+                        </td>
+                        <td>
+                          {{
                           taxestable(
-                            item.documentnumberincome?.taxpercentaje
-                              ?.percentaje,
-                            item.unit_price
+                          item.documentnumberincome?.taxpercentaje
+                          ?.percentaje,
+                          item.unit_price
                           )
-                        }}
-                      </td>
-                      <td
-                        (click)="editgetdata(item._id)"
-                        data-bs-toggle="modal"
-                        data-bs-target="#editwassap"
-                      >
-                        {{ item.inventoryflow?.price }}
-                      </td>
-                      <td
-                        (click)="editgetdata(item._id)"
-                        data-bs-toggle="modal"
-                        data-bs-target="#editwassap"
-                      >
-                        {{ item.observations }}
-                      </td>
+                          }}
+                        </td>
+                        <td (click)="editgetdata(item._id)" data-bs-toggle="modal" data-bs-target="#editwassap">
+                          {{ item.inventoryflow?.price }}
+                        </td>
+                        <td (click)="editgetdata(item._id)" data-bs-toggle="modal" data-bs-target="#editwassap">
+                          {{ item.observations }}
+                        </td>
 
-                      <td>
-                        {{ item.incomestype?.name_incomestypes.substring(0, 4) }}
-                      </td>
-                      <td>
-    
-                        <abbr title="Imprimir normal" class="p-1"  
-                        ><a class="btn btn-outline-dark p-1" (click)="printlocal(item._id)" 
-                          ><i class="fa fa-ticket"></i></a
-                      ></abbr> 
-                      <abbr title="Imprimir en Dymo" class="p-1">
-  <a class="btn btn-outline-dark p-1" (click)="printlocal(item._id,'dymo')" style="border-color: #0054D2; color: #0054D2;">
-    <i class="fa fa-print"></i> 
-  </a>
-</abbr>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </ng-template>
+                        <td>
+                          {{ item.incomestype?.name_incomestypes.substring(0, 4) }}
+                        </td>
+                                                <td>
+                          {{ item.firstStatus?.createduser }}
+                        </td>
+                        <td>
+
+                          <abbr title="Imprimir normal" class="p-1"><a class="btn btn-outline-dark p-1"
+                              (click)="printlocal(item._id)"><i class="fa fa-ticket"></i></a></abbr>
+                          <abbr title="Imprimir en Dymo" class="p-1">
+                            <a class="btn btn-outline-dark p-1" (click)="printlocal(item._id,'dymo')"
+                              style="border-color: #0054D2; color: #0054D2;">
+                              <i class="fa fa-print"></i>
+                            </a>
+                          </abbr>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </ng-template>
               <div class="row p-3">
                 <div class="col-sm-6 my-auto">
                   <p class="text-black-50">
@@ -369,21 +271,9 @@
                   <div class="d-flex justify-content-end">
                     <div class="col-sm-2">
                       <form [formGroup]="filterForm">
-                        <div
-                          class="my-auto"
-                          data-toggle="tooltip"
-                          data-placement="bottom"
-                          title="Filtrar Por"
-                        >
-                          <select
-                            class="form-control select2"
-                            style="width: 100%"
-                            formControlName="numperpage" 
-                          >
-                            <option
-                              *ngFor="let numperpag of numperpagess"
-                              [ngValue]="numperpag.tems"
-                            >
+                        <div class="my-auto" data-toggle="tooltip" data-placement="bottom" title="Filtrar Por">
+                          <select class="form-control select2" style="width: 100%" formControlName="numperpage">
+                            <option *ngFor="let numperpag of numperpagess" [ngValue]="numperpag.tems">
                               {{ numperpag.value }}
                             </option>
                           </select>
@@ -404,28 +294,15 @@
 </div>
 <!-- modal -->
 <!-- Modal -->
-<div
-  class="modal fade"
-  id="exampleModal2"
-  data-bs-backdrop="static"
-  tabindex="-1"
-  aria-labelledby="exampleModal2Label"
-  aria-hidden="true"
-  #content
->
+<div class="modal fade" id="exampleModal2" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModal2Label"
+  aria-hidden="true" #content>
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <!-- header modal -->
       <div class="modal-header" *ngIf="!newproveedor">
         <h5 class="col-12 modal-title text-center" id="exampleModal2Label">
           Nuevo ingreso
-          <button
-            type="button"
-            class="close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            #closebutton
-          >
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" #closebutton>
             <span aria-hidden="true">&times;</span>
           </button>
         </h5>
@@ -434,54 +311,34 @@
       <div class="modal-header" *ngIf="newproveedor">
         <h5 class="col-12 modal-title text-center" id="exampleModal2Label">
           Nuevo Proveedor
-          <button
-            type="button"
-            class="close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            #closebutton
-          >
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" #closebutton>
             <span aria-hidden="true">&times;</span>
           </button>
         </h5>
       </div>
       <!-- end header modal -->
       <!-- body modal -->
-      <div class="modal-body" *ngIf="!newproveedor"> 
-        <form *ngIf="incomesaveForm"  [formGroup]="incomesaveForm">
+      <div class="modal-body" *ngIf="!newproveedor">
+        <form *ngIf="incomesaveForm" [formGroup]="incomesaveForm">
 
 
           <div class="row">
             <div class="col-sm-1">
-              <button
-                type="button"
-                class="btn btn-success"
-                title="Nuevo proveedor"
-                data-bs-target="#exampleModal3"
-                (click)="nuevoproveedor()"
-              >
+              <button type="button" class="btn btn-success" title="Nuevo proveedor" data-bs-target="#exampleModal3"
+                (click)="nuevoproveedor()">
                 <i class="fa fa-plus fa-xl p-0" aria-hidden="true"></i>
               </button>
             </div>
             <div class="col-sm-11">
-              <ng-select
-                placeholder="Proveedor"
-                [virtualScroll]="false"
-                [multiple]="false"
-                #ngselectsww
-                formControlName="id_proveedor"
-                [ngClass]="{
+              <ng-select placeholder="Proveedor" [virtualScroll]="false" [multiple]="false" #ngselectsww
+                formControlName="id_proveedor" [ngClass]="{
                   'is-invalid': submitted && f['id_proveedor'].errors
-                }"
-              >
-                <ng-option *ngFor="let item of supplierslist" [value]="item._id"
-                  >{{ item.razon_social }} {{ item.countriel.name_countrie }}
+                }">
+                <ng-option *ngFor="let item of supplierslist" [value]="item._id">{{ item.razon_social }} {{
+                  item.countriel.name_countrie }}
                 </ng-option>
               </ng-select>
-              <div
-                *ngIf="submitted && f['id_proveedor'].errors"
-                class="invalid-feedback"
-              >
+              <div *ngIf="submitted && f['id_proveedor'].errors" class="invalid-feedback">
                 <div *ngIf="f['id_proveedor'].errors['required']">
                   Proveedor requerido
                 </div>
@@ -490,12 +347,8 @@
           </div>
           <div class="row">
             <div class="col-sm-6">
-              <select
-                class="form-select"
-                aria-label="Default select example"
-                (change)="changes()"
-                formControlName="tipo_documento"
-              >
+              <select class="form-select" aria-label="Default select example" (change)="changes()"
+                formControlName="tipo_documento">
                 <option *ngFor="let type of typedocument" [ngValue]="type._id">
                   {{ type.name_type_document }}
                 </option>
@@ -505,50 +358,34 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="border-lable-flt">
-                  <input
-                    type="text"
-                    class="form-control"
-                    onkeyup="this.value=this.value.toUpperCase();"
-                    placeholder="Numero de {{ typedocumenttext }}"
-                    formControlName="numero_documento"
-                    id="myInput2"
+                  <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
+                    placeholder="Numero de {{ typedocumenttext }}" formControlName="numero_documento" id="myInput2"
                     [ngClass]="{
                       'is-invalid': submitted && f['numero_documento'].errors
-                    }"
-                  />
-                  <span lass="widget-title  shop-sidebar"
-                    >Numero de {{ typedocumenttext }}</span
-                  >
+                    }" />
+                  <span lass="widget-title  shop-sidebar">Numero de {{ typedocumenttext }}</span>
                 </label>
               </div>
             </div>
           </div>
 
           <div class="row mb-3">
-            
-              <div class="position-relative">
-                <div class="input-group">
 
-                  <div class="form-floating mb-3">
-                    <div class="input-group-prepend">
-                      <button class="btn btn-outline-secondary search-btn" type="button"[disabled]="blockbusquedapro" (click)="makechoice('Enter')"  >
-                        <i class="fa fa-search"></i>
-                      </button>  
-  
-                    </div>
-                   <input
-                    type="search"
-                    class="form-control  shadow-bottom"
-                    placeholder="Buscar Producto"
-                    autocomplete="off"
-                    formControlName="item"
-                    id="myInput"
-                    [(ngModel)]="terminoDeBusqueda" 
-                    (input)="filtrarSugerencias();makechoice('')"
-                    [readonly]="blockbusquedapro"
-                    (keydown)="makechoice($event)"
-                    aria-describedby="sugerenciasDropdown"
-                  />
+            <div class="position-relative">
+              <div class="input-group">
+
+                <div class="form-floating mb-3">
+                  <div class="input-group-prepend">
+                    <button class="btn btn-outline-secondary search-btn" type="button" [disabled]="blockbusquedapro"
+                      (click)="makechoice('Enter')">
+                      <i class="fa fa-search"></i>
+                    </button>
+
+                  </div>
+                  <input type="search" class="form-control  shadow-bottom" placeholder="Buscar Producto"
+                    autocomplete="off" formControlName="item" id="myInput" [(ngModel)]="terminoDeBusqueda"
+                    (input)="filtrarSugerencias();makechoice('')" [readonly]="blockbusquedapro"
+                    (keydown)="makechoice($event)" aria-describedby="sugerenciasDropdown" />
                   <label for="inputSearch">Buscar Producto</label>
 
                 </div>
@@ -561,39 +398,27 @@
                 </li>
               </ul>
               <ng-template #loaderpronn>
-                <ul
-                  class="list-group position-absolute custom-scrollbar"
-                  *ngIf="mostrarSugerencias"
-                >
-                  <li
-                    class="list-group-item  "
-                    *ngFor="let item of items"
-                    (click)="seleccionarSugerencia('«'+ item.upc +'» '+item.nameitem+' '+item.modelitem+' '+item.quality+' '+item.stateproduc+' '+item.colors1,item._id)"
-                  >
-                  «{{ item.upc }}» {{ item.nameitem }}
-                  {{ item.modelitem }} {{ item.quality }} {{ item.stateproduc }}
-                  {{ item.colors1 }}
+                <ul class="list-group position-absolute custom-scrollbar" *ngIf="mostrarSugerencias">
+                  <li class="list-group-item  " *ngFor="let item of items"
+                    (click)="seleccionarSugerencia('«'+ item.upc +'» '+item.nameitem+' '+item.modelitem+' '+item.quality+' '+item.stateproduc+' '+item.colors1,item._id)">
+                    «{{ item.upc }}» {{ item.nameitem }}
+                    {{ item.modelitem }} {{ item.quality }} {{ item.stateproduc }}
+                    {{ item.colors1 }}
                   </li>
                 </ul>
               </ng-template>
-              </div>
-             
+            </div>
+
           </div>
-                  
+
           <div class="row">
             <!-- medio -->
             <div class="col-sm-3">
               <div class="form-group">
                 <label class="border-lable-flt">
-                  <input
-                    type="number"
-                    class="form-control"
-                    placeholder="Cantidad"
-                    formControlName="cantidad"
-                    [ngClass]="{
+                  <input type="number" class="form-control" placeholder="Cantidad" formControlName="cantidad" [ngClass]="{
                       'is-invalid': submitted && f['cantidad'].errors
-                    }"
-                  />
+                    }" />
                   <span lass="widget-title  shop-sidebar" *ngIf="!mostrarSugerencias">Cantidad</span>
                 </label>
               </div>
@@ -603,18 +428,10 @@
             <div class="col-sm-3">
               <div class="form-group">
                 <label class="border-lable-flt">
-                  <input
-                    type="number"
-                    step=".01"
-                    min="0"
-                    class="form-control"
-                    formControlName="preciounit"
-                    placeholder="Precio unitario"
-                    (input)="totalpriceds()"
-                    [ngClass]="{
+                  <input type="number" step=".01" min="0" class="form-control" formControlName="preciounit"
+                    placeholder="Precio unitario" (input)="totalpriceds()" [ngClass]="{
                       'is-invalid': submitted && f['preciounit'].errors
-                    }"
-                  />
+                    }" />
 
                   <span lass="widget-title  shop-sidebar" *ngIf="!mostrarSugerencias">Precio unitario</span>
                 </label>
@@ -623,12 +440,8 @@
 
             <!-- izquierda -->
             <div class="col-sm-3">
-              <select
-                class="form-select"
-                aria-label="Default select example"
-                (change)="findpercentaje()"
-                formControlName="inpuesto"
-              >
+              <select class="form-select" aria-label="Default select example" (change)="findpercentaje()"
+                formControlName="inpuesto">
                 <option *ngFor="let tax of taxesnames" [ngValue]="tax._id">
                   {{ tax.tax_name }}
                 </option>
@@ -636,16 +449,9 @@
             </div>
             <!-- izquierda -->
             <div class="col-sm-2">
-              <select
-                class="form-select"
-                aria-label="Default select example"
-                formControlName="porcentaje"
-                (change)="totalpriceds()"
-              >
-                <option
-                  *ngFor="let percentaje of taxespercentaje"
-                  [ngValue]="percentaje._id"
-                >
+              <select class="form-select" aria-label="Default select example" formControlName="porcentaje"
+                (change)="totalpriceds()">
+                <option *ngFor="let percentaje of taxespercentaje" [ngValue]="percentaje._id">
                   {{ percentaje.percentaje }} %
                 </option>
               </select>
@@ -659,49 +465,32 @@
             <div class="col-sm-3">
               <div class="form-group">
                 <label class="border-lable-flt">
-                  <input
-                    type="number"
-                    step=".01"
-                    min="0"
-                    class="form-control"
-                    formControlName="precioventa"
-                    placeholder="Precio venta"
-                    [ngClass]="{
+                  <input type="number" step=".01" min="0" class="form-control" formControlName="precioventa"
+                    placeholder="Precio venta" [ngClass]="{
                       'is-invalid': submitted && f['precioventa'].errors
-                    }"
-                  />
+                    }" />
 
                   <span lass="widget-title  shop-sidebar" *ngIf="!mostrarSugerencias">Precio venta</span>
                 </label>
               </div>
             </div>
-                        <!-- Checkbox IVA -->
-                         
-                        <div class="col-sm-3 d-flex align-items-center">
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              id="ivaCheckbox"
-                              formControlName="iva"
-                            />
-                            <label class="form-check-label" for="ivaCheckbox">
-                              Más IVA
-                            </label>
-                          </div>
-                        </div>
+            <!-- Checkbox IVA -->
+
+            <div class="col-sm-3 d-flex align-items-center">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="ivaCheckbox" formControlName="iva" />
+                <label class="form-check-label" for="ivaCheckbox">
+                  Más IVA
+                </label>
+              </div>
+            </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="border-lable-flt">
-                  <input
-                    type="datetime-local"
-                    class="form-control"
-                    placeholder="Procedencia"
-                    formControlName="fecha"
+                  <input type="datetime-local" class="form-control" placeholder="Procedencia" formControlName="fecha"
                     [ngClass]="{
                       'is-invalid': submitted && f['fecha'].errors
-                    }"
-                  />
+                    }" />
                   <span lass="widget-title  shop-sidebar" *ngIf="!mostrarSugerencias">Fecha</span>
                 </label>
               </div>
@@ -710,85 +499,56 @@
 
           <div class="form-group">
             <label class="border-lable-flt">
-              <textarea
-                class="form-control"
-                formControlName="observaciones"
-                placeholder="Observaciones"
-              ></textarea>
+              <textarea class="form-control" formControlName="observaciones" placeholder="Observaciones"></textarea>
 
               <span lass="widget-title  shop-sidebar" *ngIf="!mostrarSugerencias">Observaciones</span>
             </label>
           </div>
-<div class="row">
-  <div class="col-sm-12" align="center">
-    <div class="form-check form-check-inline">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        formControlName="get_print"
-        id="printLabelCheckbox"
-      />
-      <label class="form-check-label" for="printLabelCheckbox">
-        Imprimir etiqueta
-      </label>
-    </div>
+          <div class="row">
+            <div class="col-sm-12" align="center">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" formControlName="get_print" id="printLabelCheckbox" />
+                <label class="form-check-label" for="printLabelCheckbox">
+                  Imprimir etiqueta
+                </label>
+              </div>
 
-    <select
-      class="form-select w-auto d-inline-block ms-2"
-      formControlName="selected_printer"
-      *ngIf="incomesaveForm.get('get_print')?.value"
-    >
-      <option [ngValue]="'dymo'">Dymo</option>
-      <option [ngValue]="'zebra'">Zebra</option>
-    </select>
-  </div>
-</div>
+              <select class="form-select w-auto d-inline-block ms-2" formControlName="selected_printer"
+                *ngIf="incomesaveForm.get('get_print')?.value">
+                <option [ngValue]="'dymo'">Dymo</option>
+                <option [ngValue]="'zebra'">Zebra</option>
+              </select>
+            </div>
+          </div>
         </form>
-      </div> 
+      </div>
       <!-- nuevo proveedor -->
       <div class="modal-body" *ngIf="newproveedor">
         <form [formGroup]="supplierForm">
           <div class="form-group">
             <label class="border-lable-flt">
-              <input
-                type="text"
-                class="form-control"
-                formControlName="RUC"
-                placeholder="RUC/DNI"
-                [ngClass]="{
+              <input type="text" class="form-control" formControlName="RUC" placeholder="RUC/DNI" [ngClass]="{
                   'is-invalid': submitted1 && f1['RUC'].errors
-                }"
-              />
+                }" />
 
               <span lass="widget-title  shop-sidebar">RUC/DNI</span>
             </label>
           </div>
           <div class="form-group">
             <label class="border-lable-flt">
-              <input
-                type="text"
-                class="form-control"
-                formControlName="razonsocial"
-                placeholder="Razón Social"
+              <input type="text" class="form-control" formControlName="razonsocial" placeholder="Razón Social"
                 [ngClass]="{
                   'is-invalid': submitted1 && f1['razonsocial'].errors
-                }"
-              />
+                }" />
 
               <span lass="widget-title  shop-sidebar">Razón Social</span>
             </label>
           </div>
           <div class="form-group">
             <label class="border-lable-flt">
-              <input
-                type="text"
-                class="form-control"
-                formControlName="direccion"
-                placeholder="Dirección"
-                [ngClass]="{
+              <input type="text" class="form-control" formControlName="direccion" placeholder="Dirección" [ngClass]="{
                   'is-invalid': submitted1 && f1['direccion'].errors
-                }"
-              />
+                }" />
 
               <span lass="widget-title  shop-sidebar">Dirección</span>
             </label>
@@ -797,15 +557,9 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="border-lable-flt">
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="telefono"
-                    placeholder="Teléfono"
-                    [ngClass]="{
+                  <input type="text" class="form-control" formControlName="telefono" placeholder="Teléfono" [ngClass]="{
                       'is-invalid': submitted1 && f1['telefono'].errors
-                    }"
-                  />
+                    }" />
 
                   <span lass="widget-title  shop-sidebar">Teléfono</span>
                 </label>
@@ -814,15 +568,9 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="border-lable-flt">
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="email"
-                    placeholder="Email"
-                    [ngClass]="{
+                  <input type="text" class="form-control" formControlName="email" placeholder="Email" [ngClass]="{
                       'is-invalid': submitted1 && f1['email'].errors
-                    }"
-                  />
+                    }" />
 
                   <span lass="widget-title  shop-sidebar">Email</span>
                 </label>
@@ -830,44 +578,24 @@
             </div>
           </div>
           <div class="row">
-            <ng-select
-              placeholder="RIMPE"
-              [virtualScroll]="false"
-              [multiple]="false"
-              formControlName="rimpe"
-              [ngClass]="{
+            <ng-select placeholder="RIMPE" [virtualScroll]="false" [multiple]="false" formControlName="rimpe" [ngClass]="{
                 'is-invalid': submitted1 && f1['rimpe'].errors
-              }"
-            >
-              <ng-option *ngFor="let item of rimpeitems" [value]="item._id"
-                >{{ item.name_rimpe }}
+              }">
+              <ng-option *ngFor="let item of rimpeitems" [value]="item._id">{{ item.name_rimpe }}
               </ng-option>
             </ng-select>
-            <div
-              *ngIf="submitted1 && f1['rimpe'].errors"
-              class="invalid-feedback"
-            >
+            <div *ngIf="submitted1 && f1['rimpe'].errors" class="invalid-feedback">
               <div *ngIf="f1['rimpe'].errors['required']">RIMPE requerido</div>
             </div>
           </div>
           <div class="row">
-            <ng-select
-              placeholder="Pais"
-              [virtualScroll]="false"
-              [multiple]="false"
-              formControlName="pais"
-              [ngClass]="{
+            <ng-select placeholder="Pais" [virtualScroll]="false" [multiple]="false" formControlName="pais" [ngClass]="{
                 'is-invalid': submitted1 && f1['pais'].errors
-              }"
-            >
-              <ng-option *ngFor="let item of countriesitems" [value]="item._id"
-                >{{ item.name_countrie }}
+              }">
+              <ng-option *ngFor="let item of countriesitems" [value]="item._id">{{ item.name_countrie }}
               </ng-option>
             </ng-select>
-            <div
-              *ngIf="submitted1 && f1['pais'].errors"
-              class="invalid-feedback"
-            >
+            <div *ngIf="submitted1 && f1['pais'].errors" class="invalid-feedback">
               <div *ngIf="f1['pais'].errors['required']">Pais requerido</div>
             </div>
           </div>
@@ -877,20 +605,12 @@
       <!-- end body modal -->
       <!-- modal footer -->
       <div class="modal-footer" *ngIf="!newproveedor">
-        <button
-          [disabled]="bloquear"
-          type="button"
-          class="btn btn-success"
-          (click)="onSubmitclose(incomesaveForm.value)"
-        >
+        <button [disabled]="bloquear" type="button" class="btn btn-success"
+          (click)="onSubmitclose(incomesaveForm.value)">
           Ingresar y cerrar
         </button>
-        <button
-          [disabled]="bloquear"
-          type="button"
-          class="btn btn-primary"
-          (click)="onSubmitcloseoff(incomesaveForm.value)"
-        >
+        <button [disabled]="bloquear" type="button" class="btn btn-primary"
+          (click)="onSubmitcloseoff(incomesaveForm.value)">
           Ingresar
         </button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
@@ -900,18 +620,10 @@
       <!-- nuevo proveedor -->
       <div class="modal-footer" *ngIf="newproveedor">
         <div>
-          <button
-            type="button"
-            class="btn btn-success"
-            (click)="savesupplier(supplierForm.value)"
-          >
+          <button type="button" class="btn btn-success" (click)="savesupplier(supplierForm.value)">
             Guardar proveedor
           </button>
-          <button
-            type="button"
-            class="btn btn-danger"
-            (click)="nuevoproveedor()"
-          >
+          <button type="button" class="btn btn-danger" (click)="nuevoproveedor()">
             Cancelar
           </button>
         </div>
@@ -920,30 +632,17 @@
     </div>
   </div>
 </div>
- 
+
 <!-- wassap modal -->
-<div
-  class="modal fade"
-  id="editwassap"
-  data-bs-backdrop="static"
-  tabindex="-1"
-  aria-labelledby="editwassap"
-  aria-hidden="true"
-  #content
->
+<div class="modal fade" id="editwassap" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editwassap"
+  aria-hidden="true" #content>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <!-- header modal -->
       <div class="modal-header">
         <h5 class="col-12 modal-title text-center" id="editwassap">
           Editar registro
-          <button
-            type="button"
-            class="close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            #closebutton1
-          >
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" #closebutton1>
             <span aria-hidden="true">&times;</span>
           </button>
         </h5>
@@ -959,18 +658,11 @@
               <div class="form-group">
                 <label class="border-lable-flt">
                   <label class="border-lable-flt">
-                    <input
-                      type="number"
-                      step=".0001"
-                      min="0"
-                      class="form-control"
-                      formControlName="precioventa"
-                      placeholder="Precio venta"
-                      [ngClass]="{
+                    <input type="number" step=".0001" min="0" class="form-control" formControlName="precioventa"
+                      placeholder="Precio venta" [ngClass]="{
                         'is-invalid':
                           submittededdit && fed['precioventa'].errors
-                      }"
-                    />
+                      }" />
 
                     <span lass="widget-title  shop-sidebar">Precio venta</span>
                   </label>
@@ -980,18 +672,10 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="border-lable-flt">
-                  <input
-                    type="number"
-                    step=".01"
-                    min="0"
-                    class="form-control"
-                    formControlName="preciounit"
-                    placeholder="Precio unitario"
-                    (input)="totalpriceds()"
-                    [ngClass]="{
+                  <input type="number" step=".01" min="0" class="form-control" formControlName="preciounit"
+                    placeholder="Precio unitario" (input)="totalpriceds()" [ngClass]="{
                       'is-invalid': submittededdit && fed['preciounit'].errors
-                    }"
-                  />
+                    }" />
 
                   <span lass="widget-title  shop-sidebar">Precio unitario</span>
                 </label>
@@ -1002,11 +686,7 @@
             <div class="col-sm-12">
               <div class="form-group">
                 <label class="border-lable-flt">
-                  <textarea
-                    class="form-control"
-                    formControlName="observaciones"
-                    placeholder="Observaciones"
-                  ></textarea>
+                  <textarea class="form-control" formControlName="observaciones" placeholder="Observaciones"></textarea>
 
                   <span lass="widget-title  shop-sidebar">Observaciones</span>
                 </label>
@@ -1019,11 +699,7 @@
       <!-- end body modal -->
       <!-- modal footer -->
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-success"
-          (click)="editibncomes(incomeseditForm.value)"
-        >
+        <button type="button" class="btn btn-success" (click)="editibncomes(incomeseditForm.value)">
           Editar
         </button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
@@ -1036,28 +712,15 @@
   </div>
 </div>
 <!-- modal fecha de precios -->
-<div
-  class="modal fade"
-  id="exampleModal6"
-  data-bs-backdrop="static"
-  tabindex="-1"
-  aria-labelledby="exampleModal2Label"
-  aria-hidden="true"
-  #content
->
+<div class="modal fade" id="exampleModal6" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModal2Label"
+  aria-hidden="true" #content>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <!-- header modal -->
       <div class="modal-header">
         <h5 class="col-12 modal-title text-center" id="exampleModal2Label">
           Ingrese fecha reporte para precios de {{ namevaluereport }}
-          <button
-            type="button"
-            class="close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            #closebutton33
-          >
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" #closebutton33>
             <span aria-hidden="true">&times;</span>
           </button>
         </h5>
@@ -1072,12 +735,7 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="border-lable-flt">
-                  <input
-                    type="date"
-                    class="form-control"
-                    placeholder="Procedencia"
-                    formControlName="datestart"
-                  />
+                  <input type="date" class="form-control" placeholder="Procedencia" formControlName="datestart" />
                   <span lass="widget-title  shop-sidebar">Fecha Inicio</span>
                 </label>
               </div>
@@ -1085,12 +743,7 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="border-lable-flt">
-                  <input
-                    type="date"
-                    class="form-control"
-                    placeholder="Procedencia"
-                    formControlName="dateend"
-                  />
+                  <input type="date" class="form-control" placeholder="Procedencia" formControlName="dateend" />
                   <span lass="widget-title  shop-sidebar">Fecha Fin</span>
                 </label>
               </div>
@@ -1102,11 +755,7 @@
       <!-- end body modal -->
       <!-- modal footer -->
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-success"
-          (click)="reportnamevalue(dateformnamesvalue.value)"
-        >
+        <button type="button" class="btn btn-success" (click)="reportnamevalue(dateformnamesvalue.value)">
           Generar
         </button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
@@ -1119,27 +768,15 @@
   </div>
 </div>
 <!-- modal ayuda -->
-<div
-  class="modal fade"
-  id="exampleModal7"
-  tabindex="-1"
-  aria-labelledby="exampleModal2Label"
-  aria-hidden="true"
-  #content
->
+<div class="modal fade" id="exampleModal7" tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true"
+  #content>
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <!-- header modal -->
       <div class="modal-header">
         <h5 class="col-12 modal-title text-center" id="exampleModal2Label">
           Ayuda
-          <button
-            type="button"
-            class="close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            #closebutton33
-          >
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" #closebutton33>
             <span aria-hidden="true">&times;</span>
           </button>
         </h5>
@@ -1150,9 +787,7 @@
       <div class="modal-body">
         <ol>
           <li>
-            <strong
-              >Generar reporte por fecha, nombre de producto específico:</strong
-            >
+            <strong>Generar reporte por fecha, nombre de producto específico:</strong>
             Haz clic en el nombre del producto para generar un reporte basado en
             la fecha de tu elección.
           </li>
@@ -1180,23 +815,10 @@
     </div>
   </div>
 </div>
- 
 
-<app-printticketslocal *ngIf="modalVisible4"
-[namet1]="name1"
-[namet2]="name2"
-[nameb]="name3"
-[can]="cantid"
-[qrdata]="qrtext"
-[price]="price"
-[f]="ff"
-[printtype]="printlocalt"
-(closeModalEvent)="closeprintlocal()"></app-printticketslocal>
-<app-reportwassapincomes
-*ngIf="wassapmodal"
-(closeModalEvent)="closewassapmodal()"
-></app-reportwassapincomes>
-<app-reporpricespdfincomes
-*ngIf="reportpdfmodal"
-(closeModalEvent)="closereportpdfmodal()"
-></app-reporpricespdfincomes>
+
+<app-printticketslocal *ngIf="modalVisible4" [namet1]="name1" [namet2]="name2" [nameb]="name3" [can]="cantid"
+  [qrdata]="qrtext" [price]="price" [f]="ff" [printtype]="printlocalt"
+  (closeModalEvent)="closeprintlocal()"></app-printticketslocal>
+<app-reportwassapincomes *ngIf="wassapmodal" (closeModalEvent)="closewassapmodal()"></app-reportwassapincomes>
+<app-reporpricespdfincomes *ngIf="reportpdfmodal" (closeModalEvent)="closereportpdfmodal()"></app-reporpricespdfincomes>

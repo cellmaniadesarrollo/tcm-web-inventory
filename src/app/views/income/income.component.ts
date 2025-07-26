@@ -175,6 +175,7 @@ export class IncomeComponent {
   async listItemsstart(form: any) {
     this.loading = true;
     const data = await this.api.listincomesstart(form);
+    console.log(data)
     this.loading = false;
     this.statusincomes = data.statuslist || [];
     this.incomeslists = data.intake;
@@ -197,7 +198,7 @@ export class IncomeComponent {
   async listItems(form: any) {
 
     const data = await this.api.listincomes(form);
-
+ 
     this.incomeslists = data.intake;
     this.numperpages = data.number_of_records_per_page;
     this.totalentries = data.number_of_records;
@@ -296,8 +297,8 @@ export class IncomeComponent {
     return this.incomesaveForm.controls;
   }
   async getdataincome() {
-const user = localStorage.getItem('User');
- 
+    const user = localStorage.getItem('User');
+
     this.mostrarSugerencias = false;
     this.blockbusquedapro = false;
     this.bloquear = false;
@@ -654,7 +655,7 @@ const user = localStorage.getItem('User');
   qrtext: string = ''
   price: any = null
   printlocalt: any = ''
-  ff:any = ''
+  ff: any = ''
   modalVisible4: boolean = false;
   async printlocal(id: any, print: any = null) {
     const data = await this.api.ticketsincomes({ id })
