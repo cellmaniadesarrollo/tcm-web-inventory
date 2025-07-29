@@ -22,7 +22,7 @@ export class AxiosInterceptorService {
     const user = localStorage.getItem('User');
 
     const client = axios.create({
-      timeout: 150000,
+      timeout: 250000,
       headers: {
         Authorization: `Bearer ${token}`,
         'x-user': user || '',

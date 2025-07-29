@@ -40,7 +40,7 @@ export class InventorynewComponent {
   nuevoForm: FormGroup = new FormGroup({
     cod_upc: new FormControl(''),
     name_items: new FormControl(null),
-    stock: new FormControl(''),
+   // stock: new FormControl(''),
     id_brand: new FormControl(''),
     id_model: new FormControl(''),
     id_type: new FormControl(''),
@@ -216,7 +216,7 @@ export class InventorynewComponent {
     this.nuevoForm.setValue({
       cod_upc: false,
       name_items: null,
-      stock: 0,
+    //  stock: 0,
       id_brand: null,
       id_model: null,
       id_type: null,
