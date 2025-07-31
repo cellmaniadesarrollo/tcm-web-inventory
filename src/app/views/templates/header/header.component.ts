@@ -93,7 +93,8 @@ this.userimg=data
     localStorage.removeItem('Token');
     localStorage.removeItem('User');
     localStorage.removeItem('Groups');
-    this.router.navigate(['login']);
+    window.location.href = '/login'; 
+   // this.router.navigate(['login']);
   }
 
   orders() {

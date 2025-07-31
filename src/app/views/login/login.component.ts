@@ -54,9 +54,11 @@ export class LoginComponent {
       this.nivel1=  grups.some((x:any) => x == 'CSRS' || x == 'ADMINS')
       await this.api.reload();
       if (this.nivel2&&this.nivel1) {
-        this.router.navigate(['dashboard']);  
+        //this.router.navigate(['dashboard']);  
+         window.location.href = '/dashboard'; 
       } else {
-        this.router.navigate(['income']);
+       // this.router.navigate(['income']);
+        window.location.href = '/income'; 
       }
     }
   }

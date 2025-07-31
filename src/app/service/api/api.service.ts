@@ -99,7 +99,8 @@ export class ApiService {
       localStorage.removeItem('User');
       localStorage.removeItem('Groups');
 
-      this.router.navigate(['login']);
+     this.router.navigate(['login']);
+     //
     }
     this.errorHandler.handleError(error);
     this.alerts.showError(error.response.statusText, 'Error');
