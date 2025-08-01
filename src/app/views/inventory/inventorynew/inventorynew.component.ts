@@ -239,7 +239,7 @@ export class InventorynewComponent {
     this.nuevoForm = this.formBuilder.group({
       cod_upc: ['', Validators.required],
       name_items: [null, Validators.required],
-      stock: ['', Validators.required],
+    //  stock: ['', Validators.required],
       id_brand: [''],
       id_model: ['', Validators.required],
       id_type: ['', Validators.required],
