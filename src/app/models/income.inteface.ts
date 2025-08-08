@@ -1,6 +1,7 @@
 export interface ListitemsincomeI {
   _id?: any;
   upc?: any;
+  sku?: any;
   nameitem?: any;
   //comesfrom?: any;
   modelitem?: any;
