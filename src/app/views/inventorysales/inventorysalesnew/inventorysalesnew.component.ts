@@ -42,8 +42,7 @@ export class InventorysalesnewComponent {
   ) {}
   nuevoForm: FormGroup = new FormGroup({
     cod_upc: new FormControl(''),
-    name_items: new FormControl(null),
-    stock: new FormControl(''),
+    name_items: new FormControl(null), 
     id_brand: new FormControl(''),
     id_model: new FormControl(''),
     id_type: new FormControl(''),
@@ -255,8 +254,7 @@ this.subscriptions.add(
     : { latitud: null, longitud: null };
     this.nuevoForm.setValue({
       cod_upc: false,
-      name_items: null,
-      stock: null,
+      name_items: null, 
       id_brand: null,
       id_model: null,
       id_type: null,
@@ -278,8 +276,7 @@ ubicacion: coordenadasValidas
   validations() {
     this.nuevoForm = this.formBuilder.group({
       cod_upc: ['', Validators.required],
-      name_items: [null, Validators.required],
-      stock: ['', Validators.required],
+      name_items: [null, Validators.required], 
       id_brand: [''],
       id_model: ['', Validators.required],
       id_type: ['', Validators.required],

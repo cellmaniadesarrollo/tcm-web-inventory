@@ -36,7 +36,7 @@
                 <div class="col-sm-1" align="center">
                   <input
                     class="form-check-input"
-                    type="checkbox"
+                    type="checkbox" 
                     (change)="onCheckboxChange($event)"
                     checked
                   />
@@ -101,28 +101,7 @@
                   </div>
                 </div>
               </div>
-  
-              <div class="row">
-                <div class="col-sm-1"></div>
-                <!-- izquierda -->
-                <div class="col-sm-10">
-                  <div class="form-group">
-                    <label class="border-lable-flt">
-                      <input
-                        type="number"
-                        class="form-control"
-                        formControlName="stock"
-                        placeholder="Stock"
-                        [ngClass]="{
-                          'is-invalid': submitted && f['stock'].errors
-                        }"
-                        required
-                      />
-                      <span lass="widget-title  shop-sidebar">Stock *</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
+ 
   
               <div class="row">
                 <!-- izquierda -->
