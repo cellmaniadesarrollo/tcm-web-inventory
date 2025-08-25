@@ -173,7 +173,7 @@
                         <th>PI</th>
                         <th>PvP</th>
                         <th>Observaciones</th>
-                        <th>Est.</th> 
+                        <th>Est.</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -239,7 +239,7 @@
 
                         <td>
                           {{ item.incomestype?.name_incomestypes.substring(0, 4) }}
-                        </td> 
+                        </td>
                         <td>
 
                           <abbr title="Imprimir normal" class="p-1"><a class="btn btn-outline-dark p-1"
@@ -250,6 +250,10 @@
                               <i class="fa fa-print"></i>
                             </a>
                           </abbr>
+                          <button *ngIf="item.incomestype?.name_incomestypes == 'PENDIENTE'"
+                              type=" button" class="btn btn-outline-success btn-sm p-1" (click)="aceptar(item)">
+                            <i class="bi bi-check-circle p-0"></i>
+                          </button>
                         </td>
                       </tr>
                     </tbody>

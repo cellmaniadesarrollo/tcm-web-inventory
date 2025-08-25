@@ -174,8 +174,7 @@ export class IncomeComponent {
 
   async listItemsstart(form: any) {
     this.loading = true;
-    const data = await this.api.listincomesstart(form);
-    console.log(data)
+    const data = await this.api.listincomesstart(form); 
     this.loading = false;
     this.statusincomes = data.statuslist || [];
     this.incomeslists = data.intake;
@@ -208,6 +207,7 @@ export class IncomeComponent {
     this.filterinit(data.allclients, inventoryaux, 1, data.number_of_records_per_page.toString(), findlikeaux)
     this.onFormChanges()
     this.myedit = true
+    this.loading = false;
   }
   bloquear: boolean = false;
   bloquear1: boolean = false;
@@ -688,5 +688,36 @@ export class IncomeComponent {
     this.reportpdfmodal = false
   }
 
+
+
+
+    async aceptar(data: any) {
+
+      Swal.fire({
+        title: '¿Cambiar estado a aprobado?',
+        text:
+          data.quantity +
+          ' ' +
+          data.inventoryflow.modelitem +
+          ' ' +
+          data.inventoryflow.nameitem,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Aprobado',
+        allowOutsideClick: false,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          this.loading = true;
+          const asa = await this.api.incomeapproved(data._id);
+          if (asa == 'OK') {
+            
+            this.listItems(this.filterForm.value);
+             
+          }
+        }
+      });
+    }
 
 }
