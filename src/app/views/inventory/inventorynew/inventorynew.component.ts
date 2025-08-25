@@ -267,6 +267,7 @@ export class InventorynewComponent {
   submittedcolor = false;
   submittedquality = false;
   submittedstateproduct = false;
+    isButtonDisabled = false;
   //submittedcomesfrom = false;
   onSubmit(form: any): void {
     this.submitted = true;
@@ -276,6 +277,10 @@ export class InventorynewComponent {
       // console.log(JSON.stringify(this.nuevoForm.value, null, 2));
       return;
     } else {
+            this.submitted = true; 
+          setTimeout(() => {
+      this.isButtonDisabled = false;
+    }, 5000);
       this.postForm(form);
     }
     // this.postForm(form);
@@ -313,6 +318,10 @@ export class InventorynewComponent {
       console.log(JSON.stringify(this.nuevoForm.value, null, 2));
       return;
     } else {
+            this.submitted = true; 
+          setTimeout(() => {
+      this.isButtonDisabled = false;
+    }, 5000);
       const data = await this.api.savenewitem(this.nuevoForm.value);
       if (data == 'OK') {
         this.router.navigate(['inventory']);

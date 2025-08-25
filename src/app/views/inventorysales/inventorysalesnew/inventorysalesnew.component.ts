@@ -308,14 +308,20 @@ ubicacion: coordenadasValidas
   submittedcolor = false;
   submittedquality = false;
   submittedstateproduct = false;
+  isButtonDisabled = false;
   //submittedcomesfrom = false;
   onSubmit(form: any): void {
-    this.submitted = true; 
+    
+    this.isButtonDisabled = true;
     if (this.nuevoForm.invalid) {
       //this.postForm(form);
       // console.log(JSON.stringify(this.nuevoForm.value, null, 2));
       return;
     } else {
+      this.submitted = true; 
+          setTimeout(() => {
+      this.isButtonDisabled = false;
+    }, 5000);
       this.postForm(form);
     }
     // this.postForm(form);
@@ -340,11 +346,14 @@ ubicacion: coordenadasValidas
   }
 
   async onSubmitclose() {
-    this.submitted = true;
-    console.log(this.nuevoForm.value)
+    this.submitted = true; 
     if (this.nuevoForm.invalid) { 
       return;
     } else {
+      this.submitted = true; 
+          setTimeout(() => {
+      this.isButtonDisabled = false;
+    }, 5000);
       const data = await this.api.savenewitemsales(this.nuevoForm.value);
       if (data == 'OK') {
         this.router.navigate(['inventorysales']);

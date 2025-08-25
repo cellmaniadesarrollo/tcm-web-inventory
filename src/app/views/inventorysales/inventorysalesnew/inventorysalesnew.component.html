@@ -373,7 +373,7 @@
           <div class="row">
             <!-- /.col -->
             <div class="col-3">
-              <button type="submit" class="btn btn-primary btn-block">
+              <button type="submit" class="btn btn-primary btn-block"[disabled]="isButtonDisabled">
                 Aceptar
               </button>
             </div>
@@ -382,6 +382,7 @@
                 type="button"
                 (click)="onSubmitclose()"
                 class="btn btn-success btn-block"
+                [disabled]="isButtonDisabled"
               >
                 Aceptar y cerrar
               </button>
