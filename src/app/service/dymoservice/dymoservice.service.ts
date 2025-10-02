@@ -11,7 +11,7 @@ export class DymoserviceService {
 
   async printTickets(data: any): Promise<any> {
     try { 
-      const response = await axios.post(`${this.apiUrl}/api/printtiketsSS`, data, {
+      const response = await axios.post(`${this.apiUrl}/api/printtikets`, data, {
         headers: {
           'Content-Type': 'application/json'
         }
