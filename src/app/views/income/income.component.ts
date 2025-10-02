@@ -174,7 +174,7 @@ export class IncomeComponent {
 
   async listItemsstart(form: any) {
     this.loading = true;
-    const data = await this.api.listincomesstart(form); 
+    const data = await this.api.listincomesstart(form);
     this.loading = false;
     this.statusincomes = data.statuslist || [];
     this.incomeslists = data.intake;
@@ -197,7 +197,7 @@ export class IncomeComponent {
   async listItems(form: any) {
 
     const data = await this.api.listincomes(form);
- 
+
     this.incomeslists = data.intake;
     this.numperpages = data.number_of_records_per_page;
     this.totalentries = data.number_of_records;
@@ -235,8 +235,18 @@ export class IncomeComponent {
         this.listItems(this.filterForm.value);
       } else if (data.id) {
         if (data.printer === 'dymo') {
-          const datat = await this.apiticketdymmo.printTickets(data.id)
-          console.log(datat)
+          try {
+            await this.apiticketdymmo.printTickets(data.id)
+
+          } catch (error) {
+
+          } finally {
+            this.closebutton.nativeElement.click();
+            this.submitted = false;
+            this.listItems(this.filterForm.value);
+          }
+
+
         } else {
           const params = new URLSearchParams(data.id)
           const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //`https://82d3-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//
@@ -274,8 +284,22 @@ export class IncomeComponent {
       } else if (data.id) {
 
         if (data.printer === 'dymo') {
-          const datat = await this.apiticketdymmo.printTickets(data.id)
-          console.log(datat)
+          try {
+            await this.apiticketdymmo.printTickets(data.id)
+          } catch (error) {
+
+          } finally {
+            this.listItems(this.filterForm.value);
+            this.terminoDeBusqueda = ''
+            this.submitted = false;
+            this.incomesaveForm.controls['id_item'].setValue(null);
+            this.incomesaveForm.controls['cantidad'].setValue(1);
+            this.incomesaveForm.controls['precioventa'].setValue(0);
+            this.incomesaveForm.controls['preciounit'].setValue(0);
+            this.incomesaveForm.controls['observaciones'].setValue('');
+          }
+
+
         } else {
           const params = new URLSearchParams(data.id)
           const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //`https://82d3-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//
@@ -691,33 +715,33 @@ export class IncomeComponent {
 
 
 
-    async aceptar(data: any) {
+  async aceptar(data: any) {
 
-      Swal.fire({
-        title: '¿Cambiar estado a aprobado?',
-        text:
-          data.quantity +
-          ' ' +
-          data.inventoryflow.modelitem +
-          ' ' +
-          data.inventoryflow.nameitem,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Aprobado',
-        allowOutsideClick: false,
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          this.loading = true;
-          const asa = await this.api.incomeapproved(data._id);
-          if (asa == 'OK') {
-            
-            this.listItems(this.filterForm.value);
-             
-          }
+    Swal.fire({
+      title: '¿Cambiar estado a aprobado?',
+      text:
+        data.quantity +
+        ' ' +
+        data.inventoryflow.modelitem +
+        ' ' +
+        data.inventoryflow.nameitem,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Aprobado',
+      allowOutsideClick: false,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        this.loading = true;
+        const asa = await this.api.incomeapproved(data._id);
+        if (asa == 'OK') {
+
+          this.listItems(this.filterForm.value);
+
         }
-      });
-    }
+      }
+    });
+  }
 
 }

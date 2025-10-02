@@ -11,14 +11,14 @@ export class DymoserviceService {
 
   async printTickets(data: any): Promise<any> {
     try { 
-      const response = await axios.post(`${this.apiUrl}/api/printtikets`, data, {
+      const response = await axios.post(`${this.apiUrl}/api/printtiketsSS`, data, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
       return response.data;
     } catch (error) {
-      // Manejo básico de errores
+ 
       throw error;
     }
   }
