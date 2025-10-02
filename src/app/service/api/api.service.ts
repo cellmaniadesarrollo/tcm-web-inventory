@@ -101,9 +101,9 @@ export class ApiService {
 
      this.router.navigate(['login']);
      //
-    }
+    } 
     this.errorHandler.handleError(error);
-    this.alerts.showError(error.response.statusText, 'Error');
+    this.alerts.showError(error.response.data.message, `Error ${error.response.data.code}`,15000);
 
     return {
       id: '-1',

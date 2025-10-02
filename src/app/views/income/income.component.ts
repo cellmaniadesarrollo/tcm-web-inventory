@@ -272,8 +272,10 @@ export class IncomeComponent {
     } else {
       this.myedit = false
       const data = await this.api.saveincome(form);
+        
       if (data == 'OK') {
         this.listItems(this.filterForm.value);
+       
         this.terminoDeBusqueda = ''
         this.submitted = false;
         this.incomesaveForm.controls['id_item'].setValue(null);
