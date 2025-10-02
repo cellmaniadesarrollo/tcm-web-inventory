@@ -236,7 +236,7 @@ export class IncomeComponent {
       } else if (data.id) {
         if (data.printer === 'dymo') {
           try {
-            await this.apiticketdymmo.printTickets(data.id)
+            this.apiticketdymmo.printTickets(data.id)
 
           } catch (error) {
 
@@ -285,7 +285,7 @@ export class IncomeComponent {
 
         if (data.printer === 'dymo') {
           try {
-            await this.apiticketdymmo.printTickets(data.id)
+             this.apiticketdymmo.printTickets(data.id)
           } catch (error) {
 
           } finally {

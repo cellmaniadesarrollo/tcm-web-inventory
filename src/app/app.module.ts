@@ -124,7 +124,7 @@ import { RelativeDatePipe } from './pipes/relative-date.pipe';
     RouterModule,
     BrowserAnimationsModule, // Necesario para las animaciones de toast
     ToastrModule.forRoot({
-      timeOut: 3000,
+      timeOut: 5000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,
     }),

@@ -22,7 +22,7 @@ export class AlertsService {
    // this.toast2.success({detail:titulo,summary:texto,duration:2000});
      this.toast.success(texto,  (typeof titulo === 'object') ? '' : titulo);
   }
-  showError(texto:any, titulo:any) {
+  showError(texto:any, titulo:any, tiempo?: number) {
     // Swal.fire({
     //   position: "top-end",
     //   icon: "error",
@@ -33,6 +33,11 @@ export class AlertsService {
     //   width: '300px'
     // });
   // this.toast2.error({detail:titulo,summary:texto,duration:2000});
-     this.toast.error(texto,   (typeof titulo === 'object') ? '' : titulo);
+     this.toast.error(texto,   (typeof titulo === 'object') ? '' : titulo ,  {
+      timeOut: tiempo ?? 5000, // si no mandas tiempo usa 5000 por defecto
+      extendedTimeOut: 2000,   // cuánto tiempo se queda si pasas el mouse encima
+      closeButton: true,       // para mostrar botón de cerrar
+      progressBar: true        // opcional: barra de progreso
+    });
   }
 }
