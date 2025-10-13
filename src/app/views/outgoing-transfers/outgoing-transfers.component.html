@@ -1,112 +1,108 @@
-<div class="content-wrapper"> 
-    <div class="container mt-4">
-        <!-- TÍTULO CENTRADO -->
-        <h3 class="text-center mb-4">Transacciones</h3>
+<div class="content-wrapper">
+  <div class="container mt-4">
+    <!-- TÍTULO CENTRADO -->
+    <h3 class="text-center mb-4">Transacciones</h3>
 
-        <!-- FILTROS Y ACCIONES -->
-        <div class="row align-items-start">
-            <!-- BOTONES IZQUIERDA -->
-            <!-- BOTONES IZQUIERDA -->
-            <div class="col-md-4 d-flex gap-2 botones-fijos">
+    <!-- FILTROS Y ACCIONES -->
+    <div class="row align-items-start">
+      <!-- BOTONES IZQUIERDA -->
+      <!-- BOTONES IZQUIERDA -->
+      <div class="col-md-4 d-flex gap-2 botones-fijos">
 
-                <button mat-raised-button color="primary" matTooltip="Nueva Transacción" routerLink="/new-transfers" >
-                    <mat-icon class="me-1">add_circle</mat-icon>
-                    Nueva Transacción
-                </button>
+        <button mat-raised-button color="primary" matTooltip="Nueva Transacción" routerLink="/new-transfers">
+          <mat-icon class="me-1">add_circle</mat-icon>
+          Nueva Transacción
+        </button>
 
-                <button mat-raised-button color="accent" matTooltip="Nueva Solicitud" (click)="nuevaSolicitud()">
-                    <mat-icon class="me-1">note_add</mat-icon>
-                    Nueva Solicitud
-                </button>
+        <button mat-raised-button color="accent" matTooltip="Nueva Solicitud" (click)="nuevaSolicitud()">
+          <mat-icon class="me-1">note_add</mat-icon>
+          Nueva Solicitud
+        </button>
+      </div>
+
+
+      <!-- BUSCADOR CENTRO -->
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Buscar</mat-label>
+          <input matInput placeholder="Buscar por producto, modelo..." [(ngModel)]="datapage.findlike"
+            (keyup.enter)="buscar()" />
+          <button *ngIf="datapage.findlike" mat-icon-button matSuffix (click)="limpiarBusqueda()">
+            <mat-icon>close</mat-icon>
+          </button>
+          <button mat-icon-button matSuffix (click)="buscar()">
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+      <!-- SELECT DE ESTADO DERECHA -->
+      <div class="col-md-4">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Estado</mat-label>
+          <mat-select [(ngModel)]="datapage.allclients" (selectionChange)="buscar()">
+            <mat-option value="0">Todos</mat-option>
+            <mat-option *ngFor="let estado of estados" [value]="estado.id">
+              {{ estado.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- PAGINACIÓN ARRIBA -->
+    <div class="row p-3">
+      <div class="col-sm-6 my-auto">
+        <p class="text-black-50">
+          Página {{ datapage.pagination }} mostrando
+          {{ transacciones.length }} resultados de {{ totalentries }}
+        </p>
+      </div>
+      <div class="col-sm-6 my-auto">
+        <div class="d-flex justify-content-end">
+          <div class="col-sm-2">
+            <div class="my-auto" data-toggle="tooltip" data-placement="bottom" title="Filtrar Por">
+              <select class="form-select w-auto" [(ngModel)]="datapage.numperpage" (change)="buscar()">
+                <option *ngFor="let cantidad of [30, 50, 100, 200]" [value]="cantidad">
+                  {{ cantidad }}
+                </option>
+              </select>
             </div>
-
-
-            <!-- BUSCADOR CENTRO -->
-            <div class="col-md-4">
-                <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Buscar</mat-label>
-                    <input matInput placeholder="Buscar por producto, modelo..." [(ngModel)]="datapage.findlike"
-                        (keyup.enter)="buscar()" />
-                    <button *ngIf="datapage.findlike" mat-icon-button matSuffix (click)="limpiarBusqueda()">
-                        <mat-icon>close</mat-icon>
-                    </button>
-                    <button mat-icon-button matSuffix (click)="buscar()">
-                        <mat-icon>search</mat-icon>
-                    </button>
-                </mat-form-field>
-            </div>
-
-            <!-- SELECT DE ESTADO DERECHA -->
-            <div class="col-md-4">
-                <mat-form-field appearance="fill" class="w-100">
-                    <mat-label>Estado</mat-label>
-                    <mat-select [(ngModel)]="datapage.allclients" (selectionChange)="buscar()">
-                        <mat-option value="0">Todos</mat-option>
-                        <mat-option *ngFor="let estado of estados" [value]="estado.id">
-                            {{ estado.name }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
+          </div>
+          <pagination-controls (pageChange)="renderPage($event)"> </pagination-controls>
         </div>
+      </div>
+    </div>
 
-        <!-- PAGINACIÓN ARRIBA -->
-        <div class="row p-3">
-            <div class="col-sm-6 my-auto">
-              <p class="text-black-50">
-                Página {{ datapage.pagination }} mostrando
-                {{ transacciones.length }} resultados de {{ totalentries }}
-              </p>
-            </div>
-            <div class="col-sm-6 my-auto">
-              <div class="d-flex justify-content-end">
-                <div class="col-sm-2"> 
-                    <div
-                      class="my-auto"
-                      data-toggle="tooltip"
-                      data-placement="bottom"
-                      title="Filtrar Por"
-                    >
-                    <select class="form-select w-auto" [(ngModel)]="datapage.numperpage" (change)="buscar()">
-                        <option *ngFor="let cantidad of [30, 50, 100, 200]" [value]="cantidad">
-                            {{ cantidad }}
-                        </option>
-                    </select>
-                    </div> 
-                </div>
-                <pagination-controls (pageChange)="renderPage($event)"> </pagination-controls>
-              </div>
-            </div>
-          </div>
+    <!-- TABLA -->
+    <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center" style="height: 200px;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
 
-        <!-- TABLA -->
-        <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center" style="height: 200px;">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Cargando...</span>
-            </div>
-          </div>
-          
-          <div *ngIf="!isLoading" class="table-responsive">
-            <table class="table table-bordered table-striped table-sm" style="font-size: 0.75rem;">
-              <thead>
-                <tr>
-                  <th>Código</th>
-                  <th>Producto</th>
-                  <th>Modelo</th>
-                  <th>Calidad</th>
-                  <th>Cantidad</th>
-                  <th>Sucursal Destino</th>
-                  <th>Creado</th>
-                  <th>Fecha</th>
-                  <th>Estado</th>
-                  <th>Observaciones</th>
-                  <th>Por</th>
-                  <th>Fecha</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let t of transacciones | paginate : { itemsPerPage: datapage.numperpage, currentPage: datapage.pagination, totalItems: totalentries }"
-                    [ngClass]="{
+    <div *ngIf="!isLoading" class="table-responsive">
+      <table class="table table-bordered table-striped table-sm" style="font-size: 0.75rem;">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Modelo</th>
+            <th>Calidad</th>
+            <th>Cantidad</th>
+            <th>Sucursal Destino</th>
+            <th>Creado</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Observaciones</th>
+            <th>Por</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let t of transacciones | paginate : { itemsPerPage: datapage.numperpage, currentPage: datapage.pagination, totalItems: totalentries }"
+            [ngClass]="{
       'status-solicitado': t.status === 'SOLICITADO',
       'status-enviado': t.status === 'ENVIADO',
       'status-rechazado': t.status === 'RECHAZADO',
@@ -114,53 +110,46 @@
       'status-completado': t.status === 'COMPLETADO',
       'status-cancelado': t.status === 'CANCELADO'
     }">
-                  <td>{{ t.cod }}</td>
-                  <td>{{ t.name }}</td>
-                  <td>{{ t.model }}</td>
-                  <td>{{ t.calidad }}</td>
-                  <td>{{ t.quantity }}</td>
-                  <td>{{ t.destinationbranche }}</td>
-                  <td>{{ t.createuser }}</td>
-                  <td>{{ t.date | relativeDate }}</td>
-                  <td>{{ t.status}}</td>
-                  <td>{{ t.observation}}</td>
-                  <td>{{ t.status_historyuser }}</td>
-                  <td>{{ t.datechange | relativeDate}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
- 
-        <!-- PAGINACIÓN ABAJO -->
-        <div class="row p-3">
-            <div class="col-sm-6 my-auto">
-              <p class="text-black-50">
-                Página {{ datapage.pagination }} mostrando
-                {{ transacciones.length }} resultados de {{ totalentries }}
-              </p>
-            </div>
-            <div class="col-sm-6 my-auto">
-              <div class="d-flex justify-content-end">
-                <div class="col-sm-2"> 
-                    <div
-                      class="my-auto"
-                      data-toggle="tooltip"
-                      data-placement="bottom"
-                      title="Filtrar Por"
-                    >
-                    <select class="form-select w-auto" [(ngModel)]="datapage.numperpage" (change)="buscar()">
-                        <option *ngFor="let cantidad of [30, 50, 100, 200]" [value]="cantidad">
-                            {{ cantidad }}
-                        </option>
-                    </select>
-                    </div> 
-                </div>
-                <pagination-controls (pageChange)="renderPage($event)"> </pagination-controls>
-              </div>
-            </div>
-          </div>
+            <td>{{ t.cod }}</td>
+            <td>{{ t.name }}</td>
+            <td>{{ t.model }}</td>
+            <td>{{ t.calidad }}</td>
+            <td>{{ t.quantity }}</td>
+            <td>{{ t.destinationbranche }}</td>
+            <td>{{ t.createuser }}</td>
+            <td>{{ t.date | relativeDate }}</td>
+            <td>{{ t.status}}</td>
+            <td>{{ t.observation}}</td>
+            <td>{{ t.status_historyuser }}</td>
+            <td>{{ t.datechange | relativeDateZ0}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-</div>
+    <!-- PAGINACIÓN ABAJO -->
+    <div class="row p-3">
+      <div class="col-sm-6 my-auto">
+        <p class="text-black-50">
+          Página {{ datapage.pagination }} mostrando
+          {{ transacciones.length }} resultados de {{ totalentries }}
+        </p>
+      </div>
+      <div class="col-sm-6 my-auto">
+        <div class="d-flex justify-content-end">
+          <div class="col-sm-2">
+            <div class="my-auto" data-toggle="tooltip" data-placement="bottom" title="Filtrar Por">
+              <select class="form-select w-auto" [(ngModel)]="datapage.numperpage" (change)="buscar()">
+                <option *ngFor="let cantidad of [30, 50, 100, 200]" [value]="cantidad">
+                  {{ cantidad }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <pagination-controls (pageChange)="renderPage($event)"> </pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
 
- 
+</div>
