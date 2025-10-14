@@ -1,5 +1,3 @@
-
-
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
@@ -31,19 +29,10 @@
 
     <!-- Sidebar Menu -->
     <nav class="mt-2">
-      <ul
-        class="nav nav-pills nav-sidebar flex-column"
-        data-widget="treeview"
-        role="menu"
-        data-accordion="false"
-        *ngIf="nivel1"
-      >
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false"
+        *ngIf="nivel1">
         <li class="nav-item btn6">
-          <a
-            class="cursor-pointer nav-link"
-            routerLink="/dashboard"
-            routerLinkActive="bg-primary"
-          >
+          <a class="cursor-pointer nav-link" routerLink="/dashboard" routerLinkActive="bg-primary">
             <i class="nav-icon bi bi-house-fill"></i>
             <p>Inicio</p>
           </a>
@@ -58,21 +47,13 @@
             <p>Impresion de tickets</p>
           </a>
         </li> -->
+
       </ul>
-      
-      <ul
-        class="nav nav-pills nav-sidebar flex-column"
-        data-widget="treeview"
-        role="menu"
-        data-accordion="false"
-        *ngIf="nivel2"
-      >
+
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false"
+        *ngIf="nivel2">
         <li class="nav-item btn6">
-          <a
-            class="cursor-pointer nav-link"
-            routerLink="/suppliers"
-            routerLinkActive="bg-primary"
-          >
+          <a class="cursor-pointer nav-link" routerLink="/suppliers" routerLinkActive="bg-primary">
             <i class="nav-icon bi bi-people"></i>
             <p>Proveedores</p>
           </a>
@@ -83,33 +64,21 @@
             <p>Ingresos</p>
           </a>
         </li>
+        <li class="nav-item btn6">
+          <a class="cursor-pointer nav-link" routerLink="/reports-all" routerLinkActive="bg-primary">
+            <i class="nav-icon bi bi-file-text"></i>
+            <p>Reportes</p>
+          </a>
+        </li>
+      </ul>
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
       </ul>
-      <ul
-      class="nav nav-pills nav-sidebar flex-column"
-      data-widget="treeview"
-      role="menu"
-      data-accordion="false" 
-    >
- 
-    </ul>
-      <ul
-        class="nav nav-pills nav-sidebar flex-column" 
-        data-widget="treeview"
-        role="menu"
-        data-accordion="true"
-        *ngIf="nivel1 || nivel2"
-      >
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true"
+        *ngIf="nivel1 || nivel2">
         <li class="nav-item btn6">
-          <a
-            class="nav-link"
-            data-bs-toggle="collapse"
-            href="#menuInventoryRep"
-            role="button"
-            aria-expanded="false"
-            aria-controls="menuInventoryRep"
-             
-          >
+          <a class="nav-link" data-bs-toggle="collapse" href="#menuInventoryRep" role="button" aria-expanded="false"
+            aria-controls="menuInventoryRep">
             <i class="nav-icon bi bi-tools"></i>
             <p>
               Inventario Rep.
@@ -138,22 +107,12 @@
           </ul>
         </li>
       </ul>
-    
-      <ul
-        class="nav nav-pills nav-sidebar flex-column"
-        data-widget="treeview"
-        role="menu"
-        data-accordion="true"
-        *ngIf="nivel3"
-      >
+
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true"
+        *ngIf="nivel3">
         <li class="nav-item btn6">
-          <a
-            class="nav-link" 
-            href="#menuInventoryPer"
-            role="button"
-            aria-expanded="false"
-            aria-controls="menuInventoryPer"
-          >
+          <a class="nav-link" href="#menuInventoryPer" role="button" aria-expanded="false"
+            aria-controls="menuInventoryPer">
             <i class="nav-icon bi bi-palette"></i>
             <p>
               Inventario PER.
@@ -178,22 +137,11 @@
           </ul>
         </li>
       </ul>
-    
-      <ul
-        class="nav nav-pills nav-sidebar flex-column"
-        data-widget="treeview"
-        role="menu"
-        data-accordion="true"
-      >
+
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
         <li class="nav-item btn6">
-          <a
-            class="nav-link"
-            data-bs-toggle="collapse"
-            href="#menuInventorySales"
-            role="button"
-            aria-expanded="false"
-            aria-controls="menuInventorySales"
-          >
+          <a class="nav-link" data-bs-toggle="collapse" href="#menuInventorySales" role="button" aria-expanded="false"
+            aria-controls="menuInventorySales">
             <i class="nav-icon bi-bar-chart"></i>
             <p>
               Inventario Sales
@@ -213,26 +161,26 @@
               </a>
               <a *ngIf="nivel4" class="nav-link" routerLink="/incomesales" routerLinkActive="active">
                 <i class="nav-icon bi bi-check-square"></i>
-                <p>Ingresos Sales</p> 
+                <p>Ingresos Sales</p>
               </a>
               <a class="nav-link" routerLink="/outgoing-transfers" routerLinkActive="active">
                 <i class="nav-icon bi bi-arrow-right-square"></i>
-                <p>Transferencia Saliente</p> 
+                <p>Transferencia Saliente</p>
 
               </a>
               <a class="nav-link" routerLink="/receiving-transfers" routerLinkActive="active">
                 <i class="nav-icon bi bi-arrow-left-square"></i>
-                <p>Transferencia Entrante</p> 
+                <p>Transferencia Entrante</p>
               </a>
             </li>
           </ul>
 
         </li>
       </ul>
- 
-      
+
+
     </nav>
-    
+
 
     <!-- /.sidebar-menu -->
   </div>

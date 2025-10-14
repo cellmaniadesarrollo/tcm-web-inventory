@@ -1,0 +1,38 @@
+.reportes-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  padding: 20px;
+}
+
+.reportes-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px 30px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.reportes-card:hover {
+  transform: translateY(-5px);
+}
+
+.btn-reporte {
+  font-size: 1rem;
+  padding: 12px 24px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-reporte i {
+  margin-right: 8px;
+}
+
+.btn-reporte:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 10px rgba(0, 123, 255, 0.3);
+}

@@ -77,6 +77,7 @@ import { NewTransferComponent } from './views/outgoing-transfers/new-transfer/ne
 import { ReceivingTransfersComponent } from './views/receiving-transfers/receiving-transfers.component';
 import { RelativeDatePipe } from './pipes/relative-date.pipe';
 import { RelativeDateZ0Pipe } from './pipes/relative-date-z0.pipe';
+import { RepotsAllComponent } from './views/repots-all/repots-all.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -111,7 +112,8 @@ import { RelativeDateZ0Pipe } from './pipes/relative-date-z0.pipe';
     NewTransferComponent,
     ReceivingTransfersComponent,
     RelativeDatePipe,
-    RelativeDateZ0Pipe,   
+    RelativeDateZ0Pipe,
+    RepotsAllComponent,   
   
 
   ],

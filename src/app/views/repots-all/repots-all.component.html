@@ -1,0 +1,31 @@
+<div class="content-wrapper">
+    <div class="reportes-container">
+        <div class="reportes-card shadow-lg">
+            <h2 class="text-center mb-4">📊 Reportes del Sistema</h2>
+
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <button class="btn btn-primary btn-reporte" [disabled]="loading" (click)="verReporteStockCelulares()">
+                    <ng-container *ngIf="!loading">
+                        <i class="bi bi-phone"></i> Reporte de Celulares en stock
+                    </ng-container>
+                    <ng-container *ngIf="loading">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Generando...
+                    </ng-container>
+                </button>
+
+                <button class="btn btn-secondary btn-reporte" [disabled]="loading"
+                    (click)="verReporteCelularesVendidos()">
+                    <ng-container *ngIf="!loading">
+                        <i class="bi bi-cart-check"></i> Reporte de Celulares vendidos
+                    </ng-container>
+                    <ng-container *ngIf="loading">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Generando...
+                    </ng-container>
+
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
