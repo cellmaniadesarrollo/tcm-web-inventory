@@ -3,6 +3,7 @@ import { ApiService } from '../../service/api/api.service';
 import { PdfViewerService } from 'src/app/service/pdf-viewer/pdf-viewer.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { formatDate } from '@angular/common';
+import { serialValidator } from './serial-validator';
 import {
   AbstractControl,
   FormGroup,
@@ -10,6 +11,7 @@ import {
   Validators,
   FormBuilder,
   FormControlName,
+  FormArray,
 } from '@angular/forms';
 import {
   ListitemsincomeI,
@@ -42,6 +44,18 @@ export class IncomeComponent {
   @ViewChild('closebutton33') closebutton33: any;
   @ViewChild('closebutton34') closebutton34: any;
   @ViewChild('closebutton1') closebutton1: any;
+    serialRules = [
+    {
+      name: 'CELULAR',
+      keywords: ['CELULAR', 'MOVIL', 'SMARTPHONE'],
+      requiredLength: 15,
+      numericOnly: true
+    }
+    
+  ];
+
+
+  serialMessage: string = '';
   constructor(
     private api: ApiService,
     private pdfViewerService: PdfViewerService,
@@ -60,6 +74,8 @@ export class IncomeComponent {
   numperpages: any;
   totalentries: any;
   pagination: any;
+ 
+
   filterForm = new FormGroup({
     allclients: new FormControl('0'),
     inventory: new FormControl('0'),
@@ -90,7 +106,9 @@ export class IncomeComponent {
     item: new FormControl(''),
     get_print: new FormControl(true),
     iva: new FormControl(true),
-    selected_printer: new FormControl('')
+    selected_printer: new FormControl(''),
+    // 🚨 AGREGAR ESTO
+    imeis: this.formBuilder.array([])
   });
   incomeseditForm: FormGroup = new FormGroup({
     id: new FormControl(null),
@@ -212,7 +230,17 @@ export class IncomeComponent {
   bloquear: boolean = false;
   bloquear1: boolean = false;
   async onSubmitclose(form: any) {
+    if (this.isCelular) {
+      if (this.imeisArr.length === 0) {
+        return;
+      }
 
+      for (let imei of this.imeisArr.controls) {
+        if (imei.invalid) {
+          return;
+        }
+      }
+    }
     this.submitted = true;
     this.bloquear = true;
     this.bloquear1 = true;
@@ -259,6 +287,17 @@ export class IncomeComponent {
     }
   }
   async onSubmitcloseoff(form: any) {
+    if (this.isCelular) {
+      if (this.imeisArr.length === 0) {
+        return;
+      }
+
+      for (let imei of this.imeisArr.controls) {
+        if (imei.invalid) {
+          return;
+        }
+      }
+    }
     this.submitted = true;
     this.bloquear = true;
     this.bloquear1 = true;
@@ -272,10 +311,10 @@ export class IncomeComponent {
     } else {
       this.myedit = false
       const data = await this.api.saveincome(form);
-        
+
       if (data == 'OK') {
         this.listItems(this.filterForm.value);
-       
+
         this.terminoDeBusqueda = ''
         this.submitted = false;
         this.incomesaveForm.controls['id_item'].setValue(null);
@@ -287,7 +326,7 @@ export class IncomeComponent {
 
         if (data.printer === 'dymo') {
           try {
-             this.apiticketdymmo.printTickets(data.id)
+            this.apiticketdymmo.printTickets(data.id)
           } catch (error) {
 
           } finally {
@@ -322,6 +361,73 @@ export class IncomeComponent {
   get f(): { [key: string]: AbstractControl } {
     return this.incomesaveForm.controls;
   }
+  get imeisArr() {
+    return this.incomesaveForm.get('imeis') as FormArray;
+  }
+addImei() {
+  const itemName = this.incomesaveForm.get('item')?.value || '';
+
+  const control = this.formBuilder.control('', [
+    Validators.required,
+    serialValidator(itemName, this.serialRules)
+  ]);
+
+  (this.incomesaveForm.get('imeis') as FormArray).push(control);
+
+  // añadir espacio para el mensaje
+  this.imeiMessages.push('');
+}
+imeiMessages: string[] = [];
+onImeiBlur(index: number) {
+  const control = (this.incomesaveForm.get('imeis') as FormArray).at(index);
+
+  const errors = control.errors;
+  this.imeiMessages[index] = ''; // limpiar mensaje
+
+  if (!errors) {
+    this.imeiMessages[index] = 'Serial válido ✔';
+    return;
+  }
+
+  if (errors['serialLength']) {
+    const e = errors['serialLength'];
+    this.imeiMessages[index] =
+      `Faltan ${e.missing} caracteres (necesita ${e.required}).`;
+    return;
+  }
+
+  if (errors['serialNumeric']) {
+    this.imeiMessages[index] = `Debe ser solo números.`;
+    return;
+  }
+}
+get imeisFormArray(): FormArray {
+  return this.incomesaveForm.get('imeis') as FormArray;
+}
+  removeImei(index: number) {
+    this.imeisArr.removeAt(index);
+  }
+  sanitizeImei(index: number) {
+    const cleanValue = this.imeisArr.at(index).value.replace(/[^0-9]/g, '');
+    this.imeisArr.at(index).setValue(cleanValue, { emitEvent: false });
+  }
+onItemChange() {
+  const itemName = this.incomesaveForm.get('item')?.value || '';
+  const arr = this.incomesaveForm.get('imeis') as FormArray;
+
+  arr.controls.forEach((ctrl, i) => {
+    ctrl.setValidators([
+      Validators.required,
+      serialValidator(itemName, this.serialRules)
+    ]);
+    ctrl.updateValueAndValidity();
+  });
+
+  // limpiar mensajes
+  this.imeiMessages = arr.controls.map(() => '');
+}
+ 
+  isCelular: boolean = false;
   async getdataincome() {
     const user = localStorage.getItem('User');
 
@@ -336,28 +442,26 @@ export class IncomeComponent {
     this.taxesnames = data.dattax;
     this.taxespercentaje = data.datpercetax;
     const currentDate = new Date();
-    this.incomesaveForm = this.formBuilder.group({
-      id_proveedor: [null, Validators.required],
-      id_item: [null, Validators.required],
-      tipo_documento: [this.typedocument[0]._id, Validators.required],
-      numero_documento: ['', Validators.required],
-      precioventa: [0, Validators.required],
-      cantidad: [1, Validators.required],
-      preciounit: [0, Validators.required],
-      observaciones: [''],
-      porcentaje: [this.taxespercentaje[0]._id, Validators.required],
-      inpuesto: [data.nametax, Validators.required],
-      fecha: [
-        formatDate(currentDate, "yyyy-MM-dd'T'HH:mm:ss", 'en-US'),
-        Validators.required,
-      ],
-      item: [''],
-      get_print: [true, Validators.required],
-      iva: [true, Validators.required],
-      selected_printer: [user && user === 'byronp' ? 'dymo' : 'zebra']
-
+    this.isCelular = false;
+    this.incomesaveForm.patchValue({
+      id_proveedor: null,
+      id_item: null,
+      tipo_documento: this.typedocument[0]._id,
+      numero_documento: '',
+      precioventa: 0,
+      cantidad: 1,
+      preciounit: 0,
+      observaciones: '',
+      porcentaje: this.taxespercentaje[0]._id,
+      inpuesto: data.nametax,
+      fecha: formatDate(currentDate, "yyyy-MM-dd'T'HH:mm:ss", 'en-US'),
+      item: '',
+      get_print: true,
+      iva: true,
+      selected_printer: user && user === 'byronp' ? 'dymo' : 'zebra'
     });
-
+    this.imeisArr.clear();
+    this.imeiMessages = [];
     this.typedocumenttext = this.typedocument[0].name_type_document;
   }
   changes() {
@@ -622,13 +726,36 @@ export class IncomeComponent {
     const data = this.incomesaveForm.controls['id_item'].getRawValue();
     const found = this.items.find((element) => element._id == data);
     this.incomesaveForm.controls['precioventa'].setValue(found?.price);
+    this.incomesaveForm.controls['preciounit'].setValue(found?.last_unit_price_income);
   }
 
-  seleccionarSugerencia(sugerencia: string, id: string) {
-    this.incomesaveForm.controls['id_item'].setValue(id);
-    this.terminoDeBusqueda = sugerencia;
+  seleccionarSugerencia(texto: string, id_item: string) {
+    this.incomesaveForm.controls['id_item'].setValue(id_item);
+    this.terminoDeBusqueda = texto;
     this.mostrarSugerencias = false;
     this.seleccionitem()
+    this.incomesaveForm.patchValue({
+      id_item: id_item,
+      item: texto
+    });
+
+    // Detectar si es celular
+    const isCelular =
+      texto.toUpperCase().includes('CELULAR') ||
+      texto.toUpperCase().includes('MOVIL') ||
+      texto.toUpperCase().includes('SMARTPHONE');
+
+    this.isCelular = isCelular;
+
+    if (isCelular) {
+      // Al menos un IMEI requerido
+      if (this.imeisArr.length === 0) {
+        this.addImei();
+      }
+    } else {
+      // Si no es celular, limpiar IMEIs
+      this.imeisArr.clear();
+    }
   }
   filtrarSugerencias() {
     this.mostrarSugerencias = this.terminoDeBusqueda.length > 0;
@@ -682,9 +809,11 @@ export class IncomeComponent {
   price: any = null
   printlocalt: any = ''
   ff: any = ''
+  ivadat:boolean=false
   modalVisible4: boolean = false;
   async printlocal(id: any, print: any = null) {
     const data = await this.api.ticketsincomes({ id })
+    
     this.name1 = data.topText1
     this.name2 = data.topText2
     this.name3 = data.bottomText1
@@ -693,6 +822,7 @@ export class IncomeComponent {
     this.printlocalt = print
     this.price = data.price
     this.ff = data.f
+    this.ivadat=data.iva
 
     this.modalVisible4 = true;
   }

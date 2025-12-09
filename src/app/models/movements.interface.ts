@@ -13,7 +13,7 @@ export interface EmployeeMoveI {
 
 export interface TechnicianeMoveI {
   _id?: UsersMoveI;
- // user?: UsersMoveI;
+  // user?: UsersMoveI;
 }
 export interface MovementnameI {
   _id?: any;
@@ -27,77 +27,80 @@ export interface MovementsI {
   _id?: any;
   cant_movement?: any;
   date_movement?: any;
+  batch_info?: {
+    productName?: any;
+  };
   itemsinventory?: ListitemsinventoryIN;
   id_movement_name?: any;
   user_recipient?: ListusersIN;
   user_sender?: ListusersIN;
   uuid_movement?: uuiMoivementIn;
   observations_movement?: any;
-  numorder?:NumordersIN;
-  name_movement?:NamemovementIn;
+  numorder?: NumordersIN;
+  name_movement?: NamemovementIn;
 }
-export interface uuiMoivementIn{
-  _id?:any;
-  uuid?:any;
+export interface uuiMoivementIn {
+  _id?: any;
+  uuid?: any;
 }
-export interface NamemovementIn{
-  _id?:any;
-  name_movement?:any
-  movementtype?:TypeMovementIN;
+export interface NamemovementIn {
+  _id?: any;
+  name_movement?: any
+  movementtype?: TypeMovementIN;
 }
-export interface TypeMovementIN{
-  _id?:any;
-  name_movementtype?:any
+export interface TypeMovementIN {
+  _id?: any;
+  name_movementtype?: any
 }
-export interface NumordersIN{
-  _id?:any;
-  numorders?:any;
+export interface NumordersIN {
+  _id?: any;
+  numorders?: any;
 }
-export interface ListusersIN{
+export interface ListusersIN {
   _id?: any;
   employee?: ListemployeeIn;
 }
-export interface ListemployeeIn{
+export interface ListemployeeIn {
   _id?: any;
   first_name1?: any;
   last_name1?: any;
 }
 
-export interface ListitemsinventoryIN{
+export interface ListitemsinventoryIN {
   _id?: any;
-  items?:ListitemsIN;
- 
+  items?: ListitemsIN;
+
 }
 
-export interface ListitemsIN{
-_id?:any;
-inventoryfownameitem?:ListnameI;
-models?:ListmodelsIN;
+export interface ListitemsIN {
+  _id?: any;
+  inventoryfownameitem?: ListnameI;
+  models?: ListmodelsIN;
 }
 export interface ListnameI {
   _id?: any;
   name_nameitems?: any;
 
 }
-export interface ListmodelsIN{
-  _id?:any;
-  business_model?:any
-brand?:ListbrandI;
+export interface ListmodelsIN {
+  _id?: any;
+  business_model?: any
+  brand?: ListbrandI;
 }
 
 export interface ListmovementsIN {
   allclients?: any;
-  alltypes?:any;
+  alltypes?: any;
   page_numbers?: any;
   actual_page?: any;
   number_of_records?: any;
   number_of_records_per_page?: any;
   intake: MovementsI[];
   // stateproduct: ListstateproductI[];
-  pdfbase64?:any;
+  pdfbase64?: any;
 }
 
-export interface ListonemovementIN{
-  movementout?:MovementsI;
+export interface ListonemovementIN {
+  movementout?: MovementsI;
   technician?: ListusersIN;
 }

@@ -29,6 +29,7 @@ import {
   ListsstateinventoryI,
   ListscomesfromI,
   Getoneitem,
+  ListBatches
   
 } from 'src/app/models/item.inteface';
 
@@ -184,6 +185,7 @@ loading: boolean = true;
     this.loading = false;
     this.stateproducts = data.stateproduct;
     this.items=data.intake 
+    
     this.numperpages = data.number_of_records_per_page;
     this.totalentries = data.number_of_records;
     this.datapage.allclients = data.allclients;
@@ -563,12 +565,14 @@ pvitotal(punit:any,ptax:any,cant:any){
       this.codeauto = true
     }
   }
-
+batches:ListBatches[]=[]
   async listdataout() {
-    const data = await this.api.movementoutdata();
+    this.batches=[]
+    const data = await this.api.movementoutdata(this.find);
     this.technician = data.item;
     this.outs = data.outs;
-    // console.log(data);
+    this.batches=data.batches
+     console.log(data);
 
     const currentDateAndTime = this.datePipe.transform(
       new Date(),
@@ -578,7 +582,7 @@ pvitotal(punit:any,ptax:any,cant:any){
     //console.log(uuid)
     // console.log(currentDateAndTime)
     this.salidaForm.setValue({
-      id_item: this.find,
+      id_item: null,
       codigo_movimiento: uuid,
       tipo_salida: data.outs[3]._id,
       numero_orden: '',

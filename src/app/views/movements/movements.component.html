@@ -200,8 +200,7 @@
                 <table class="table table-bordered table-hover table-sm1">
                   <thead>
                     <tr>
-                      <th>Nombre</th>
-                      <th>Modelo</th>
+                      <th>Nombre</th> 
                       <th>Emisor</th>
                       <th>Receptor</th>
                       <th>Fecha</th>
@@ -233,15 +232,9 @@
                         data-bs-target="#exampleModal2"
                       >
                         {{
-                          movement.itemsinventory?.items?.inventoryfownameitem
-                            ?.name_nameitems
+                          movement.batch_info?.productName
                         }}
-                      </td>
-                      <td>
-                        {{
-                          movement.itemsinventory?.items?.models?.business_model
-                        }}
-                      </td>
+                      </td> 
                       <td>
                         {{ movement.user_sender?.employee?.first_name1 }}
                         {{ movement.user_sender?.employee?.last_name1 }}
@@ -465,13 +458,8 @@
             <div class="d-flex justify-content-center">
               <h3>
                 {{
-                  detailsdata.itemsinventory?.items?.inventoryfownameitem
-                    ?.name_nameitems
-                }}-{{
-                  detailsdata.itemsinventory?.items?.models?.brand?.name_brands
-                }}-{{
-                  detailsdata.itemsinventory?.items?.models?.business_model
-                }}
+                  detailsdata.batch_info?.productName
+                }} 
               </h3>
             </div>
           </div>
@@ -606,14 +594,8 @@
                 <div class="d-flex justify-content-center">
                   <h3>
                     {{
-                      detailsdata.itemsinventory?.items?.inventoryfownameitem
-                        ?.name_nameitems
-                    }}-{{
-                      detailsdata.itemsinventory?.items?.models?.brand
-                        ?.name_brands
-                    }}-{{
-                      detailsdata.itemsinventory?.items?.models?.business_model
-                    }}
+                      detailsdata.batch_info?.productName
+                    }} 
                   </h3>
                 </div>
               </div>

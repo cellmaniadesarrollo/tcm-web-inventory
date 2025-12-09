@@ -558,14 +558,15 @@ export class ApiService {
    * movements
    */
 
-  public async movementoutdata(): Promise<any> {
+  public async movementoutdata(id:any): Promise<any> {
     //console.log(data);
     try {
       await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
-        method: 'get',
+        method: 'post',
         url: this.url + 'movementoutdata',
-      });
+        data:{id}
+            });
       // console.log(axiosResponse.data)
       return axiosResponse.data;
     } catch (error) {

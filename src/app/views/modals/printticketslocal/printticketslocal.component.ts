@@ -24,6 +24,7 @@ export class PrintticketslocalComponent {
   @Input() qrdata: any;
   @Input() price: any;
   @Input() f: any;
+   @Input() ivsa: boolean=false;
   @Output() closeModalEvent = new EventEmitter<any>();
   constructor(
     private api: ApiService,
@@ -52,7 +53,7 @@ export class PrintticketslocalComponent {
     cant: new FormControl(''),
     qrText: new FormControl(''),
     price: new FormControl(null),
-    iva: new FormControl(true),
+    iva: new FormControl(false),
     f: new FormControl(''),
   });
   validationsname() {
@@ -63,7 +64,7 @@ export class PrintticketslocalComponent {
       cant: [this.can, [Validators.required, Validators.min(1)]],
       qrText: [this.qrdata, Validators.required],
       price: [this.price, Validators.required],
-      iva: [true],
+      iva: [this.ivsa],
       f: [this.f],
     });
   }

@@ -250,8 +250,8 @@
                               <i class="fa fa-print"></i>
                             </a>
                           </abbr>
-                          <button *ngIf="item.incomestype?.name_incomestypes == 'PENDIENTE'"
-                              type=" button" class="btn btn-outline-success btn-sm p-1" (click)="aceptar(item)">
+                          <button *ngIf="item.incomestype?.name_incomestypes == 'PENDIENTE'" type=" button"
+                            class="btn btn-outline-success btn-sm p-1" (click)="aceptar(item)">
                             <i class="bi bi-check-circle p-0"></i>
                           </button>
                         </td>
@@ -480,7 +480,7 @@
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="ivaCheckbox" formControlName="iva" />
                 <label class="form-check-label" for="ivaCheckbox">
-                  Más IVA
+                  inculye IVA
                 </label>
               </div>
             </div>
@@ -504,6 +504,40 @@
               <span lass="widget-title  shop-sidebar" *ngIf="!mostrarSugerencias">Observaciones</span>
             </label>
           </div>
+          
+
+<!-- IMEIs SOLO SI EL PRODUCTO ES CELULAR -->
+<div formArrayName="imeis">
+
+  <div *ngFor="let imei of imeisFormArray.controls; let i = index" class="mb-2">
+
+    <div class="input-group">
+      <input type="text"
+             class="form-control"
+             [formControlName]="i"
+             (blur)="onImeiBlur(i)">
+
+      <button type="button"
+              class="btn btn-danger"
+              (click)="removeImei(i)"
+              *ngIf="! (incomesaveForm.get('item')?.value?.toUpperCase().includes('CELULAR') && imeisFormArray.length === 1)">
+        Eliminar
+      </button>
+    </div>
+
+    <!-- Mensaje de validación -->
+    <div *ngIf="imeiMessages[i]"
+         [style.color]="imei.valid ? 'green' : 'red'">
+      {{ imeiMessages[i] }}
+    </div>
+
+  </div>
+
+  <button class="btn btn-primary" (click)="addImei()">Agregar IMEI</button>
+</div>
+
+
+          
           <div class="row">
             <div class="col-sm-12" align="center">
               <div class="form-check form-check-inline">
@@ -818,7 +852,7 @@
 
 
 <app-printticketslocal *ngIf="modalVisible4" [namet1]="name1" [namet2]="name2" [nameb]="name3" [can]="cantid"
-  [qrdata]="qrtext" [price]="price" [f]="ff" [printtype]="printlocalt"
+  [qrdata]="qrtext" [price]="price" [f]="ff" [printtype]="printlocalt" [ivsa]="ivadat"
   (closeModalEvent)="closeprintlocal()"></app-printticketslocal>
 <app-reportwassapincomes *ngIf="wassapmodal" (closeModalEvent)="closewassapmodal()"></app-reportwassapincomes>
 <app-reporpricespdfincomes *ngIf="reportpdfmodal" (closeModalEvent)="closereportpdfmodal()"></app-reporpricespdfincomes>

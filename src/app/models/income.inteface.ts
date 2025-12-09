@@ -9,7 +9,8 @@ export interface ListitemsincomeI {
   stateproduc?: any;
   price?: any;
   colors1?: any;
-  idname?:any;
+  idname?:any;  
+last_unit_price_income?:any;
 }
 export interface ListinventorysnamesI {
  _id?:any;

@@ -610,7 +610,7 @@ pvitotal(punit:any,ptax:any,cant:any){
   }
 
   async listdataout() {
-    const data = await this.api.movementoutdata();
+    const data = await this.api.movementoutdata(this.find);
     this.technician = data.item;
     this.outs = data.outs;
     // console.log(data);
@@ -813,4 +813,23 @@ pvitotal(punit:any,ptax:any,cant:any){
       Swal.close();
     }
   }
+
+
+
+
+  getBranchSummary(branchbatchstock: any[]): string {
+  if (!branchbatchstock || branchbatchstock.length === 0) return '';
+
+  const map = new Map<string, number>();
+
+  for (const b of branchbatchstock) {
+    const key = b.branchName || 'SIN NOMBRE';
+    const qty = b.quantity || 0;
+    map.set(key, (map.get(key) || 0) + qty);
+  }
+
+  return Array.from(map.entries())
+    .map(([name, qty]) => `${name} (${qty})`)
+    .join(', ');
+}
 }

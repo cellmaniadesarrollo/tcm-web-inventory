@@ -51,8 +51,7 @@ export class InventorynewComponent {
     weight: new FormControl(''),
     volume: new FormControl(''),
     id_weightnomen: new FormControl(''),
-    id_volumenomen: new FormControl(''),
-    id_stateinventoryflow: new FormControl(''),
+    id_volumenomen: new FormControl(''), 
     // id_comesfrom: new FormControl(''),
     get_print: new FormControl(''),
   }); 
@@ -223,8 +222,7 @@ export class InventorynewComponent {
       id_color: null,
       id_quality: null,
       id_stateproduct_inventoryflow: null,
-      observations: '',
-      id_stateinventoryflow: this.stateinventoryflows[0]._id,
+      observations: '', 
       //id_comesfrom: null,
       get_print: false,
     });
@@ -246,8 +244,7 @@ export class InventorynewComponent {
       id_color: ['', Validators.required],
       id_quality: ['', Validators.required],
       id_stateproduct_inventoryflow: ['', Validators.required],
-      observations: [''],
-      id_stateinventoryflow: ['', Validators.required],
+      observations: [''], 
       //  id_comesfrom: ['', Validators.required],
       get_print: [true, Validators.required],
     });

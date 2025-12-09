@@ -35,8 +35,8 @@
                   <div class="row">
                     <div class="col-sm-2">
                       <button type="button" class="btn btn-block bg-gradient-primary" data-toggle="tooltip"
-                        data-placement="bottom" title="enlistar productos" (click)="getreportsalesitems()"  >
-                        <i class="fa fa-file-pdf-o fa-xl" aria-hidden="true" ></i>
+                        data-placement="bottom" title="enlistar productos" (click)="getreportsalesitems()">
+                        <i class="fa fa-file-pdf-o fa-xl" aria-hidden="true"></i>
                       </button>
                     </div>
                     <div class="col-sm-2">
@@ -158,13 +158,13 @@
                                   currentPage: datapage.pagination,
                                   totalItems: totalentries
                                 }
-                        " [ngClass]="datacolor(item.stock.stock)">
+                        " [ngClass]="datacolor(item.totalStock)">
                         <td (click)="
                             datafind(
                               item._id,
-                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.name_nameitems,
                               item.sku,
-                              item.stock.stock
+                              item.totalStock
                             )
                           " data-bs-toggle="modal" data-bs-target="#nuevoprocedenciamodal">
                           {{ item.sku }}
@@ -172,87 +172,83 @@
                         <td (click)="
                             datafind(
                               item._id,
-                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.name_nameitems,
                               item.sku,
-                              item.stock.stock
+                              item.totalStock
                             )
                           " data-bs-toggle="modal" data-bs-target="#nuevoprocedenciamodal">
-                          {{ item.items.inventoryfownameitem?.name_nameitems }}
+                          {{ item.name_nameitems }}
                         </td>
                         <td (click)="
                             datafind(
                               item._id,
-                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.name_nameitems,
                               item.sku,
-                              item.stock.stock
+                              item.totalStock
                             )
                           " data-bs-toggle="modal" data-bs-target="#nuevoprocedenciamodal">
-                          {{ item.items.models?.business_model }}
+                          {{ item.name_model }}
                         </td>
                         <td (click)="
                             datafind(
                               item._id,
-                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.name_nameitems,
                               item.sku,
-                              item.stock.stock
+                              item.totalStock
                             )
                           " data-bs-toggle="modal" data-bs-target="#nuevoprocedenciamodal">
-                          {{ item.items.colors.color_name }}
+                          {{ item.name_color }}
                         </td>
                         <td (click)="
                             datafind(
                               item._id,
-                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.name_nameitems,
                               item.sku,
-                              item.stock.stock
+                              item.totalStock
                             )
                           " data-bs-toggle="modal" data-bs-target="#nuevoprocedenciamodal">
-                          {{ item.items.quality.quality_inventoryflow }}
+                          {{ item.name_quality}}
                         </td>
                         <td (click)="
                             datafind(
                               item._id,
-                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.name_nameitems,
                               item.sku,
-                              item.stock.stock
+                              item.totalStock
                             )
                           " data-bs-toggle="modal" data-bs-target="#nuevoprocedenciamodal">
-                          {{ item.items.stateproduc.stateproduct_inventoryflow }}
+                          {{ item.stateprod }}
                         </td>
                         <td (click)="
                             datafind(
                               item._id,
-                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.name_nameitems,
                               item.sku,
-                              item.stock.stock
+                              item.totalStock
                             )
                           " data-bs-toggle="modal" data-bs-target="#nuevoprocedenciamodal">
-                          ${{ item.items.item_price }}
+                          ${{ item.item_price }}
                         </td>
                         <td (click)="
                             datafind(
                               item._id,
-                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.name_nameitems,
                               item.sku,
-                              item.stock.stock
+                              item.totalStock
                             )
                           " data-bs-toggle="modal" data-bs-target="#nuevoprocedenciamodal">
-                          {{ item.stock.stock }}
+                          {{ item.totalStock }}
                         </td>
-                        <td (click)="
-                        datafind(
-                          item._id,
-                          item.items.inventoryfownameitem?.name_nameitems,
-                          item.sku,
-                          item.stock.stock
-                        )
-                      " data-bs-toggle="modal" data-bs-target="#nuevoprocedenciamodal">{{item.stock.branch.name}}</td>
+                        <td (click)="datafind(item._id, item.name_nameitems, item.sku, item.totalStock)"
+                          data-bs-toggle="modal" data-bs-target="#nuevoprocedenciamodal">
+                          {{ getBranchSummary(item.branchbatchstock) }}
+                        </td>
                         <td (click)="
                             datafind(
                               item._id,
-                              item.items.inventoryfownameitem?.name_nameitems,
+                              item.name_nameitems,
                               item.sku,
-                              item.stock.stock
+                              item.totalStock
                             )
                           " data-bs-toggle="modal" data-bs-target="#nuevoprocedenciamodal">
                           {{ item.observations }}
@@ -275,7 +271,7 @@
                           ></abbr> -->
 
                           <abbr title="Imprimir normal" class="p-1"
-                            (click)="printlocal(item.items.models?.business_model, item.items.inventoryfownameitem?.name_nameitems+' ' +item.items.quality.quality_inventoryflow ,item.sku,item.stock.stock,item.items.item_price )"><a
+                            (click)="printlocal(item.name_model, item.name_nameitems +' ' +item.name_quality ,item.sku,item.totalStock,item.item_price )"><a
                               class="btn btn-outline-dark p-1"><i class="fa fa-ticket"></i></a></abbr>
                           <!-- <abbr
                         title="Imprimir Ticket"
@@ -505,187 +501,191 @@
           </form>
         </div>
         <div class="modal-body" *ngIf="editar">
-<form [formGroup]="nuevoForm">
-  <div class="row">
-    <div class="d-flex justify-content-center">
-      <label for=""> {{ upc }}</label>
-    </div>
+          <form [formGroup]="nuevoForm">
+            <div class="row">
+              <div class="d-flex justify-content-center">
+                <label for=""> {{ upc }}</label>
+              </div>
 
-    <div class="col-sm-6">
-      <div class="row">
-        <!-- izquierda -->
-        <div class="col-sm-10">
-          <div class="form-group">
-            <label class="border-lable-flt">
-              <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
-                formControlName="name_items" placeholder="nombre" [ngClass]="{
+              <div class="col-sm-6">
+                <div class="row">
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <label class="border-lable-flt">
+                        <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
+                          formControlName="name_items" placeholder="nombre" [ngClass]="{
                   'is-invalid': submitted && f['name_items'].errors
                 }" readonly />
-              <span lass="widget-title  shop-sidebar">Nombre </span>
-            </label>
-          </div>
-        </div>
-      </div>
+                        <span lass="widget-title  shop-sidebar">Nombre </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
 
-      <div class="row">
-        <!-- izquierda -->
-        <div class="col-sm-10">
-          <div class="form-group">
-            <label class="border-lable-flt">
-              <input type="number" class="form-control" formControlName="stock" placeholder="Stock" [ngClass]="{
+                <div class="row">
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <label class="border-lable-flt">
+                        <input type="number" class="form-control" formControlName="stock" placeholder="Stock" [ngClass]="{
                   'is-invalid': submitted && f['stock'].errors
                 }" required />
-              <span lass="widget-title  shop-sidebar">Stock *</span>
-            </label>
-          </div>
-        </div>
-      </div>
+                        <span lass="widget-title  shop-sidebar">Stock *</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
 
-      <div class="row">
-        <!-- izquierda -->
-        <!-- derecha-->
-        <div class="col-sm-10">
-          <div class="form-group">
-            <label class="border-lable-flt">
-              <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
-                formControlName="id_brand" placeholder="nombre" [ngClass]="{
+                <div class="row">
+                  <!-- izquierda -->
+                  <!-- derecha-->
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <label class="border-lable-flt">
+                        <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
+                          formControlName="id_brand" placeholder="nombre" [ngClass]="{
                   'is-invalid': submitted && f['id_brand'].errors
                 }" readonly />
-              <span lass="widget-title  shop-sidebar">Marca</span>
-            </label>
-          </div>
-        </div>
-      </div>
+                        <span lass="widget-title  shop-sidebar">Marca</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
 
-      <div class="row">
-        <!-- derecha-->
-        <!-- izquierda -->
-        <div class="col-sm-10">
-          <div class="form-group">
-            <label class="border-lable-flt">
-              <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
-                formControlName="id_model" placeholder="nombre" [ngClass]="{
+                <div class="row">
+                  <!-- derecha-->
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <label class="border-lable-flt">
+                        <input type="text" class="form-control" onkeyup="this.value=this.value.toUpperCase();"
+                          formControlName="id_model" placeholder="nombre" [ngClass]="{
                   'is-invalid': submitted && f['id_model'].errors
                 }" readonly />
-              <span lass="widget-title  shop-sidebar">Modelo</span>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <!-- derecha-->
-        <!-- izquierda -->
-        <div class="col-sm-10">
-          <ng-select placeholder="Selecionar estado inventario*" formControlName="id_type" [ngClass]="{
+                        <span lass="widget-title  shop-sidebar">Modelo</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- derecha-->
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <ng-select placeholder="Selecionar estado inventario*" formControlName="id_type" [ngClass]="{
             'is-invalid':
               submitted && f['id_type'].errors
           }">
-            <ng-option *ngFor="let type of types" [value]="type._id" >{{ type.type_inventoryflow }} 
-            </ng-option>
-          </ng-select>
-          <div *ngIf="submitted && f['id_type'].errors" class="invalid-feedback">
-            <div *ngIf="f['id_type'].errors['required']">
-              Tipo de producto requerido
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <!-- derecha-->
-        <!-- izquierda -->
-      </div>
+                      <ng-option *ngFor="let type of types" [value]="type._id">{{ type.type_inventoryflow }}
+                      </ng-option>
+                    </ng-select>
+                    <div *ngIf="submitted && f['id_type'].errors" class="invalid-feedback">
+                      <div *ngIf="f['id_type'].errors['required']">
+                        Tipo de producto requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- derecha-->
+                  <!-- izquierda -->
+                </div>
 
-      <div class="row">
-        <!-- derecha-->
-        <!-- izquierda -->
-        <div class="col-sm-10">
-          <label class="border-lable-flt">
-            <input type="text" class="form-control" placeholder="Color" formControlName="id_color" readonly />
-            <span lass="widget-title  shop-sidebar">Color</span>
-          </label>
-        </div>
-      </div>
-    </div>
-    <!-- derecha -->
-    <div class="col-sm-6">
-      <div class="row">
-        <!-- derecha-->
-        <!-- izquierda -->
-        <div class="col-sm-10">
-          <div class="form-group">
-            <label class="border-lable-flt">
-              <input type="number" class="form-control" formControlName="price" placeholder="Precio" [ngClass]="{
+                <div class="row">
+                  <!-- derecha-->
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <label class="border-lable-flt">
+                      <input type="text" class="form-control" placeholder="Color" formControlName="id_color" readonly />
+                      <span lass="widget-title  shop-sidebar">Color</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <!-- derecha -->
+              <div class="col-sm-6">
+                <div class="row">
+                  <!-- derecha-->
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <label class="border-lable-flt">
+                        <input type="number" class="form-control" formControlName="price" placeholder="Precio"
+                          [ngClass]="{
                 'is-invalid': submitted && f['price'].errors
               }" step="0.01" min="0" />
-              <span lass="widget-title  shop-sidebar">Precio</span>
-            </label>
-          </div>
-        </div>
-      </div>
-      
-      <div class="row">
-        <!-- derecha-->
-        <!-- izquierda -->
-        <div class="col-sm-10">
-          <!-- <label class="border-lable-flt">
+                        <span lass="widget-title  shop-sidebar">Precio</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <!-- derecha-->
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <!-- <label class="border-lable-flt">
             <input type="text" class="form-control" placeholder="Calidad" formControlName="id_quality" readonly />
             <span lass="widget-title  shop-sidebar">Calidad</span>
           </label> -->
- 
-            <ng-select placeholder="Selecionar estado inventario*" formControlName="id_quality" [ngClass]="{
+
+                    <ng-select placeholder="Selecionar estado inventario*" formControlName="id_quality" [ngClass]="{
             'is-invalid':
               submitted && f['id_type'].errors
           }">
-            <ng-option *ngFor="let type of qualitys" [value]="type._id" >{{ type.quality_inventoryflow }} 
-            </ng-option>
-          </ng-select>
-        </div>
-      </div>
-      <div class="row">
-        <!-- derecha-->
-        <!-- izquierda -->
-        <div class="col-sm-10">
-          <label class="border-lable-flt">
-            <input type="text" class="form-control" placeholder="Estado del producto"
-              formControlName="id_stateproduct_inventoryflow" readonly />
-            <span lass="widget-title  shop-sidebar">Estado del producto</span>
-          </label>
-        </div>
-      </div>
-      <div class="row">
-        <!-- izquierda -->
-        <div class="col-sm-10">
-          <div class="form-group">
-            <label class="border-lable-flt">
-              <textarea class="form-control" formControlName="observations" placeholder="Observaciones"></textarea>
-              <span lass="widget-title  shop-sidebar">Observaciones</span>
-            </label>
-          </div>
-        </div>
-      </div>
+                      <ng-option *ngFor="let type of qualitys" [value]="type._id">{{ type.quality_inventoryflow }}
+                      </ng-option>
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- derecha-->
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <label class="border-lable-flt">
+                      <input type="text" class="form-control" placeholder="Estado del producto"
+                        formControlName="id_stateproduct_inventoryflow" readonly />
+                      <span lass="widget-title  shop-sidebar">Estado del producto</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <div class="form-group">
+                      <label class="border-lable-flt">
+                        <textarea class="form-control" formControlName="observations"
+                          placeholder="Observaciones"></textarea>
+                        <span lass="widget-title  shop-sidebar">Observaciones</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
 
-      <div class="row">
-        <!-- derecha-->
-        <!-- izquierda -->
-        <div class="col-sm-10">
-          <ng-select placeholder="Selecionar estado inventario*" formControlName="id_stateinventoryflow" [ngClass]="{
+                <div class="row">
+                  <!-- derecha-->
+                  <!-- izquierda -->
+                  <div class="col-sm-10">
+                    <ng-select placeholder="Selecionar estado inventario*" formControlName="id_stateinventoryflow"
+                      [ngClass]="{
             'is-invalid':
               submitted && f['id_stateinventoryflow'].errors
           }">
-            <ng-option *ngFor="let stateinventoryflow of stateinventoryflows" [value]="stateinventoryflow._id">
-              {{ stateinventoryflow.state_inventoryflow }}
-            </ng-option>
-          </ng-select>
-          <div *ngIf="submitted && f['id_stateinventoryflow'].errors" class="invalid-feedback">
-            <div *ngIf="f['id_stateinventoryflow'].errors['required']">
-              Estado del inventario requerido
+                      <ng-option *ngFor="let stateinventoryflow of stateinventoryflows"
+                        [value]="stateinventoryflow._id">
+                        {{ stateinventoryflow.state_inventoryflow }}
+                      </ng-option>
+                    </ng-select>
+                    <div *ngIf="submitted && f['id_stateinventoryflow'].errors" class="invalid-feedback">
+                      <div *ngIf="f['id_stateinventoryflow'].errors['required']">
+                        Estado del inventario requerido
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</form>
+          </form>
         </div>
 
         <div class="modal-body" *ngIf="history">

@@ -349,34 +349,7 @@
               </div>
             </div>
 
-            <div class="row">
-              <!-- derecha-->
-              <div class="col-sm-1"></div>
-              <!-- izquierda -->
-              <div class="col-sm-10">
-                <ng-select
-                  placeholder="Selecionar estado inventario*"
-                  formControlName="id_stateinventoryflow"
-                  [ngClass]="{
-                    'is-invalid': submitted && f['id_stateinventoryflow'].errors
-                  }"
-                >
-                  <ng-option
-                    *ngFor="let stateinventoryflow of stateinventoryflows"
-                    [value]="stateinventoryflow._id"
-                    >{{ stateinventoryflow.state_inventoryflow }}
-                  </ng-option>
-                </ng-select>
-                <div
-                  *ngIf="submitted && f['id_stateinventoryflow'].errors"
-                  class="invalid-feedback"
-                >
-                  <div *ngIf="f['id_stateinventoryflow'].errors['required']">
-                    Estado del inventario requerido
-                  </div>
-                </div>
-              </div>
-            </div>
+ 
           </div>
         </div>
 

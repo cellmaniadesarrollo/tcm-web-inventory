@@ -57,27 +57,28 @@ export interface ListscomesfromI {
   comesfrom?: any;
 }
 export interface ListnewdataI {
-  names:ListnameI[];
+  names: ListnameI[];
   brand: ListbrandI[];
   color: ListcolorI[];
   type: ListtypeI[];
   quality: ListqualityI[];
-  stateproduct: ListstateproductI[]; 
-  stateinventoryflow:ListsstateinventoryI[];
- // comesfrom:ListscomesfromI[];
+  stateproduct: ListstateproductI[];
+  stateinventoryflow: ListsstateinventoryI[];
+  // comesfrom:ListscomesfromI[];
 }
 
-export interface ListItemsnameI{
+export interface ListItemsnameI {
   _id?: any;
   inventoryfownameitem?: ListnameI;
-  models?:ListmodelI;
-  item_price?:any;
+  models?: ListmodelI;
+  item_price?: any;
   colors: ListcolorI;
-  quality:ListqualityI;
-  stateproduc:ListstateproductI;
-//  globalstock?:any;
+  quality: ListqualityI;
+  stateproduc: ListstateproductI;
+  stateproduct: ListstateproductI[];
+  //  globalstock?:any;
 }
-export interface ListstockI{
+export interface ListstockI {
   _id?: any;
   stock?: any;
   branch: {
@@ -85,16 +86,24 @@ export interface ListstockI{
     name?: any
   }
 }
-export interface ListitemsI{
+export interface ListitemsI {
   _id?: any;
   sku?: any;
-  observations?:any;
-
-  items:ListItemsnameI;
-
- // comesfrom:ListscomesfromI;
-  
-  stock:ListstockI;
+  observations?: any;
+  name_nameitems?: any;
+  name_model?: any;
+  stateprod?: any;
+  name_quality?: any;
+  name_color?: any;
+  item_price?: any;
+  totalStock?: any;
+branchbatchstock: [
+  { branchName: 'PRINCIPAL', quantity: 1, batchNumber: 1 },
+  { branchName: 'PRINCIPAL', quantity: 1, batchNumber: 2 }
+];
+  // comesfrom:ListscomesfromI;
+  items?: any;
+  stock: ListstockI;
 }
 export interface ListitemsIN {
   allclients?: any;
@@ -104,58 +113,64 @@ export interface ListitemsIN {
   number_of_records_per_page?: any;
   intake: ListitemsI[];
   stateproduct: ListstateproductI[];
-  pdfbase64?:any;
+  pdfbase64?: any;
 }
 
-export interface Getimgbase64{
-  imgbase64?:any;
-  namefile?:any;
+export interface Getimgbase64 {
+  imgbase64?: any;
+  namefile?: any;
 }
-export interface Getpdfbase64{
-  pdfbase64?:any;
-  namefile?:any;
-}
-
-export interface Getxmlticket{
-  xml?:any; 
+export interface Getpdfbase64 {
+  pdfbase64?: any;
+  namefile?: any;
 }
 
-export interface Getoneitem{
-  _id?:any;
-  id_stock?:any;
-  upc?:any;
-  sku?:any;
-  id_items?:any;
-  id_details?:any;
-  id_state?:any;
-  id_color?:any;
-  id_quality?:any;
- // id_comesfrom?:any;
-  id_stateproduct_inventoryflow?:any;
-  observations?:any;
+export interface Getxmlticket {
+  xml?: any;
 }
 
-export interface Listmovementsitem{
-  _id:any;
-  observations_movement:any;
-  cant_movement:any;
-  date_movement:any;
-  movementname:any;
-  numordermovement:any;
-  sender:any;
-  recipient:any;
+export interface Getoneitem {
+  _id?: any;
+  id_stock?: any;
+  upc?: any;
+  sku?: any;
+  id_items?: any;
+  id_details?: any;
+  id_state?: any;
+  id_color?: any;
+  id_quality?: any;
+  // id_comesfrom?:any;
+  id_stateproduct_inventoryflow?: any;
+  observations?: any;
+}
+
+export interface Listmovementsitem {
+  _id: any;
+  observations_movement: any;
+  cant_movement: any;
+  date_movement: any;
+  movementname: any;
+  numordermovement: any;
+  sender: any;
+  recipient: any;
 
 
 }
-export interface Listincomeshistory{
-  _id:any;
+export interface Listincomeshistory {
+  _id: any;
   unit_price: any;
-  observations:any;
-  quantity:any;
-  date_income:any;
-  document:any;
-  supplier:any;
-  status:any;
-  taxpercentaje:any;
-firstStatus?:{createduser?: any};
+  observations: any;
+  quantity: any;
+  date_income: any;
+  document: any;
+  supplier: any;
+  status: any;
+  taxpercentaje: any;
+  firstStatus?: { createduser?: any };
+}
+export interface ListBatches{
+          batchStockId:any,
+          quantity:any, 
+          batchNumber:any,
+          batchId:any
 }
