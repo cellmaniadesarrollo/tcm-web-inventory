@@ -112,6 +112,7 @@ export class IncomeComponent {
   });
   incomeseditForm: FormGroup = new FormGroup({
     id: new FormControl(null),
+    numero_documento:new FormControl(''),
     precioventa: new FormControl(''),
     preciounit: new FormControl(''),
     observaciones: new FormControl(''),
@@ -653,8 +654,9 @@ onItemChange() {
     this.listincomeditone = await this.api.getfindedititemincome(data);
     this.incomeseditForm = this.formBuilder.group({
       id: [this.listincomeditone._id, Validators.required],
+      numero_documento:[this.listincomeditone.document_info?.document_number, Validators.required],
       precioventa: [
-        this.listincomeditone.items?.itemsinventory?.item_price,
+        this.listincomeditone.batch?.unitPrice,
         Validators.required,
       ],
       preciounit: [this.listincomeditone.unit_price, Validators.required],

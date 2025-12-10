@@ -97,6 +97,8 @@ export interface ListitemsI {
   name_color?: any;
   item_price?: any;
   totalStock?: any;
+  
+last_unit_price_income?:any;
 branchbatchstock: [
   { branchName: 'PRINCIPAL', quantity: 1, batchNumber: 1 },
   { branchName: 'PRINCIPAL', quantity: 1, batchNumber: 2 }

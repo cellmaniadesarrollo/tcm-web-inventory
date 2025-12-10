@@ -36,6 +36,7 @@ export interface ListsuppliersincomeI {
 export interface ListincomesI {
   _id?: any;
   date_income?: any;
+  unit_sales_price?:any;
   unit_price?: any;
   observations?: any;
   quantity?: any;
@@ -86,11 +87,11 @@ export interface ListIncomeseditI {
   _id?: any;
   observations?: any;
   unit_price?: any;
-  items?: {
-    _id?: any;
-    itemsinventory?: {
-      _id?: any;
-      item_price?: any;
-    };
-  };
+  batch?:{
+    unitPrice?:any;
+    hasTax?:any;
+  }
+  document_info?:{
+    document_number?:any;
+  } 
 }

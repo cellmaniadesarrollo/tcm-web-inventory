@@ -231,7 +231,7 @@
                           }}
                         </td>
                         <td (click)="editgetdata(item._id)" data-bs-toggle="modal" data-bs-target="#editwassap">
-                          {{ item.inventoryflow?.price }}
+                          {{ item.unit_sales_price }}
                         </td>
                         <td (click)="editgetdata(item._id)" data-bs-toggle="modal" data-bs-target="#editwassap">
                           {{ item.observations }}
@@ -504,40 +504,34 @@
               <span lass="widget-title  shop-sidebar" *ngIf="!mostrarSugerencias">Observaciones</span>
             </label>
           </div>
-          
-
-<!-- IMEIs SOLO SI EL PRODUCTO ES CELULAR -->
-<div formArrayName="imeis">
-
-  <div *ngFor="let imei of imeisFormArray.controls; let i = index" class="mb-2">
-
-    <div class="input-group">
-      <input type="text"
-             class="form-control"
-             [formControlName]="i"
-             (blur)="onImeiBlur(i)">
-
-      <button type="button"
-              class="btn btn-danger"
-              (click)="removeImei(i)"
-              *ngIf="! (incomesaveForm.get('item')?.value?.toUpperCase().includes('CELULAR') && imeisFormArray.length === 1)">
-        Eliminar
-      </button>
-    </div>
-
-    <!-- Mensaje de validación -->
-    <div *ngIf="imeiMessages[i]"
-         [style.color]="imei.valid ? 'green' : 'red'">
-      {{ imeiMessages[i] }}
-    </div>
-
-  </div>
-
-  <button class="btn btn-primary" (click)="addImei()">Agregar IMEI</button>
-</div>
 
 
-          
+          <!-- IMEIs SOLO SI EL PRODUCTO ES CELULAR -->
+          <div formArrayName="imeis">
+
+            <div *ngFor="let imei of imeisFormArray.controls; let i = index" class="mb-2">
+
+              <div class="input-group">
+                <input type="text" class="form-control" [formControlName]="i" (blur)="onImeiBlur(i)">
+
+                <button type="button" class="btn btn-danger" (click)="removeImei(i)"
+                  *ngIf="! (incomesaveForm.get('item')?.value?.toUpperCase().includes('CELULAR') && imeisFormArray.length === 1)">
+                  Eliminar
+                </button>
+              </div>
+
+              <!-- Mensaje de validación -->
+              <div *ngIf="imeiMessages[i]" [style.color]="imei.valid ? 'green' : 'red'">
+                {{ imeiMessages[i] }}
+              </div>
+
+            </div>
+
+            <button class="btn btn-primary" (click)="addImei()">Agregar IMEI</button>
+          </div>
+
+
+
           <div class="row">
             <div class="col-sm-12" align="center">
               <div class="form-check form-check-inline">
@@ -686,6 +680,19 @@
 
       <div class="modal-body">
         <form [formGroup]="incomeseditForm">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label class="border-lable-flt">
+                  <input type="text" class="form-control" formControlName="numero_documento"
+                    placeholder="Número de documento" [ngClass]="{
+            'is-invalid': submittededdit && fed['numero_documento'].errors
+          }" />
+                  <span class="widget-title shop-sidebar">Número de documento</span>
+                </label>
+              </div>
+            </div>
+          </div>
           <div class="row">
             <!-- derecha-->
             <div class="col-sm-6">
