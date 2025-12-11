@@ -92,25 +92,31 @@ export class ApiService {
       }
     }
   }
-  private normalizeError(error: any): ErrorResponse {
-    Swal.close();
-    if (error.response.status == 401) {
-      localStorage.removeItem('Token');
-      localStorage.removeItem('User');
-      localStorage.removeItem('Groups');
+private normalizeError(error: any): ErrorResponse {
+  console.log("ASDDD", error);
+  Swal.close();
 
-     this.router.navigate(['login']);
-     //
-    } 
-    this.errorHandler.handleError(error);
-    this.alerts.showError(error.response.data.message, `Error ${error.response.data.code}`,15000);
-
-    return {
-      id: '-1',
-      code: error.response.status,
-      message: error.response.statusText,
-    };
+  if (error.response?.status === 401) {
+    localStorage.removeItem('Token');
+    localStorage.removeItem('User');
+    localStorage.removeItem('Groups');
+    this.router.navigate(['login']);
   }
+
+  this.errorHandler.handleError(error);
+
+  // Captura el mensaje real desde statusText (porque data no sirve)
+  const msg = error.response?.statusText || 'Error desconocido';
+  const code = error.response?.status || 500;
+
+  this.alerts.showError(msg, `Error ${code}`, 15000);
+
+  return {
+    id: '-1',
+    code,
+    message: msg,
+  };
+}
   private normalizeSuccess(success: any): ErrorResponse {
     // this.errorHandler.handleError(success);
     this.alerts.showSuccess(success.statusText, success.data);
