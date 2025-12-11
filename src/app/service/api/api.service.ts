@@ -93,7 +93,7 @@ export class ApiService {
     }
   }
 private normalizeError(error: any): ErrorResponse {
-  console.log("ASDDD", error);
+ 
   Swal.close();
 
   if (error.response?.status === 401) {
