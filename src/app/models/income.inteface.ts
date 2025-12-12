@@ -11,6 +11,7 @@ export interface ListitemsincomeI {
   colors1?: any;
   idname?:any;  
 last_unit_price_income?:any;
+last_income_price?:any;
 }
 export interface ListinventorysnamesI {
  _id?:any;
