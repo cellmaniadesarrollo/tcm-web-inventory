@@ -727,10 +727,9 @@ onItemChange() {
   seleccionitem() {
     const data = this.incomesaveForm.controls['id_item'].getRawValue();
     
-    const found = this.items.find((element) => element._id == data);
-    
-    this.incomesaveForm.controls['precioventa'].setValue(found?.last_unit_price_income);
-    this.incomesaveForm.controls['preciounit'].setValue(found?.last_income_price);
+    const found = this.items.find((element) => element._id == data); 
+    this.incomesaveForm.controls['precioventa'].setValue(found?.price);
+    this.incomesaveForm.controls['preciounit'].setValue(found?.last_unit_price_income);
   }
 
   seleccionarSugerencia(texto: string, id_item: string) {
