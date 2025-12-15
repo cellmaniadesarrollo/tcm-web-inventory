@@ -161,10 +161,7 @@
                     <thead>
                       <tr>
                         <th>Cant</th>
-                        <th>Nombre</th>
-                        <th>Modelo</th>
-                        <th>Calidad</th>
-                        <th>codigo</th>
+                        <th>codigo/Nombre/Modelo/Calidad/Lote/Cods</th>
                         <th>Proveedor</th>
                         <th>Nº Doc.</th>
                         <th>Fecha</th>
@@ -172,7 +169,8 @@
                         <th>PT</th>
                         <th>PI</th>
                         <th>PvP</th>
-                        <th>Observaciones</th>
+                        <th>Creado</th>
+                        <th>Obs.</th>
                         <th>Est.</th>
                         <th></th>
                       </tr>
@@ -190,15 +188,26 @@
                         <td>{{ item.quantity }}</td>
                         <td data-bs-toggle="modal" data-bs-target="#exampleModal6" (click)="
                           reportnamevalueinit(
-                            item.inventoryflow?.idname,
-                            item.inventoryflow?.nameitem
+                            item.inventory_snapshot.sku,
+                            item.inventory_snapshot.name_item
                           )
                         ">
-                          {{ item.inventoryflow?.nameitem }}
+                          <strong>{{ item.inventory_snapshot.sku }}</strong> <strong>-</strong>
+                          {{ item.inventory_snapshot.name_item }} <strong>-</strong>
+                          {{ item.inventory_snapshot.name_model }} <strong>-</strong>
+                          {{ item.inventory_snapshot.name_quality }} <strong>-</strong>
+                          {{ item.inventory_snapshot.name_color }}
+
+                          <!-- LOTE -->
+                          <strong>(</strong> {{ item.batch_snapshot?.batchNumber }} <strong>)</strong>
+
+                          <!-- IDENTIFICADORES -->
+                          <ng-container *ngIf="item.batch_snapshot?.identifiers as identifiers">
+                            <span>
+                              {{ identifiers.join(', ') }}
+                            </span>
+                          </ng-container>
                         </td>
-                        <td>{{ item.inventoryflow?.modelitem }}</td>
-                        <td>{{ item.inventoryflow?.quality }}</td>
-                        <td>{{ item.inventoryflow?.sku }}</td>
                         <td>
                           {{ item.documentnumberincome?.supplier?.razon_social }}
                         </td>
@@ -232,6 +241,9 @@
                         </td>
                         <td (click)="editgetdata(item._id)" data-bs-toggle="modal" data-bs-target="#editwassap">
                           {{ item.unit_sales_price }}
+                        </td>
+                        <td>
+                          {{ item.user_create}}
                         </td>
                         <td (click)="editgetdata(item._id)" data-bs-toggle="modal" data-bs-target="#editwassap">
                           {{ item.observations }}

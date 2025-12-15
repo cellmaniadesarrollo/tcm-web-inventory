@@ -175,10 +175,10 @@
                     [ngClass]="datacolor(item.incomestype?.name_incomestypes)"
                   >
                     <td>{{ item.quantity }}</td>
-                    <td>{{ item.inventoryflow?.nameitem }}</td>
-                    <td>{{ item.inventoryflow?.modelitem }}</td>
-                    <td>{{ item.inventoryflow?.quality }}</td>
-                    <td>{{ item.inventoryflow?.colors1 }}</td>
+                    <td>{{ item.inventory_snapshot.name_item }} - {{item.batch_snapshot?.batchNumber}}</td>
+                    <td>{{ item.inventory_snapshot.name_model }}</td>
+                    <td>{{ item.inventory_snapshot.name_quality }}</td>
+                    <td>{{ item.inventory_snapshot.name_color }}</td>
                     <td>
                       {{ item.documentnumberincome?.supplier?.razon_social }}
                     </td>
@@ -186,10 +186,10 @@
                     <td title="{{ item.date_income }}">
                       {{ item.date_income.substring(0, 10) }}
                     </td>
-                    <td>{{ item.inventoryflow?.price}}</td>
+                    <td>{{ item.unit_sales_price}}</td>
                     <td>{{ item.observations }}</td>
                                                 <td>
-                          {{ item.firstStatus?.createduser }}
+                          {{ item.user_create }}
                         </td>
                     <td
                       *ngIf="

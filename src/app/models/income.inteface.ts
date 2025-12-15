@@ -9,13 +9,13 @@ export interface ListitemsincomeI {
   stateproduc?: any;
   price?: any;
   colors1?: any;
-  idname?:any;  
-last_unit_price_income?:any;
-last_income_price?:any;
+  idname?: any;
+  last_unit_price_income?: any;
+  last_income_price?: any;
 }
 export interface ListinventorysnamesI {
- _id?:any;
- inventory_name?:any; 
+  _id?: any;
+  inventory_name?: any;
 }
 export interface ListdocumentincomeI {
   _id?: any;
@@ -34,17 +34,32 @@ export interface ListsuppliersincomeI {
   razon_social: 1;
   countriel: ListcountriesI;
 }
+export interface BatchSnapshotI {
+  batchNumber?: number;
+  identifiers?: string[];
+}
 export interface ListincomesI {
   _id?: any;
   date_income?: any;
-  unit_sales_price?:any;
+  unit_sales_price?: any;
   unit_price?: any;
   observations?: any;
   quantity?: any;
   incomestype?: ListSatatusincomesI;
+  user_create?: any; 
+  // ✅ snapshot de lote
+  batch_snapshot?: BatchSnapshotI;
+  inventory_snapshot: {
+    sku?: any;
+    upc?: any;
+    name_item?: any;
+    name_model?: any;
+    name_color?: any;
+    name_quality?: any;
+  };
   inventoryflow?: ListitemsincomeI;
   documentnumberincome?: ListnumberincomeI;
-  firstStatus?:{createduser?: any};
+  firstStatus?: { createduser?: any };
 }
 export interface ListstatusincomesI {
   _id?: any;
@@ -66,7 +81,7 @@ export interface ListSatatusincomesI {
 }
 export interface ListincomesIN {
   allclients?: any;
-  inventorys?:ListinventorysnamesI[];
+  inventorys?: ListinventorysnamesI[];
   page_numbers?: any;
   actual_page?: any;
   number_of_records?: any;
@@ -88,11 +103,11 @@ export interface ListIncomeseditI {
   _id?: any;
   observations?: any;
   unit_price?: any;
-  batch?:{
-    unitPrice?:any;
-    hasTax?:any;
+  batch?: {
+    unitPrice?: any;
+    hasTax?: any;
   }
-  document_info?:{
-    document_number?:any;
-  } 
+  document_info?: {
+    document_number?: any;
+  }
 }

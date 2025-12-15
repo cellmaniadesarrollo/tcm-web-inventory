@@ -157,6 +157,7 @@
                       <th>Fecha</th>
                       <th>PvP</th>
                       <th>Observaciones</th>
+                       <th>Crea.</th>
                       <th>Estado</th>
                     </tr>
                   </thead>
@@ -173,11 +174,11 @@
                       "
                       [ngClass]="datacolor(item.incomestype?.name_incomestypes)"
                     >
-                      <td>{{ item.quantity }}</td>
-                      <td>{{ item.inventoryflow?.nameitem }}</td>
-                      <td>{{ item.inventoryflow?.modelitem }}</td>
-                      <td>{{ item.inventoryflow?.quality }}</td>
-                      <td>{{ item.inventoryflow?.colors1 }}</td>
+                      <td>{{ item.quantity }}</td> 
+                    <td>{{ item.inventory_snapshot.name_item }} - {{item.batch_snapshot?.batchNumber}}</td>
+                    <td>{{ item.inventory_snapshot.name_model }}</td>
+                    <td>{{ item.inventory_snapshot.name_quality }}</td>
+                    <td>{{ item.inventory_snapshot.name_color }}</td>
                       <td>
                         {{ item.documentnumberincome?.supplier?.razon_social }}
                       </td>
@@ -187,7 +188,9 @@
                       </td>
                       <td>{{ item.inventoryflow?.price}}</td>
                       <td>{{ item.observations }}</td>
-  
+                                                  <td>
+                          {{ item.user_create }}
+                        </td>
                       <td
                         *ngIf="
                           item.incomestype?.name_incomestypes != 'PENDIENTE';
