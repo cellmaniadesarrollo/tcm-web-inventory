@@ -144,7 +144,13 @@ export class IncomeComponent {
   ngOnInit(): void {
     // Suscribirse al canal al iniciar el componente
     this.socketService.subscribeToChannel(this.subscribedChannel);
+  this.incomesaveForm.get('precioventa')?.valueChanges.subscribe(() => {
+    this.calcularPrecioConIva();
+  });
 
+  this.incomesaveForm.get('iva')?.valueChanges.subscribe(() => {
+    this.calcularPrecioConIva();
+  });
     // Suscribirse al observable de mensajes para recibir los mensajes del canal
     this.messageSubscription = this.socketService.message$.subscribe((message) => {
       if (message && message === 'RELOAD') {
@@ -878,5 +884,21 @@ onItemChange() {
       }
     });
   }
+precioMostrado: number = 0;
+calcularPrecioConIva() {
+  const precioVenta = Number(this.incomesaveForm.get('precioventa')?.value) || 0;
+  const tieneIva = this.incomesaveForm.get('iva')?.value;
 
+  if (tieneIva) {
+    // Checkbox en TRUE → mismo precio
+    this.precioMostrado = precioVenta;
+  } else {
+    // Checkbox en FALSE → agregar 15%
+    this.precioMostrado = +(precioVenta * 1.15).toFixed(2);
+  }
+}
+seleccionarTexto(event: Event) {
+  const input = event.target as HTMLInputElement;
+  input.select();
+}
 }
