@@ -857,15 +857,15 @@ onItemChange() {
 
 
   async aceptar(data: any) {
-
+console.log(data)
     Swal.fire({
       title: '¿Cambiar estado a aprobado?',
       text:
+
         data.quantity +
+        ' ' +data.inventory_snapshot.name_model +
         ' ' +
-        data.inventoryflow.modelitem +
-        ' ' +
-        data.inventoryflow.nameitem,
+        data.inventory_snapshot.name_item ,
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
