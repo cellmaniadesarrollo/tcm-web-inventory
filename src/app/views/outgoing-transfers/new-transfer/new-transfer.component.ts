@@ -20,6 +20,7 @@ interface Product {
   quality: string;
   state: string;
   stocks: string;
+  batchNumber:any;
 }
 
 interface Branch {

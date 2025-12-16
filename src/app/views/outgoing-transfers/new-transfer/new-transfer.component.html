@@ -45,7 +45,7 @@
               
                 <ng-container *ngIf="!loading">
                   <mat-option *ngFor="let product of products" [value]="product">
-                   {{product.upc}}-{{ product.name }}-{{product.model}}-{{product.color}}-{{product.quality}}-{{product.state}}                  </mat-option>
+                   {{product.upc}}-({{product.batchNumber}})-{{ product.name }}-{{product.model}}-{{product.color}}-{{product.quality}}-{{product.state}}                  </mat-option>
                 </ng-container>
               </mat-autocomplete>
               </mat-form-field>
