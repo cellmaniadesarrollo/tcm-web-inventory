@@ -44,14 +44,14 @@ export class IncomeComponent {
   @ViewChild('closebutton33') closebutton33: any;
   @ViewChild('closebutton34') closebutton34: any;
   @ViewChild('closebutton1') closebutton1: any;
-    serialRules = [
+  serialRules = [
     {
       name: 'CELULAR',
       keywords: ['CELULAR', 'MOVIL', 'SMARTPHONE'],
       requiredLength: 15,
       numericOnly: true
     }
-    
+
   ];
 
 
@@ -74,7 +74,7 @@ export class IncomeComponent {
   numperpages: any;
   totalentries: any;
   pagination: any;
- 
+
 
   filterForm = new FormGroup({
     allclients: new FormControl('0'),
@@ -112,7 +112,7 @@ export class IncomeComponent {
   });
   incomeseditForm: FormGroup = new FormGroup({
     id: new FormControl(null),
-    numero_documento:new FormControl(''),
+    numero_documento: new FormControl(''),
     precioventa: new FormControl(''),
     preciounit: new FormControl(''),
     observaciones: new FormControl(''),
@@ -144,13 +144,13 @@ export class IncomeComponent {
   ngOnInit(): void {
     // Suscribirse al canal al iniciar el componente
     this.socketService.subscribeToChannel(this.subscribedChannel);
-  this.incomesaveForm.get('precioventa')?.valueChanges.subscribe(() => {
-    this.calcularPrecioConIva();
-  });
+    this.incomesaveForm.get('precioventa')?.valueChanges.subscribe(() => {
+      this.calcularPrecioConIva();
+    });
 
-  this.incomesaveForm.get('iva')?.valueChanges.subscribe(() => {
-    this.calcularPrecioConIva();
-  });
+    this.incomesaveForm.get('iva')?.valueChanges.subscribe(() => {
+      this.calcularPrecioConIva();
+    });
     // Suscribirse al observable de mensajes para recibir los mensajes del canal
     this.messageSubscription = this.socketService.message$.subscribe((message) => {
       if (message && message === 'RELOAD') {
@@ -329,6 +329,8 @@ export class IncomeComponent {
         this.incomesaveForm.controls['precioventa'].setValue(0);
         this.incomesaveForm.controls['preciounit'].setValue(0);
         this.incomesaveForm.controls['observaciones'].setValue('');
+        const imeisArray = this.incomesaveForm.get('imeis') as FormArray;
+        imeisArray.clear();
       } else if (data.id) {
 
         if (data.printer === 'dymo') {
@@ -345,6 +347,8 @@ export class IncomeComponent {
             this.incomesaveForm.controls['precioventa'].setValue(0);
             this.incomesaveForm.controls['preciounit'].setValue(0);
             this.incomesaveForm.controls['observaciones'].setValue('');
+            const imeisArray = this.incomesaveForm.get('imeis') as FormArray;
+            imeisArray.clear();
           }
 
 
@@ -360,6 +364,8 @@ export class IncomeComponent {
         this.incomesaveForm.controls['precioventa'].setValue(0);
         this.incomesaveForm.controls['preciounit'].setValue(0);
         this.incomesaveForm.controls['observaciones'].setValue('');
+        const imeisArray = this.incomesaveForm.get('imeis') as FormArray;
+        imeisArray.clear();
       }
     }
   }
@@ -371,46 +377,46 @@ export class IncomeComponent {
   get imeisArr() {
     return this.incomesaveForm.get('imeis') as FormArray;
   }
-addImei() {
-  const itemName = this.incomesaveForm.get('item')?.value || '';
+  addImei() {
+    const itemName = this.incomesaveForm.get('item')?.value || '';
 
-  const control = this.formBuilder.control('', [
-    Validators.required,
-    serialValidator(itemName, this.serialRules)
-  ]);
+    const control = this.formBuilder.control('', [
+      Validators.required,
+      serialValidator(itemName, this.serialRules)
+    ]);
 
-  (this.incomesaveForm.get('imeis') as FormArray).push(control);
+    (this.incomesaveForm.get('imeis') as FormArray).push(control);
 
-  // añadir espacio para el mensaje
-  this.imeiMessages.push('');
-}
-imeiMessages: string[] = [];
-onImeiBlur(index: number) {
-  const control = (this.incomesaveForm.get('imeis') as FormArray).at(index);
-
-  const errors = control.errors;
-  this.imeiMessages[index] = ''; // limpiar mensaje
-
-  if (!errors) {
-    this.imeiMessages[index] = 'Serial válido ✔';
-    return;
+    // añadir espacio para el mensaje
+    this.imeiMessages.push('');
   }
+  imeiMessages: string[] = [];
+  onImeiBlur(index: number) {
+    const control = (this.incomesaveForm.get('imeis') as FormArray).at(index);
 
-  if (errors['serialLength']) {
-    const e = errors['serialLength'];
-    this.imeiMessages[index] =
-      `Faltan ${e.missing} caracteres (necesita ${e.required}).`;
-    return;
-  }
+    const errors = control.errors;
+    this.imeiMessages[index] = ''; // limpiar mensaje
 
-  if (errors['serialNumeric']) {
-    this.imeiMessages[index] = `Debe ser solo números.`;
-    return;
+    if (!errors) {
+      this.imeiMessages[index] = 'Serial válido ✔';
+      return;
+    }
+
+    if (errors['serialLength']) {
+      const e = errors['serialLength'];
+      this.imeiMessages[index] =
+        `Faltan ${e.missing} caracteres (necesita ${e.required}).`;
+      return;
+    }
+
+    if (errors['serialNumeric']) {
+      this.imeiMessages[index] = `Debe ser solo números.`;
+      return;
+    }
   }
-}
-get imeisFormArray(): FormArray {
-  return this.incomesaveForm.get('imeis') as FormArray;
-}
+  get imeisFormArray(): FormArray {
+    return this.incomesaveForm.get('imeis') as FormArray;
+  }
   removeImei(index: number) {
     this.imeisArr.removeAt(index);
   }
@@ -418,22 +424,22 @@ get imeisFormArray(): FormArray {
     const cleanValue = this.imeisArr.at(index).value.replace(/[^0-9]/g, '');
     this.imeisArr.at(index).setValue(cleanValue, { emitEvent: false });
   }
-onItemChange() {
-  const itemName = this.incomesaveForm.get('item')?.value || '';
-  const arr = this.incomesaveForm.get('imeis') as FormArray;
+  onItemChange() {
+    const itemName = this.incomesaveForm.get('item')?.value || '';
+    const arr = this.incomesaveForm.get('imeis') as FormArray;
 
-  arr.controls.forEach((ctrl, i) => {
-    ctrl.setValidators([
-      Validators.required,
-      serialValidator(itemName, this.serialRules)
-    ]);
-    ctrl.updateValueAndValidity();
-  });
+    arr.controls.forEach((ctrl, i) => {
+      ctrl.setValidators([
+        Validators.required,
+        serialValidator(itemName, this.serialRules)
+      ]);
+      ctrl.updateValueAndValidity();
+    });
 
-  // limpiar mensajes
-  this.imeiMessages = arr.controls.map(() => '');
-}
- 
+    // limpiar mensajes
+    this.imeiMessages = arr.controls.map(() => '');
+  }
+
   isCelular: boolean = false;
   async getdataincome() {
     const user = localStorage.getItem('User');
@@ -660,7 +666,7 @@ onItemChange() {
     this.listincomeditone = await this.api.getfindedititemincome(data);
     this.incomeseditForm = this.formBuilder.group({
       id: [this.listincomeditone._id, Validators.required],
-      numero_documento:[this.listincomeditone.document_info?.document_number, Validators.required],
+      numero_documento: [this.listincomeditone.document_info?.document_number, Validators.required],
       precioventa: [
         this.listincomeditone.batch?.unitPrice,
         Validators.required,
@@ -732,8 +738,8 @@ onItemChange() {
   loaderpro = false;
   seleccionitem() {
     const data = this.incomesaveForm.controls['id_item'].getRawValue();
-    
-    const found = this.items.find((element) => element._id == data); 
+
+    const found = this.items.find((element) => element._id == data);
     this.incomesaveForm.controls['precioventa'].setValue(found?.price);
     this.incomesaveForm.controls['preciounit'].setValue(found?.last_unit_price_income);
   }
@@ -818,11 +824,11 @@ onItemChange() {
   price: any = null
   printlocalt: any = ''
   ff: any = ''
-  ivadat:boolean=false
+  ivadat: boolean = false
   modalVisible4: boolean = false;
   async printlocal(id: any, print: any = null) {
     const data = await this.api.ticketsincomes({ id })
-    
+
     this.name1 = data.topText1
     this.name2 = data.topText2
     this.name3 = data.bottomText1
@@ -831,7 +837,7 @@ onItemChange() {
     this.printlocalt = print
     this.price = data.price
     this.ff = data.f
-    this.ivadat=data.iva
+    this.ivadat = data.iva
 
     this.modalVisible4 = true;
   }
@@ -857,15 +863,15 @@ onItemChange() {
 
 
   async aceptar(data: any) {
-console.log(data)
+    //console.log(data)
     Swal.fire({
       title: '¿Cambiar estado a aprobado?',
       text:
 
         data.quantity +
-        ' ' +data.inventory_snapshot.name_model +
+        ' ' + data.inventory_snapshot.name_model +
         ' ' +
-        data.inventory_snapshot.name_item ,
+        data.inventory_snapshot.name_item,
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -884,21 +890,21 @@ console.log(data)
       }
     });
   }
-precioMostrado: number = 0;
-calcularPrecioConIva() {
-  const precioVenta = Number(this.incomesaveForm.get('precioventa')?.value) || 0;
-  const tieneIva = this.incomesaveForm.get('iva')?.value;
+  precioMostrado: number = 0;
+  calcularPrecioConIva() {
+    const precioVenta = Number(this.incomesaveForm.get('precioventa')?.value) || 0;
+    const tieneIva = this.incomesaveForm.get('iva')?.value;
 
-  if (tieneIva) {
-    // Checkbox en TRUE → mismo precio
-    this.precioMostrado = precioVenta;
-  } else {
-    // Checkbox en FALSE → agregar 15%
-    this.precioMostrado = +(precioVenta * 1.15).toFixed(2);
+    if (tieneIva) {
+      // Checkbox en TRUE → mismo precio
+      this.precioMostrado = precioVenta;
+    } else {
+      // Checkbox en FALSE → agregar 15%
+      this.precioMostrado = +(precioVenta * 1.15).toFixed(2);
+    }
   }
-}
-seleccionarTexto(event: Event) {
-  const input = event.target as HTMLInputElement;
-  input.select();
-}
+  seleccionarTexto(event: Event) {
+    const input = event.target as HTMLInputElement;
+    input.select();
+  }
 }
