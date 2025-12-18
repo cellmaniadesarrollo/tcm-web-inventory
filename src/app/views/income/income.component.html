@@ -652,19 +652,54 @@
 
       <!-- end body modal -->
       <!-- modal footer -->
-      <div class="modal-footer" *ngIf="!newproveedor">
-        <button [disabled]="bloquear" type="button" class="btn btn-success"
-          (click)="onSubmitclose(incomesaveForm.value)">
-          Ingresar y cerrar
-        </button>
-        <button [disabled]="bloquear" type="button" class="btn btn-primary"
-          (click)="onSubmitcloseoff(incomesaveForm.value)">
-          Ingresar
-        </button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-          Cancelar
-        </button>
-      </div>
+<div class="modal-footer" *ngIf="!newproveedor">
+
+  <!-- INGRESAR Y CERRAR -->
+  <button
+    type="button"
+    class="btn btn-success btn-loading"
+    [disabled]="bloquear"
+    (click)="onSubmitclose(incomesaveForm.value)">
+
+    <ng-container *ngIf="!bloquear; else loadingClose">
+      Ingresar y cerrar
+    </ng-container>
+
+    <ng-template #loadingClose>
+      <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+      Guardando...
+    </ng-template>
+
+  </button>
+
+  <!-- INGRESAR -->
+  <button
+    type="button"
+    class="btn btn-primary btn-loading"
+    [disabled]="bloquear"
+    (click)="onSubmitcloseoff(incomesaveForm.value)">
+
+    <ng-container *ngIf="!bloquear; else loadingSave">
+      Ingresar
+    </ng-container>
+
+    <ng-template #loadingSave>
+      <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+      Guardando...
+    </ng-template>
+
+  </button>
+
+  <!-- CANCELAR -->
+  <button
+    type="button"
+    class="btn btn-danger"
+    data-bs-dismiss="modal"
+    [disabled]="bloquear">
+    Cancelar
+  </button>
+
+</div>
       <!-- nuevo proveedor -->
       <div class="modal-footer" *ngIf="newproveedor">
         <div>

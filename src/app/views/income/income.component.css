@@ -116,3 +116,12 @@ select {
   text-align: left; /* Alinea el texto a la derecha */
   padding-left: 75px; /* Espaciado a la izquierda */
 }
+
+
+.btn-loading {
+  height: 38px;           /* altura estándar Bootstrap */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}

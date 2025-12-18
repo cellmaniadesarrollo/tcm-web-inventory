@@ -308,16 +308,21 @@ export class IncomeComponent {
     this.submitted = true;
     this.bloquear = true;
     this.bloquear1 = true;
-    setTimeout(() => {
-      this.bloquear = false;
-      this.bloquear1 = false;
-    }, 2000);
+
     if (this.incomesaveForm.invalid) {
 
       return;
     } else {
       this.myedit = false
-      const data = await this.api.saveincome(form);
+      let data
+      try {
+        data = await this.api.saveincome(form);
+        this.bloquear = false;
+        this.bloquear1 = false;
+      } catch (error) {
+        this.bloquear = false;
+        this.bloquear1 = false;
+      }
 
       if (data == 'OK') {
         this.listItems(this.filterForm.value);
