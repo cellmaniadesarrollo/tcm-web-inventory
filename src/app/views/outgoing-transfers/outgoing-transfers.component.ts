@@ -7,18 +7,25 @@ import { Subscription } from 'rxjs';
 export interface Transfer {
   _id: string;
   quantity: number;
+
   cod: string;
   name: string;
   model: string;
   calidad: string;
+
   originbranche: string;
   destinationbranche: string;
-  status_historyuser: string;
+
   createuser: string;
-  status: string;
-  observation: string;
-  date: string;
-  datechange:string;
+  date: string; // fecha de creación
+
+  status_history: TransferStatusHistory[];
+}
+export interface TransferStatusHistory {
+  status_name: string;
+  observation: string | null;
+  user: string;
+  date: string; // ISO string
 }
 export interface Status {
   id: string;

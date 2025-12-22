@@ -99,31 +99,65 @@
             <th>Fecha</th>
           </tr>
         </thead>
-        <tbody>
-          <tr
-            *ngFor="let t of transacciones | paginate : { itemsPerPage: datapage.numperpage, currentPage: datapage.pagination, totalItems: totalentries }"
-            [ngClass]="{
-      'status-solicitado': t.status === 'SOLICITADO',
-      'status-enviado': t.status === 'ENVIADO',
-      'status-rechazado': t.status === 'RECHAZADO',
-      'status-en-proceso': t.status === 'EN PROCESO',
-      'status-completado': t.status === 'COMPLETADO',
-      'status-cancelado': t.status === 'CANCELADO'
-    }">
-            <td>{{ t.cod }}</td>
-            <td>{{ t.name }}</td>
-            <td>{{ t.model }}</td>
-            <td>{{ t.calidad }}</td>
-            <td>{{ t.quantity }}</td>
-            <td>{{ t.destinationbranche }}</td>
-            <td>{{ t.createuser }}</td>
-            <td>{{ t.date | relativeDate }}</td>
-            <td>{{ t.status}}</td>
-            <td>{{ t.observation}}</td>
-            <td>{{ t.status_historyuser }}</td>
-            <td>{{ t.datechange | relativeDateZ0}}</td>
-          </tr>
-        </tbody>
+<tbody>
+  <ng-container *ngFor="let t of transacciones">
+    <ng-container *ngFor="let h of t.status_history; let i = index">
+
+      <tr
+        [ngClass]="{
+          'status-solicitado': h.status_name === 'SOLICITADO',
+          'status-enviado': h.status_name === 'ENVIADO',
+          'status-rechazado': h.status_name === 'RECHAZADO',
+          'status-en-proceso': h.status_name === 'EN PROCESO',
+          'status-completado': h.status_name === 'COMPLETADO',
+          'status-cancelado': h.status_name === 'CANCELADO'
+        }"
+      >
+
+        <!-- COLUMNAS FIJAS (solo en la primera subfila) -->
+        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+          {{ t.cod }}
+        </td>
+
+        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+          {{ t.name }}
+        </td>
+
+        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+          {{ t.model }}
+        </td>
+
+        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+          {{ t.calidad }}
+        </td>
+
+        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+          {{ t.quantity }}
+        </td>
+
+        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+          {{ t.destinationbranche }}
+        </td>
+
+        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+          {{ t.createuser }}
+        </td>
+
+        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+          {{ t.date | relativeDate }}
+        </td>
+
+        <!-- COLUMNAS VARIABLES (una por cada estado) -->
+        <td>{{ h.status_name }}</td>
+        <td>{{ h.observation || '-' }}</td>
+        <td>{{ h.user }}</td>
+        <td>{{ h.date | relativeDateZ0 }}</td>
+
+      </tr>
+
+    </ng-container>
+  </ng-container>
+</tbody>
       </table>
     </div>
 
