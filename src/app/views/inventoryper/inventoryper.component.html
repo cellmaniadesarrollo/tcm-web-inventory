@@ -181,35 +181,35 @@
                             currentPage: datapage.pagination,
                             totalItems: totalentries
                           }"
-                        [ngClass]="datacolor(item.stock.stock)"
+                        [ngClass]="datacolor(item.totalStock)"
                       >
                         <td>
                           {{ item.sku }}
                         </td>
-                        <td (click)="openModaloptions(item.items.inventoryfownameitem?.name_nameitems+' '+item.sku ,item._id)">
-                          {{ item.items.inventoryfownameitem?.name_nameitems }}
+                        <td (click)="openModaloptions(item.name_nameitems+' '+item.sku ,item._id)">
+                          {{ item.name_nameitems}}
                         </td>
                         <td>
-                          {{ item.items.models?.business_model }}
+                          {{ item.name_model }}
                         </td>
                         <td>
-                          {{ item.items.colors.color_name }}
+                          {{ item.name_color }}
                         </td>
                         <td>
-                          {{ item.items.quality.quality_inventoryflow }}
+                          {{ item.name_quality }}
                         </td>
                         <td>
-                          {{ item.items.stateproduc.stateproduct_inventoryflow }}
+                          {{ item.stateprod }}
                         </td>
-                        <td>${{ item.items.item_price }}</td>
+                        <td>${{ item.item_price }}</td>
                         <td>
-                          {{ item.stock.stock }}
+                          {{ item.totalStock }}
                         </td>
                         <td>
                           {{ item.observations }}
                         </td>
                         <td> 
-                          <abbr title="Imprimir normal" class="p-1"  (click)="printlocal(item.items.models?.business_model, item.items.inventoryfownameitem?.name_nameitems+' ' +item.items.quality.quality_inventoryflow ,item.sku,item.stock.stock,item.items.item_price)"
+                          <abbr title="Imprimir normal" class="p-1"   (click)="printlocal(item.name_model, item.name_nameitems+' ' +item.name_quality ,item.sku,item.totalStock,item.item_price)"
                           ><a class="btn btn-outline-dark p-1"
                             ><i class="fa fa-ticket"></i></a
                         ></abbr>

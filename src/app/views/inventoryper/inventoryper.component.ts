@@ -111,7 +111,7 @@ export class InventoryperComponent {
   async listItems(form: any) {
     
     const data = await this.api.listitemsper(form);
-    
+    console.log(data)
     this.stateproducts = data.stateproduct;
     this.items = data.intake;
     this.numperpages = data.number_of_records_per_page;

@@ -99,65 +99,63 @@
             <th>Fecha</th>
           </tr>
         </thead>
-<tbody>
-  <ng-container *ngFor="let t of transacciones">
-    <ng-container *ngFor="let h of t.status_history; let i = index">
+        <tbody>
+          <ng-container *ngFor="let t of transacciones">
+            <ng-container *ngFor="let h of t.status_history; let i = index">
 
-      <tr
-        [ngClass]="{
+              <tr [ngClass]="{
           'status-solicitado': h.status_name === 'SOLICITADO',
           'status-enviado': h.status_name === 'ENVIADO',
           'status-rechazado': h.status_name === 'RECHAZADO',
           'status-en-proceso': h.status_name === 'EN PROCESO',
           'status-completado': h.status_name === 'COMPLETADO',
           'status-cancelado': h.status_name === 'CANCELADO'
-        }"
-      >
+        }">
 
-        <!-- COLUMNAS FIJAS (solo en la primera subfila) -->
-        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
-          {{ t.cod }}
-        </td>
+                <!-- COLUMNAS FIJAS (solo en la primera subfila) -->
+                <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+                  {{ t.cod }}
+                </td>
 
-        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
-          {{ t.name }}
-        </td>
+                <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+                  {{ t.name }}
+                </td>
 
-        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
-          {{ t.model }}
-        </td>
+                <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+                  {{ t.model }}
+                </td>
 
-        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
-          {{ t.calidad }}
-        </td>
+                <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+                  {{ t.calidad }}
+                </td>
 
-        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
-          {{ t.quantity }}
-        </td>
+                <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+                  {{ t.quantity }}
+                </td>
 
-        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
-          {{ t.destinationbranche }}
-        </td>
+                <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+                  {{ t.destinationbranche }}
+                </td>
 
-        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
-          {{ t.createuser }}
-        </td>
+                <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+                  {{ t.createuser }}
+                </td>
 
-        <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
-          {{ t.date | relativeDate }}
-        </td>
+                <td *ngIf="i === 0" [attr.rowspan]="t.status_history.length">
+                  {{ t.date | relativeDate }}
+                </td>
 
-        <!-- COLUMNAS VARIABLES (una por cada estado) -->
-        <td>{{ h.status_name }}</td>
-        <td>{{ h.observation || '-' }}</td>
-        <td>{{ h.user }}</td>
-        <td>{{ h.date | relativeDateZ0 }}</td>
+                <!-- COLUMNAS VARIABLES (una por cada estado) -->
+                <td>{{ h.status_name }}</td>
+                <td>{{ h.observation || '-' }}</td>
+                <td>{{ h.user }}</td>
+                <td>{{ h.date | relativeDateZ0 }}</td>
 
-      </tr>
+              </tr>
 
-    </ng-container>
-  </ng-container>
-</tbody>
+            </ng-container>
+          </ng-container>
+        </tbody>
       </table>
     </div>
 
