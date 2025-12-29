@@ -12,6 +12,7 @@ export interface ListitemsincomeI {
   idname?: any;
   last_unit_price_income?: any;
   last_income_price?: any;
+  hasTax?:any;
 }
 export interface ListinventorysnamesI {
   _id?: any;
@@ -110,4 +111,5 @@ export interface ListIncomeseditI {
   document_info?: {
     document_number?: any;
   }
+   hasTax?:any;
 }
