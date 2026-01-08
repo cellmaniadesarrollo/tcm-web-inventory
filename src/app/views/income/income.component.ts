@@ -741,26 +741,26 @@ export class IncomeComponent {
   mostrarSugerencias = false;
   blockbusquedapro = false;
   loaderpro = false;
-seleccionitem() {
-  const data = this.incomesaveForm.controls['id_item'].getRawValue();
+  seleccionitem() {
+    const data = this.incomesaveForm.controls['id_item'].getRawValue();
 
-  const found = this.items.find(element => element._id == data);
-  if (!found) return;
+    const found = this.items.find(element => element._id == data);
+    if (!found) return;
 
-  const precioBase = Number(found.price ?? 0);
+    const precioBase = Number(found.price ?? 0);
 
-  // 👇 solo cuando viene EXPLÍCITAMENTE false
-  const hasTax = found.hasTax !== false;
+    // 👇 solo cuando viene EXPLÍCITAMENTE false
+    const hasTax = found.hasTax !== false;
 
-  const precioVentaFinal = hasTax
-    ? precioBase
-    : +(precioBase * 1.15).toFixed(2);
+    const precioVentaFinal = hasTax
+      ? precioBase
+      : +(precioBase * 1.15).toFixed(2);
 
-  this.incomesaveForm.controls['precioventa'].setValue(precioVentaFinal);
-  this.incomesaveForm.controls['preciounit'].setValue(
-    Number(found.last_unit_price_income ?? 0)
-  );
-}
+    this.incomesaveForm.controls['precioventa'].setValue(precioVentaFinal);
+    this.incomesaveForm.controls['preciounit'].setValue(
+      Number(found.last_unit_price_income ?? 0)
+    );
+  }
 
   seleccionarSugerencia(texto: string, id_item: string) {
     this.incomesaveForm.controls['id_item'].setValue(id_item);
@@ -804,7 +804,7 @@ seleccionitem() {
         }, 1000);
         this.loaderpro = true;
         this.items = await this.api.finditemincome(this.terminoDeBusqueda);
-         
+
         this.loaderpro = false;
 
       }

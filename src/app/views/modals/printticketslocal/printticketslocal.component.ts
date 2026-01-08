@@ -25,6 +25,7 @@ export class PrintticketslocalComponent {
   @Input() price: any;
   @Input() f: any;
    @Input() ivsa: boolean=false;
+   @Input () showiva:boolean=false
   @Output() closeModalEvent = new EventEmitter<any>();
   constructor(
     private api: ApiService,
