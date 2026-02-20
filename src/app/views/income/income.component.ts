@@ -105,6 +105,7 @@ export class IncomeComponent {
     inpuesto: new FormControl(''),
     item: new FormControl(''),
     get_print: new FormControl(true),
+    bodega: new FormControl(false),
     iva: new FormControl(true),
     selected_printer: new FormControl(''),
     // 🚨 AGREGAR ESTO
@@ -475,6 +476,7 @@ export class IncomeComponent {
       fecha: formatDate(currentDate, "yyyy-MM-dd'T'HH:mm:ss", 'en-US'),
       item: '',
       get_print: true,
+      bodega: false,
       iva: true,
       selected_printer: user && user === 'byronp' ? 'dymo' : 'zebra'
     });
