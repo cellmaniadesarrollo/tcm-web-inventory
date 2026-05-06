@@ -11,7 +11,7 @@ import {
   FormControl,
   Validators,
   FormBuilder,
-} from '@angular/forms'; 
+} from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { formatDate } from '@angular/common';
@@ -56,7 +56,7 @@ export class MovementsComponent {
     private tokenstate: TokencheckService,
     public readonly swalTargets: SwalPortalTargets,
     private formBuilder: FormBuilder
-  ) {}
+  ) { }
 
   devolucionForm: FormGroup = new FormGroup({
     id_item: new FormControl(''),
@@ -209,7 +209,7 @@ export class MovementsComponent {
   async savemovementreturn() {
     this.submittedoutmovement = true;
     if (this.devolucionForm.invalid) {
-      // console.log(JSON.stringify(this.salidaForm.value, null, 2));
+      console.log(JSON.stringify(this.devolucionForm.value, null, 2));
       return;
     } else {
       const data = await this.api.movementreturnsave(this.devolucionForm.value);
@@ -268,7 +268,7 @@ export class MovementsComponent {
       } catch (error) {
         numOrder = '';
       }
-
+      console.log(JSON.stringify(data.movementget.value, null, 2));
       this.devolucionForm = this.formBuilder.group({
         id_item: [data.movementget.id_item, Validators.required],
         codigo_movimiento: [
@@ -342,25 +342,25 @@ export class MovementsComponent {
     }
   }
 
-    obtenerFechaHace6Dias(): string {
+  obtenerFechaHace6Dias(): string {
     // Obtener la fecha actual
     let fechaActual = new Date();
-  
+
     // Restar 7 días a la fecha actual
     fechaActual.setDate(fechaActual.getDate() - 6);
-  
+
     // Formatear la fecha resultante
     let fechainit = formatDate(fechaActual, 'yyyy-MM-dd', 'en-US');
-  
+
     return fechainit;
   }
- 
 
-  fechainit=formatDate(new Date() , 'yyyy-MM-dd', 'en-US');
-  fechafin =formatDate(new Date() , 'yyyy-MM-dd', 'en-US'); 
-  datareset(){
-    this.fechainit =  this.obtenerFechaHace6Dias() ;
-    this.fechafin = formatDate(new Date() , 'yyyy-MM-dd', 'en-US');
+
+  fechainit = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
+  fechafin = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
+  datareset() {
+    this.fechainit = this.obtenerFechaHace6Dias();
+    this.fechafin = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
   }
   async reportemovimientos() {
     let dat = { datestart: this.fechainit, dateend: this.fechafin };
