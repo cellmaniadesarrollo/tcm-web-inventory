@@ -1,0 +1,63 @@
+<div class="row">
+  <div class="col-sm-2 my-auto">
+    <div class="row">
+      <div class="col-sm-3">
+        <button type="button" class="btn btn-block bg-gradient-primary"
+          data-toggle="tooltip" title="Generar Reporte"
+          data-bs-toggle="modal" data-bs-target="#exampleModal16"
+          (click)="reportClick.emit()">
+          <i class="fa fa-bar-chart fa-xl" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-4 justify-content-center">
+    <form [formGroup]="searchForm">
+      <div class="input-group">
+        <input type="search" (keyup)="searchKeyUp.emit($event)" (input)="searchKeyUp.emit($event)"
+          [readonly]="blockbusqueda" class="form-control form-control-lg"
+          placeholder="Buscar" formControlName="valuesearch" />
+        <div class="input-group-append">
+          <button type="button" class="btn btn-lg btn-default"
+            [disabled]="blockbusqueda" (click)="findClick.emit()">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-sm-3 my-auto">
+    <form [formGroup]="typemovementform">
+      <div class="d-flex flex-row-reverse bd-highlight">
+        <div class="col-sm-9">
+          <select class="form-control select2" style="width: 100%"
+            formControlName="type_movement" (change)="typeChange.emit()">
+            <option [value]="0">ALL</option>
+            <option *ngFor="let t of typestypemovements" [ngValue]="t._id">
+              {{ t.name_movementtype }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-sm-3 my-auto">
+    <form [formGroup]="namemovementform">
+      <div class="d-flex flex-row-reverse bd-highlight">
+        <div class="col-sm-9">
+          <select class="form-control select2" style="width: 100%"
+            formControlName="name_movement" (change)="nameChange.emit()">
+            <option [value]="0">ALL</option>
+            <option *ngFor="let m of typesmovements" [ngValue]="m._id"
+              [ngClass]="datacolor(m.name_movement)">
+              {{ m.name_movement }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

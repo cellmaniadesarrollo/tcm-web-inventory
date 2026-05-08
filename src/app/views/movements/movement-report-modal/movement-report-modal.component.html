@@ -1,0 +1,41 @@
+<div class="modal fade" id="exampleModal16" data-bs-backdrop="static"
+  tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="col-12 modal-title text-center">
+          Ingrese fecha reporte de movimientos
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label class="border-lable-flt">
+                <input type="date" class="form-control"
+                  [ngModel]="fechainit" (ngModelChange)="fechainitChange.emit($event)" />
+                <span class="widget-title shop-sidebar">Fecha Inicio</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label class="border-lable-flt">
+                <input type="date" class="form-control"
+                  [ngModel]="fechafin" (ngModelChange)="fechafinChange.emit($event)" />
+                <span class="widget-title shop-sidebar">Fecha Fin</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="generate.emit()">Generar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

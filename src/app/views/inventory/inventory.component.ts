@@ -30,7 +30,7 @@ import {
   ListscomesfromI,
   Getoneitem,
   ListBatches
-  
+
 } from 'src/app/models/item.inteface';
 
 import {
@@ -49,16 +49,16 @@ import { SocketService } from 'src/app/service/socket/socket.service';
 import { Subscription } from 'rxjs';
 declare var window: any;
 declare var dymo: any;
- 
+
 @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.css'],
 })
 export class InventoryComponent {
- // socket: WebSocketSubject<any> = new WebSocketSubject('ws://localhost:3000');
+  // socket: WebSocketSubject<any> = new WebSocketSubject('ws://localhost:3000');
   @ViewChild('closebutton') closebutton: any;
- 
+
   active = 1;
   datapage = {
     allclients: '0',
@@ -75,23 +75,23 @@ export class InventoryComponent {
     { tems: '50', value: '50' },
     { tems: '100', value: '100' },
   ];
- 
+
   submitted = false;
   constructor(
-    private setdataService: SetdataService , 
+    private setdataService: SetdataService,
     private datePipe: DatePipe,
     private renderer: Renderer2,
     private api: ApiService,
     private router: Router,
     private tokenstate: TokencheckService,
     public readonly swalTargets: SwalPortalTargets,
-    private formBuilder: FormBuilder,  
+    private formBuilder: FormBuilder,
     private socketService: SocketService
-  ) { 
-   
+  ) {
+
   }
 
- 
+
 
   items: ListitemsI[] = [];
   numperpagesForm = new FormGroup({
@@ -104,40 +104,40 @@ export class InventoryComponent {
     stateproduct_inventoryflow: new FormControl(''),
   });
   stateproducts: ListstateproductI[] = [];
- 
-  nivel2 = false;
-  getdata:any; 
-  private subscribedChannel: string = 'invfl';
-  private messageSubscription: Subscription | null = null;  
-  myedit:boolean=true
-  ngOnInit(): void {  
-        // Suscribirse al canal al iniciar el componente
-        this.socketService.subscribeToChannel(this.subscribedChannel);
 
-        // Suscribirse al observable de mensajes para recibir los mensajes del canal
-        this.messageSubscription = this.socketService.message$.subscribe((message) => {
-          if (message && message === 'RELOAD') {
-            console.log('Received message from channel:', message);
-            this.listItems(this.datapage);
-          }
-        });
+  nivel2 = false;
+  getdata: any;
+  private subscribedChannel: string = 'invfl';
+  private messageSubscription: Subscription | null = null;
+  myedit: boolean = true
+  ngOnInit(): void {
+    // Suscribirse al canal al iniciar el componente
+    this.socketService.subscribeToChannel(this.subscribedChannel);
+
+    // Suscribirse al observable de mensajes para recibir los mensajes del canal
+    this.messageSubscription = this.socketService.message$.subscribe((message) => {
+      if (message && message === 'RELOAD') {
+        console.log('Received message from channel:', message);
+        this.listItems(this.datapage);
+      }
+    });
 
 
     const group = localStorage.getItem('Groups') || '';
     this.nivel2 = group
       .split(',')
       .some((x: any) => x == 'IFE' || x == 'ADMINS');
- 
+
 
     // window.addEventListener('keypress', (event: any) => {
     //   this.keycomp(event.key);
     // });
 
-   
 
 
-    let serverid =  this.setdataService.getData();
-    if (serverid !== null &&serverid !==undefined&& serverid.length == 29) {
+
+    let serverid = this.setdataService.getData();
+    if (serverid !== null && serverid !== undefined && serverid.length == 29) {
       this.datapage.findlike = serverid.toUpperCase();
       this.tokenstate.checkLocalStorage();
       this.listItems(this.datapage);
@@ -161,7 +161,7 @@ export class InventoryComponent {
       this.messageSubscription.unsubscribe();
     }
   }
- 
+
 
   async simpleAlert() {
     Swal.fire({
@@ -173,27 +173,27 @@ export class InventoryComponent {
       },
     });
   }
-findbutton(){
-  this.datapage.findlike = this.searchForm.value.valuesearch || '';
-  this.datapage.pagination = 1;
-  this.listItems(this.datapage);
-}
-loading: boolean = true;
+  findbutton() {
+    this.datapage.findlike = this.searchForm.value.valuesearch || '';
+    this.datapage.pagination = 1;
+    this.listItems(this.datapage);
+  }
+  loading: boolean = true;
   async listItems(form: any) {
     //this.loading = true;
     const data = await this.api.listitems(form);
     this.loading = false;
     this.stateproducts = data.stateproduct;
-    this.items=data.intake 
-    
+    this.items = data.intake
+
     this.numperpages = data.number_of_records_per_page;
     this.totalentries = data.number_of_records;
     this.datapage.allclients = data.allclients;
-    this.datapage.pagination = data.actual_page; 
+    this.datapage.pagination = data.actual_page;
     this.stateproductform.controls['stateproduct_inventoryflow'].setValue(
       this.datapage.allclients
     );
-   // console.log(data)
+    // console.log(data)
   }
 
   async print(data: any) {
@@ -211,7 +211,7 @@ loading: boolean = true;
     Swal.close();
   }
 
- 
+
 
   async downloadpdf(data: any) {
     const dataget = await this.api.getpdfbase64(data);
@@ -234,27 +234,27 @@ loading: boolean = true;
   inicio() {
     this.router.navigate(['dashboard']);
   }
-  blockbusqueda=false
+  blockbusqueda = false
   onKeyDownEvent(event: any) {
     this.datapage.findlike = this.searchForm.value.valuesearch || '';
-    
+
     if (event.key === 'Enter') {
-    if (event.target.value.length > 0) {
-      this.blockbusqueda =true
-       
-      setTimeout(() => {
-        this.blockbusqueda=false
-      }, 1000);
-      this.datapage.pagination = 1;
-      this.loading = true
-      this.listItems(this.datapage);
-    }
+      if (event.target.value.length > 0) {
+        this.blockbusqueda = true
+
+        setTimeout(() => {
+          this.blockbusqueda = false
+        }, 1000);
+        this.datapage.pagination = 1;
+        this.loading = true
+        this.listItems(this.datapage);
+      }
     }
     if (event.target.value.length == 0) {
       this.datapage.pagination = 1;
       this.loading = true
       this.listItems(this.datapage);
-    } 
+    }
   }
 
   async changeLeagueOwner() {
@@ -265,7 +265,7 @@ loading: boolean = true;
     await this.listItems(this.datapage);
   }
 
-  renderPage(event: number) { 
+  renderPage(event: number) {
     this.datapage.pagination = event;
     this.loading = true
     this.listItems(this.datapage);
@@ -292,8 +292,8 @@ loading: boolean = true;
     id_stateproduct_inventoryflow: new FormControl(''),
     observations: new FormControl(''),
     id_stateinventoryflow: new FormControl(''),
-    
-   // id_comesfrom: new FormControl(''),
+
+    // id_comesfrom: new FormControl(''),
     get_print: new FormControl(''),
   });
 
@@ -311,16 +311,16 @@ loading: boolean = true;
 
   async onSubmitclose() {
     this.submitted = true;
-    this.myedit=false
+    this.myedit = false
     if (this.nuevoForm.invalid) {
       //  console.log(JSON.stringify(this.nuevoForm.value, null, 2));
       return;
     } else {
       const data = await this.api.dataedititem(this.nuevoForm.value);
-      
-      if (data == 'OK') { 
+
+      if (data == 'OK') {
         this.listItems(this.datapage);
-        this.myedit=true
+        this.myedit = true
         //  this.router.navigate(['inventory']);
       } else if (data.id) {
         const dataget = await this.api.getpdfbase64(data.id);
@@ -335,12 +335,12 @@ loading: boolean = true;
     }
   }
 
- 
+
   brands: ListbrandI[] = [];
   models: ListmodelI[] = [];
   colors: ListcolorI[] = [];
   types: ListtypeI[] = [];
-  qualitys: ListqualityI[] = []; 
+  qualitys: ListqualityI[] = [];
   //comesfroms: ListscomesfromI[] = [];
   stateinventoryflows: ListsstateinventoryI[] = [];
   tipo: any;
@@ -351,10 +351,10 @@ loading: boolean = true;
   async datainit() {
     //  this.validationssalidaform()
     const data: any = await this.api.findoneitem(this.find);
- 
- 
+
+
     this.tipo = await this.types.find((_id) => _id > data.id_type)
-      ?.type_inventoryflow; 
+      ?.type_inventoryflow;
     this.nuevoForm.setValue({
       _id: data._id,
       cod_upc: data.upc,
@@ -367,7 +367,7 @@ loading: boolean = true;
       id_quality: data.items.quality.quality_inventoryflow,
       id_stateproduct_inventoryflow: data.items.stateproductinventoryflow.stateproduct_inventoryflow,
       observations: data.observations,
-      id_stateinventoryflow: data.id_state, 
+      id_stateinventoryflow: data.id_state,
       get_print: true,
     });
   }
@@ -386,7 +386,7 @@ loading: boolean = true;
       id_stateproduct_inventoryflow: null,
       observations: null,
       id_stateinventoryflow: null,
-    //  id_comesfrom: null,
+      //  id_comesfrom: null,
       get_print: null,
     });
   }
@@ -403,16 +403,16 @@ loading: boolean = true;
 
   salida = true;
   editar = false;
-  history=false;
-  incomeH=false;
-  incomeRH=false;
+  history = false;
+  incomeH = false;
+  incomeRH = false;
   async salidas() {
     this.submittedoutmovement = false;
     this.editar = false;
     this.salida = true;
-    this.history=false;
-    this.incomeH=false;
-    this.incomeRH=false;
+    this.history = false;
+    this.incomeH = false;
+    this.incomeRH = false;
     this.validationssalidaform();
     await this.listdataout();
     if (this.focus) {
@@ -443,63 +443,63 @@ loading: boolean = true;
   editars() {
     this.salida = false;
     this.editar = true;
-    this.history=false;
-    this.incomeH=false;
-    this.incomeRH=false;
+    this.history = false;
+    this.incomeH = false;
+    this.incomeRH = false;
     this.listdata();
   }
- movementshisto: Listmovementsitem[]=[]
- incomeshistory:Listincomeshistory[]=[]
- async histori() {
-    this.history=true;
+  movementshisto: Listmovementsitem[] = []
+  incomeshistory: Listincomeshistory[] = []
+  async histori() {
+    this.history = true;
     this.salida = false;
     this.editar = false;
-    this.incomeH=false;
-    this.incomeRH=false;
-    const data= await this.api.listhistoryitems(this.find)
-    this.movementshisto=data
-   // console.log(data)
-  //  this.listdata();
+    this.incomeH = false;
+    this.incomeRH = false;
+    const data = await this.api.listhistoryitems(this.find)
+    this.movementshisto = data
+    // console.log(data)
+    //  this.listdata();
   }
 
 
   async incomeh() {
-    this.incomeH=true;
-    this.incomeRH=false;
-    this.history=false;
+    this.incomeH = true;
+    this.incomeRH = false;
+    this.history = false;
     this.salida = false;
     this.editar = false;
-    const data= await this.api.listincomeshistory(this.find)
-    this.incomeshistory=data
-  console.log(data)
-  //this.listdata();
+    const data = await this.api.listincomeshistory(this.find)
+    this.incomeshistory = data
+    //console.log(data)
+    //this.listdata();
   }
   async incomehr() {
-    this.incomeH=false;
-    this.incomeRH=true;
-    this.history=false;
+    this.incomeH = false;
+    this.incomeRH = true;
+    this.history = false;
     this.salida = false;
     this.editar = false;
-    const data= await this.api.listincomeshistory(this.find)
-    this.incomeshistory=data
-  //console.log(data)
-  //this.listdata();
+    //const data = await this.api.listincomeshistory(this.find)
+    // this.incomeshistory = data
+    //console.log(data)
+    //this.listdata();
   }
-pvimpuesto(punit:any,ptax:any){
- return (((parseFloat(ptax)/100)+1) *parseFloat(punit))
-}
-pvitotal(punit:any,ptax:any,cant:any){
-  return ((((parseFloat(ptax)/100)+1) *parseFloat(punit))*parseFloat(cant))
- }
+  pvimpuesto(punit: any, ptax: any) {
+    return (((parseFloat(ptax) / 100) + 1) * parseFloat(punit))
+  }
+  pvitotal(punit: any, ptax: any, cant: any) {
+    return ((((parseFloat(ptax) / 100) + 1) * parseFloat(punit)) * parseFloat(cant))
+  }
 
   async listdata() {
     const data = await this.api.datanewitem('invfl');
-    
+
     this.brands = data.brand;
     this.colors = data.color;
     this.types = data.type;
     this.qualitys = data.quality;
-    this.stateproducts = data.stateproduct; 
+    this.stateproducts = data.stateproduct;
     this.stateinventoryflows = data.stateinventoryflow;
     //this.comesfroms = data.comesfrom;
     await this.datainit();
@@ -512,9 +512,9 @@ pvitotal(punit:any,ptax:any,cant:any){
       return;
     } else {
       const data = await this.api.savenewitem(this.nuevoForm.value);
-      if (data == 'OK') { 
+      if (data == 'OK') {
         this.router.navigate(['inventory']);
-      } else if (data.id) { 
+      } else if (data.id) {
         const dataget = await this.api.getpdfbase64(data.id);
         this.openPDFInNewTab(dataget.pdfbase64)
         // printJS({
@@ -548,31 +548,31 @@ pvitotal(punit:any,ptax:any,cant:any){
       this.save = '';
     }
   }
-  technician:TechnicianeMoveI []=[]// TechnicianeMoveI[] = [];
+  technician: TechnicianeMoveI[] = []// TechnicianeMoveI[] = [];
   outs: MovementnameI[] = [];
   codeauto = false;
   async changeLeagueOwnertype(e: any) {
-    
-   const as= await this.api.liststaffmovementtype(e)
-   //console.log(as)
-   this.technician=as
-    const found = this.outs.find((element:any) => element._id==e);
-    if(found?.name_movement=='REPARACION DAÑO'||found?.name_movement=='REPARACION' ){
+
+    const as = await this.api.liststaffmovementtype(e)
+    //console.log(as)
+    this.technician = as
+    const found = this.outs.find((element: any) => element._id == e);
+    if (found?.name_movement == 'REPARACION DAÑO' || found?.name_movement == 'REPARACION') {
       this.codeauto = false
 
-    }else{
+    } else {
       this.salidaForm.controls['numero_orden'].setValue('');
       this.codeauto = true
     }
   }
-batches:ListBatches[]=[]
+  batches: ListBatches[] = []
   async listdataout() {
-    this.batches=[]
+    this.batches = []
     const data = await this.api.movementoutdata(this.find);
     this.technician = data.item;
     this.outs = data.outs;
-    this.batches=data.batches
-     console.log(data);
+    this.batches = data.batches
+    console.log(data);
 
     const currentDateAndTime = this.datePipe.transform(
       new Date(),
@@ -619,23 +619,23 @@ batches:ListBatches[]=[]
   }
 
   submittedoutmovement = false;
- 
-  async saveoutmovement() {
-   // console.log(this.salidaForm.value.numero_orden)
 
-     //   ;
+  async saveoutmovement() {
+    // console.log(this.salidaForm.value.numero_orden)
+
+    //   ;
     this.submittedoutmovement = true;
     if (this.salidaForm.invalid) {
       // console.log(JSON.stringify(this.salidaForm.value, null, 2));
       return;
-    } else { 
+    } else {
       const data = await this.api.movementoutsave(this.salidaForm.value);
-      if (data == 'OK') { 
+      if (data == 'OK') {
         this.listItems(this.datapage);
         this.closebutton.nativeElement.click();
         this.find = '';
         this.submittedoutmovement = false;
-      } 
+      }
     }
   }
   datacolor1(data: any) {
@@ -669,14 +669,14 @@ batches:ListBatches[]=[]
     }
     return '';
   }
-    
+
   currentDate = new Date();
   validationssalidaform() {
 
     this.salidaForm = this.formBuilder.group({
       id_item: ['', Validators.required],
       codigo_movimiento: [
-         '' ,
+        '',
         [
           Validators.required,
           Validators.minLength(36),
@@ -721,8 +721,8 @@ batches:ListBatches[]=[]
   delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-  openPDFInNewTab(pdfBase64:any) {
-    const binaryData = atob( pdfBase64);
+  openPDFInNewTab(pdfBase64: any) {
+    const binaryData = atob(pdfBase64);
     const arrayBuffer = new ArrayBuffer(binaryData.length);
     const byteArray = new Uint8Array(arrayBuffer);
 
@@ -742,21 +742,21 @@ batches:ListBatches[]=[]
     // Agrega más datos según sea necesario
   ];
 
-  modalVisible4:boolean=false
-  name1:string=''
-  name2:string=''
-  name3:string=''
-  cantid:string=''
-  price:any=null
-  async printlocal(n1: any,n2:any,n3:any, can: any,pri:any) {
-    this.name1=n1
-    this.name2=n2
-    this.name3=n3
-    this.cantid=can
-    this.price=pri
+  modalVisible4: boolean = false
+  name1: string = ''
+  name2: string = ''
+  name3: string = ''
+  cantid: string = ''
+  price: any = null
+  async printlocal(n1: any, n2: any, n3: any, can: any, pri: any) {
+    this.name1 = n1
+    this.name2 = n2
+    this.name3 = n3
+    this.cantid = can
+    this.price = pri
     this.modalVisible4 = true;
   }
-  async closeprintlocal( ) {
+  async closeprintlocal() {
     this.modalVisible4 = false;
   }
 }

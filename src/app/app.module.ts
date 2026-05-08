@@ -1,29 +1,29 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule,routingComponents  } from './app-routing.module';
-import { AppComponent } from './app.component'; 
+import { AppRoutingModule, routingComponents } from './app-routing.module';
+import { AppComponent } from './app.component';
 
 
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
-import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TagInputModule } from 'ngx-chips';
 import { HeaderComponent } from './views/templates/header/header.component';
 import { FooterComponent } from './views/templates/footer/footer.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { NgToastModule } from 'ng-angular-popup'
-import {NgbModule,NgbModalModule} from '@ng-bootstrap/ng-bootstrap'; 
+import { NgbModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common';
-import { SidebarComponent } from './views/templates/sidebar/sidebar.component'; 
- 
- 
- 
- 
+import { SidebarComponent } from './views/templates/sidebar/sidebar.component';
+
+
+
+
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { CreatenameitemsComponent } from './views/modals/createnameitems/createnameitems.component';
@@ -43,9 +43,9 @@ import { TablemovementsComponent } from './views/partials/tablemovements/tablemo
 import { ReloadComponent } from './views/partials/reload/reload.component';
 import { ReportwassapincomesComponent } from './views/modals/reportwassapincomes/reportwassapincomes.component';
 import { ReporpricespdfincomesComponent } from './views/modals/reporpricespdfincomes/reporpricespdfincomes.component';
-import { TableincomerepComponent } from './views/partials/tableincomerep/tableincomerep.component'; 
+import { TableincomerepComponent } from './views/partials/tableincomerep/tableincomerep.component';
 
- 
+
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -63,13 +63,13 @@ import { InventorysalesComponent } from './views/inventorysales/inventorysales.c
 import { InventorysalesnewComponent } from './views/inventorysales/inventorysalesnew/inventorysalesnew.component';
 import { MovementssalesComponent } from './views/movementssales/movementssales.component';
 
- 
-import { MatAutocompleteModule } from '@angular/material/autocomplete'; 
+
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list'; 
-import { MatExpansionModule } from '@angular/material/expansion';  
+import { MatListModule } from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
-import { TicketPrinterComponent } from './views/ticket-printer/ticket-printer.component'; 
+import { TicketPrinterComponent } from './views/ticket-printer/ticket-printer.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { IncomesalesComponent } from './views/incomesales/incomesales.component';
 import { OutgoingTransfersComponent } from './views/outgoing-transfers/outgoing-transfers.component';
@@ -78,6 +78,12 @@ import { ReceivingTransfersComponent } from './views/receiving-transfers/receivi
 import { RelativeDatePipe } from './pipes/relative-date.pipe';
 import { RelativeDateZ0Pipe } from './pipes/relative-date-z0.pipe';
 import { RepotsAllComponent } from './views/repots-all/repots-all.component';
+import { MovementsFiltersComponent } from './views/movements/movements-filters/movements-filters.component';
+import { MovementsTableComponent } from './views/movements/movements-table/movements-table.component';
+import { MovementsPaginationComponent } from './views/movements/movements-pagination/movements-pagination.component';
+import { MovementDetailModalComponent } from './views/movements/movement-detail-modal/movement-detail-modal.component';
+import { MovementReportModalComponent } from './views/movements/movement-report-modal/movement-report-modal.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -113,12 +119,16 @@ import { RepotsAllComponent } from './views/repots-all/repots-all.component';
     ReceivingTransfersComponent,
     RelativeDatePipe,
     RelativeDateZ0Pipe,
-    RepotsAllComponent,   
-  
+    RepotsAllComponent,
+    MovementsFiltersComponent,
+    MovementsTableComponent,
+    MovementsPaginationComponent,
+    MovementDetailModalComponent,
+    MovementReportModalComponent,
 
   ],
   imports: [
-    
+
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
@@ -134,17 +144,17 @@ import { RepotsAllComponent } from './views/repots-all/repots-all.component';
     }),
     NgxPaginationModule,
     TagInputModule,
-   SweetAlert2Module, 
+    SweetAlert2Module,
     NgbModule,
     NgbModalModule,
     ButtonModule,
-    DialogModule, 
+    DialogModule,
 
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,
-    MatFormFieldModule, 
+    MatFormFieldModule,
     MatPaginatorModule,
     MatSortModule,
     MatCardModule,

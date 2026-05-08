@@ -1,0 +1,165 @@
+<div class="modal fade" data-bs-backdrop="static" id="exampleModal2"
+     tabindex="-1" aria-labelledby="exampleModal2Label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+          <li [ngbNavItem]="1" *ngIf="devoluciones">
+            <button ngbNavLink (click)="tabSalida.emit()">Devolución</button>
+          </li>
+          <li [ngbNavItem]="2">
+            <button ngbNavLink (click)="tabDetalles.emit()">Detalles</button>
+          </li>
+          <li [ngbNavItem]="3">
+            <button ngbNavLink (click)="tabEditar.emit()">Editar</button>
+          </li>
+        </ul>
+        <button type="button" #closebutton class="btn-close"
+                data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- TAB: Devolución -->
+        <div *ngIf="salida">
+          <form [formGroup]="devolucionForm">
+
+            <!-- Campo oculto con el nuevo nombre -->
+            <input type="hidden" formControlName="id_movimiento" />
+
+            <div class="col-12">
+              <div class="form-group">
+                <ng-select placeholder="Motivo de devolución *" 
+                           formControlName="tipo_devolucion"
+                           [ngClass]="{ 'is-invalid': submittedoutmovement && f['tipo_devolucion'].errors }">
+                  <ng-option *ngFor="let inp of ins" [value]="inp._id">{{ inp.name_movement }}</ng-option>
+                </ng-select>
+                <div *ngIf="submittedoutmovement && f['tipo_devolucion'].errors" class="invalid-feedback">
+                  <div *ngIf="f['tipo_devolucion'].errors['required']">Motivo de devolución es requerido</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-group">
+                <ng-select placeholder="Emisor *" 
+                           formControlName="recibe_de"
+                           [ngClass]="{ 'is-invalid': submittedoutmovement && f['recibe_de'].errors }">
+                  <ng-option *ngFor="let technician of technicians" [value]="technician._id?._id">
+                    {{ technician._id?.employee?.first_name1 }} {{ technician._id?.employee?.last_name1 }}
+                  </ng-option>
+                </ng-select>
+                <div *ngIf="submittedoutmovement && f['recibe_de'].errors" class="invalid-feedback">
+                  <div *ngIf="f['recibe_de'].errors['required']">Emisor es requerido</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-group">
+                <label class="border-lable-flt">
+                  <textarea class="form-control" formControlName="observaciones" placeholder="Observaciones"></textarea>
+                  <span class="widget-title shop-sidebar">Observaciones</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label class="border-lable-flt">
+                  <input type="datetime-local" class="form-control" formControlName="fecha"
+                         [ngClass]="{ 'is-invalid': submittedoutmovement && f['fecha'].errors }" />
+                  <span class="widget-title shop-sidebar">Fecha</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label class="border-lable-flt">
+                  <input type="number" class="form-control" formControlName="cantidad"
+                         min="{{ minvalue }}" max="{{ maxvalue }}"
+                         [ngClass]="{ 'is-invalid': submittedoutmovement && f['cantidad'].errors }" />
+                  <span class="widget-title shop-sidebar">Cantidad</span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- TAB: Detalles -->
+        <div *ngIf="detalles" [ngClass]="datacolor(detailsdata.name_movement?.name_movement)">
+          <!-- ... (mantengo el contenido igual que tenías) ... -->
+          <div class="col-12">
+            <div class="d-flex justify-content-center">
+              <h3>{{ detailsdata.batch_info?.productName }}</h3>
+            </div>
+          </div>
+          <!-- Resto de detalles (sin cambios) -->
+          <ng-container *ngFor="let row of [
+            { label: 'Movimiento', value: detailsdata.name_movement?.movementtype?.name_movementtype },
+            { label: 'Motivo', value: detailsdata.name_movement?.name_movement },
+            { label: 'Fecha', value: detailsdata.date_movement },
+            { label: 'Cantidad', value: detailsdata.cant_movement },
+            { label: 'Numero de orden', value: detailsdata.numorder?.numorders },
+            { label: 'Cod. movimiento', value: detailsdata.uuid_movement?.uuid },
+            { label: 'Observaciones', value: detailsdata.observations_movement }
+          ]">
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-4"><div class="d-flex justify-content-start">{{ row.label }}:</div></div>
+                <div class="col-8"><label>{{ row.value }}</label></div>
+              </div>
+            </div>
+          </ng-container>
+          <!-- Emisor y Receptor -->
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-4"><div class="d-flex justify-content-start">Emisor:</div></div>
+              <div class="col-8"><label>{{ detailsdata.user_sender?.employee?.first_name1 }} {{ detailsdata.user_sender?.employee?.last_name1 }}</label></div>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-4"><div class="d-flex justify-content-start">Receptor:</div></div>
+              <div class="col-8"><label>{{ detailsdata.user_recipient?.employee?.first_name1 }} {{ detailsdata.user_recipient?.employee?.last_name1 }}</label></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Editar -->
+        <div *ngIf="editar">
+          <form [formGroup]="editmovementForm">
+            <!-- ... contenido igual ... -->
+            <div class="col-12">
+              <div class="form-group">
+                <label class="border-lable-flt">
+                  <textarea id="myInput" class="form-control"
+                            formControlName="observations" placeholder="Observaciones"></textarea>
+                  <span class="widget-title shop-sidebar">Observaciones</span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <ng-container *ngIf="salida">
+          <button type="button" (click)="saveReturn.emit()" class="btn btn-primary">Aceptar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        </ng-container>
+        <ng-container *ngIf="detalles">
+          <button type="button" data-bs-dismiss="modal" class="btn btn-primary">Aceptar</button>
+        </ng-container>
+        <ng-container *ngIf="editar">
+          <button type="button" (click)="saveEdit.emit()" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        </ng-container>
+      </div>
+
+    </div>
+  </div>
+</div>

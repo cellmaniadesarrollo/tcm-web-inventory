@@ -1,0 +1,41 @@
+<table *ngIf="loading; else dataLoaded">
+  <tr>
+    <td colspan="3">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<ng-template #dataLoaded>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover table-sm1">
+      <thead>
+        <tr>
+          <th>Nombre</th><th>Emisor</th><th>Receptor</th><th>Fecha</th>
+          <th>Movimiento</th><th>Cantidad</th><th>Nº Orden</th><th>Observaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let movement of movements | paginate: {
+              itemsPerPage: datapage.numperpage,
+              currentPage: datapage.pagination,
+              totalItems: totalItems }"
+          [ngClass]="datacolor(movement.name_movement?.name_movement)">
+          <td (click)="rowClick.emit(movement._id)"
+              data-bs-toggle="modal" data-bs-target="#exampleModal2">
+            {{ movement.batch_info?.productName }}
+          </td>
+          <td>{{ movement.user_sender?.employee?.first_name1 }} {{ movement.user_sender?.employee?.last_name1 }}</td>
+          <td>{{ movement.user_recipient?.employee?.first_name1 }} {{ movement.user_recipient?.employee?.last_name1 }}</td>
+          <td title="{{ movement.date_movement }}">{{ movement.date_movement.substring(0, 10) }}</td>
+          <td>{{ movement.name_movement?.name_movement }}</td>
+          <td>{{ movement.cant_movement }}</td>
+          <td>{{ movement.numorder?.numorders }}</td>
+          <td>{{ movement.observations_movement }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>

@@ -9,60 +9,74 @@
       <th>Proveedor</th>
       <th>Nº Doc.</th>
       <th>Fecha</th>
+      <th>P. Compra</th>
       <th>PvP</th>
+      <th>IVA %</th>
       <th>Observaciones</th>
       <th>Crea.</th>
       <th>Estado</th>
     </tr>
   </thead>
+
+  <!-- Loading -->
   <tbody *ngIf="loading; else dataLoaded">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
+    <tr>
+      <td colspan="14" class="text-center py-3">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </td>
+    </tr>
   </tbody>
+
+  <!-- Datos -->
   <ng-template #dataLoaded>
     <tbody [ngStyle]="{'font-size': fontSize}">
-      <tr *ngFor="let item of incomeslists" [ngClass]="datacolor(item.incomestype?.name_incomestypes)">
-        <td>{{ item.quantity }}</td>
-        <td>{{ item.inventoryflow?.nameitem }}</td>
-        <td>{{ item.inventoryflow?.modelitem }}</td>
-        <td>{{ item.inventoryflow?.quality }}</td>
-        <td>{{ item.inventoryflow?.colors1 }}</td>
-        <td>
-          {{ item.documentnumberincome?.supplier?.razon_social }}
-        </td>
-        <td>{{ item.documentnumberincome?.document_number }}</td>
-        <td title="{{ item.date_income }}">
-          {{ item.date_income.substring(0, 10) }}
-        </td>
-        <td>{{ item.inventoryflow?.price}}</td>
-        <td>{{ item.observations }}</td>
-        <td>
-          {{ item.firstStatus?.createduser }}
-        </td>
-        <td *ngIf="
-            item.incomestype?.name_incomestypes != 'PENDIENTE';
-            else templateElse
-          ">
-          {{ item.incomestype?.name_incomestypes }}
-        </td>
-        <ng-template #templateElse>
+      <ng-container *ngFor="let item of incomeslists">
+        <tr [ngClass]="datacolor(item.incomestype?.name_incomestypes)">
+
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.inventory_snapshot?.name_item }}</td>
+          <td>{{ item.inventory_snapshot?.name_model }}</td>
+          <td>{{ item.inventory_snapshot?.name_quality }}</td>
+          <td>{{ item.inventory_snapshot?.name_color }}</td>
+          <td>{{ item.documentnumberincome?.supplier?.razon_social }}</td>
+          <td>{{ item.documentnumberincome?.document_number }}</td>
+          <td [title]="item.date_income">
+            {{ item.date_income | date:'yyyy-MM-dd' }}
+          </td>
+          <td>{{ item.unit_price }}</td>
+          <td>{{ item.unit_sales_price }}</td>
+          <td>{{ item.documentnumberincome?.taxpercentaje?.percentaje }}%</td>
+          <td>{{ item.observations }}</td>
+          <td>{{ item.user_create }}</td>
+
+          <!-- Estado / Acciones -->
           <td class="text-center">
-      <tr class="p-1">
-        <td class="p-1">
-          <button type="button" class="btn btn-outline-success btn-sm p-1" (click)="aceptar(item)">
-            <i class="bi bi-check-circle p-0"></i>
-          </button>
-        </td>
-        <td class="p-1">
-          <button type="button" class="btn btn-outline-danger btn-sm p-1" (click)="NOaceptar(item)">
-            <i class="bi bi-x-circle p-0"></i>
-          </button>
-        </td>
+            <ng-container *ngIf="item.incomestype?.name_incomestypes !== 'PENDIENTE'; else acciones">
+              {{ item.incomestype?.name_incomestypes }}
+            </ng-container>
+            <ng-template #acciones>
+              <button type="button" class="btn btn-outline-success btn-sm p-1 me-1"
+                      (click)="aceptar(item)">
+                <i class="bi bi-check-circle"></i>
+              </button>
+              <button type="button" class="btn btn-outline-danger btn-sm p-1"
+                      (click)="NOaceptar(item)">
+                <i class="bi bi-x-circle"></i>
+              </button>
+            </ng-template>
+          </td>
+
+        </tr>
+      </ng-container>
+
+      <!-- Sin resultados -->
+      <tr *ngIf="incomeslists.length === 0">
+        <td colspan="14" class="text-center text-muted py-3">Sin ingresos registrados</td>
       </tr>
-      </td>
-  </ng-template>
-  </tr>
-  </tbody>
+    </tbody>
   </ng-template>
 </table>
+
+

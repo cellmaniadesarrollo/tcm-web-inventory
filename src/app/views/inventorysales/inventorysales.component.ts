@@ -27,7 +27,7 @@ import {
   ListsstateinventoryI,
   ListscomesfromI,
   Getoneitem,
-  
+
 } from 'src/app/models/item.inteface';
 
 import { SocketService } from 'src/app/service/socket/socket.service';
@@ -68,18 +68,18 @@ export class InventorysalesComponent {
     { tems: '50', value: '50' },
     { tems: '100', value: '100' },
   ];
- 
+
   submitted = false;
   constructor(
     private api: ApiService,
-    private apireprt:ApireportsService,
+    private apireprt: ApireportsService,
     private router: Router,
     private formBuilder: FormBuilder,
     private socketService: SocketService,
     private setdataService: SetdataService,
-        private tokenstate: TokencheckService,
-        private datePipe: DatePipe, 
-        private renderer: Renderer2,
+    private tokenstate: TokencheckService,
+    private datePipe: DatePipe,
+    private renderer: Renderer2,
   ) { }
 
   items: ListitemsI[] = [];
@@ -93,94 +93,94 @@ export class InventorysalesComponent {
     stateproduct_inventoryflow: new FormControl(''),
   });
   stateproducts: ListstateproductI[] = [];
- 
+
   nivel2 = false;
-  getdata:any; 
+  getdata: any;
   private subscribedChannel: string = 'invsal';
-  private messageSubscription: Subscription | null = null;  
-  myedit:boolean=true
+  private messageSubscription: Subscription | null = null;
+  myedit: boolean = true
   ubicacion: { latitud: number; longitud: number } | null = null;
   sucursal: any;
 
-ngOnInit(): void {
-   // Suscribirse al canal al iniciar el componente
-   this.socketService.subscribeToChannel(this.subscribedChannel);
+  ngOnInit(): void {
+    // Suscribirse al canal al iniciar el componente
+    this.socketService.subscribeToChannel(this.subscribedChannel);
 
-   // Suscribirse al observable de mensajes para recibir los mensajes del canal
-   this.messageSubscription = this.socketService.message$.subscribe((message) => {
-     if (message && message === 'RELOAD') {
-       console.log('Received message from channel:', message);
-       this.listItems(this.datapage);
-     }
-   });
-
-
-const group = localStorage.getItem('Groups') || '';
-this.nivel2 = group
- .split(',')
- .some((x: any) => x == 'IFE' || x == 'ADMINS');
-
-
-// window.addEventListener('keypress', (event: any) => {
-//   this.keycomp(event.key);
-// });
-
-
-
-
-let serverid =  this.setdataService.getData();
-if (serverid !== null &&serverid !==undefined&& serverid.length == 29) {
- this.datapage.findlike = serverid.toUpperCase();
- this.tokenstate.checkLocalStorage();
- this.listItems(this.datapage);
- this.numperpagesForm.setValue({
-   valueperpage: this.numperpagess[1].tems,
- });
-} else {
- this.tokenstate.checkLocalStorage();
- this.listItems(this.datapage);
- this.numperpagesForm.setValue({
-   valueperpage: this.numperpagess[1].tems,
- });
-}
-  this.obtenerUbicacion();
-}
-
-async obtenerUbicacion(): Promise<void> {
-  try {
-    // Obtener ubicación
-    const ubicacion = await new Promise<{ latitud: number; longitud: number }>(
-      (resolve, reject) => {
-        if ('geolocation' in navigator) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              resolve({
-                latitud: position.coords.latitude,
-                longitud: position.coords.longitude
-              });
-            },
-            (error) => {
-              reject('No se pudo obtener la ubicación: ' + error.message);
-            }
-          );
-        } else {
-          reject('La geolocalización no está soportada en este navegador.');
-        }
+    // Suscribirse al observable de mensajes para recibir los mensajes del canal
+    this.messageSubscription = this.socketService.message$.subscribe((message) => {
+      if (message && message === 'RELOAD') {
+        console.log('Received message from channel:', message);
+        this.listItems(this.datapage);
       }
-    );
+    });
 
-    // Guardar ubicación en la variable
-    this.ubicacion = ubicacion;
 
-    // Llamar al API con la ubicación
-    this.sucursal = await this.api.ubicacionessucursales(this.ubicacion);
-    console.log(this.sucursal)
-  } catch (error) {
-    console.error('Error:', error);
+    const group = localStorage.getItem('Groups') || '';
+    this.nivel2 = group
+      .split(',')
+      .some((x: any) => x == 'IFE' || x == 'ADMINS');
+
+
+    // window.addEventListener('keypress', (event: any) => {
+    //   this.keycomp(event.key);
+    // });
+
+
+
+
+    let serverid = this.setdataService.getData();
+    if (serverid !== null && serverid !== undefined && serverid.length == 29) {
+      this.datapage.findlike = serverid.toUpperCase();
+      this.tokenstate.checkLocalStorage();
+      this.listItems(this.datapage);
+      this.numperpagesForm.setValue({
+        valueperpage: this.numperpagess[1].tems,
+      });
+    } else {
+      this.tokenstate.checkLocalStorage();
+      this.listItems(this.datapage);
+      this.numperpagesForm.setValue({
+        valueperpage: this.numperpagess[1].tems,
+      });
+    }
+    this.obtenerUbicacion();
   }
 
-}
- ngOnDestroy() {
+  async obtenerUbicacion(): Promise<void> {
+    try {
+      // Obtener ubicación
+      const ubicacion = await new Promise<{ latitud: number; longitud: number }>(
+        (resolve, reject) => {
+          if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                resolve({
+                  latitud: position.coords.latitude,
+                  longitud: position.coords.longitude
+                });
+              },
+              (error) => {
+                reject('No se pudo obtener la ubicación: ' + error.message);
+              }
+            );
+          } else {
+            reject('La geolocalización no está soportada en este navegador.');
+          }
+        }
+      );
+
+      // Guardar ubicación en la variable
+      this.ubicacion = ubicacion;
+
+      // Llamar al API con la ubicación
+      this.sucursal = await this.api.ubicacionessucursales(this.ubicacion);
+      console.log(this.sucursal)
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+  }
+  ngOnDestroy() {
     // Desuscribirse del canal cuando el componente sea destruido
     this.socketService.unsubscribeFromChannel(this.subscribedChannel);
 
@@ -189,7 +189,7 @@ async obtenerUbicacion(): Promise<void> {
       this.messageSubscription.unsubscribe();
     }
   }
- 
+
 
   async simpleAlert() {
     Swal.fire({
@@ -201,26 +201,26 @@ async obtenerUbicacion(): Promise<void> {
       },
     });
   }
-findbutton(){
-  this.datapage.findlike = this.searchForm.value.valuesearch || '';
-  this.datapage.pagination = 1;
-  this.listItems(this.datapage);
-}
-loading: boolean = true;
+  findbutton() {
+    this.datapage.findlike = this.searchForm.value.valuesearch || '';
+    this.datapage.pagination = 1;
+    this.listItems(this.datapage);
+  }
+  loading: boolean = true;
   async listItems(form: any) {
     //this.loading = true;
     const data = await this.api.listitemssales(form);
     this.loading = false;
     this.stateproducts = data.stateproduct;
-    this.items=data.intake 
+    this.items = data.intake
     this.numperpages = data.number_of_records_per_page;
     this.totalentries = data.number_of_records;
     this.datapage.allclients = data.allclients;
-    this.datapage.pagination = data.actual_page; 
+    this.datapage.pagination = data.actual_page;
     this.stateproductform.controls['stateproduct_inventoryflow'].setValue(
       this.datapage.allclients
     );
-   // console.log(data)
+    // console.log(data)
   }
 
   async print(data: any) {
@@ -282,27 +282,27 @@ loading: boolean = true;
   inicio() {
     this.router.navigate(['dashboard']);
   }
-  blockbusqueda=false
+  blockbusqueda = false
   onKeyDownEvent(event: any) {
     this.datapage.findlike = this.searchForm.value.valuesearch || '';
-    
+
     if (event.key === 'Enter') {
-    if (event.target.value.length > 2) {
-      this.blockbusqueda =true
-       
-      setTimeout(() => {
-        this.blockbusqueda=false
-      }, 1000);
-      this.datapage.pagination = 1;
-      this.loading = true
-      this.listItems(this.datapage);
-    }
+      if (event.target.value.length > 2) {
+        this.blockbusqueda = true
+
+        setTimeout(() => {
+          this.blockbusqueda = false
+        }, 1000);
+        this.datapage.pagination = 1;
+        this.loading = true
+        this.listItems(this.datapage);
+      }
     }
     if (event.target.value.length == 0) {
       this.datapage.pagination = 1;
       this.loading = true
       this.listItems(this.datapage);
-    } 
+    }
   }
 
   async changeLeagueOwner() {
@@ -313,7 +313,7 @@ loading: boolean = true;
     await this.listItems(this.datapage);
   }
 
-  renderPage(event: number) { 
+  renderPage(event: number) {
     this.datapage.pagination = event;
     this.loading = true
     this.listItems(this.datapage);
@@ -340,7 +340,7 @@ loading: boolean = true;
     id_stateproduct_inventoryflow: new FormControl(''),
     observations: new FormControl(''),
     id_stateinventoryflow: new FormControl(''),
-    price: new FormControl(''),  
+    price: new FormControl(''),
   });
 
   salidaForm: FormGroup = new FormGroup({
@@ -356,16 +356,16 @@ loading: boolean = true;
 
   async onSubmitclose() {
     this.submitted = true;
-    this.myedit=false
+    this.myedit = false
     if (this.nuevoForm.invalid) {
       //  console.log(JSON.stringify(this.nuevoForm.value, null, 2));
       return;
     } else {
       const data = await this.api.dataedititem(this.nuevoForm.value);
-      
-      if (data == 'OK') { 
+
+      if (data == 'OK') {
         this.listItems(this.datapage);
-        this.myedit=true
+        this.myedit = true
         //  this.router.navigate(['inventory']);
       } else if (data.id) {
         const dataget = await this.api.getpdfbase64(data.id);
@@ -380,12 +380,12 @@ loading: boolean = true;
     }
   }
 
- 
+
   brands: ListbrandI[] = [];
   models: ListmodelI[] = [];
   colors: ListcolorI[] = [];
   types: ListtypeI[] = [];
-  qualitys: ListqualityI[] = []; 
+  qualitys: ListqualityI[] = [];
   //comesfroms: ListscomesfromI[] = [];
   stateinventoryflows: ListsstateinventoryI[] = [];
   tipo: any;
@@ -396,8 +396,8 @@ loading: boolean = true;
   async datainit() {
     //  this.validationssalidaform()
     const data: any = await this.api.findoneitem(this.find);
-     
- 
+
+
     this.nuevoForm.setValue({
       _id: data._id,
       cod_upc: data.upc,
@@ -407,12 +407,12 @@ loading: boolean = true;
       id_model: data.items.model.business_model,
       id_type: data.typeinventoryflow._id,
       id_color: data.items.colors.color_name,
-     // id_quality: data.items.quality.quality_inventoryflow,
+      // id_quality: data.items.quality.quality_inventoryflow,
       id_quality: data.items.quality._id,
       id_stateproduct_inventoryflow: data.items.stateproductinventoryflow.stateproduct_inventoryflow,
       observations: data.observations,
-      id_stateinventoryflow: data.id_state,  
-      price:data.items.item_price
+      id_stateinventoryflow: data.id_state,
+      price: data.items.item_price
     });
   }
 
@@ -430,7 +430,7 @@ loading: boolean = true;
       id_stateproduct_inventoryflow: null,
       observations: null,
       id_stateinventoryflow: null,
-    //  id_comesfrom: null, 
+      //  id_comesfrom: null, 
     });
   }
   get f(): { [key: string]: AbstractControl } {
@@ -446,16 +446,16 @@ loading: boolean = true;
 
   salida = true;
   editar = false;
-  history=false;
-  incomeH=false;
-  incomeRH=false;
+  history = false;
+  incomeH = false;
+  incomeRH = false;
   async salidas() {
     this.submittedoutmovement = false;
     this.editar = false;
     this.salida = true;
-    this.history=false;
-    this.incomeH=false;
-    this.incomeRH=false;
+    this.history = false;
+    this.incomeH = false;
+    this.incomeRH = false;
     this.validationssalidaform();
     await this.listdataout();
     if (this.focus) {
@@ -486,63 +486,63 @@ loading: boolean = true;
   editars() {
     this.salida = false;
     this.editar = true;
-    this.history=false;
-    this.incomeH=false;
-    this.incomeRH=false;
+    this.history = false;
+    this.incomeH = false;
+    this.incomeRH = false;
     this.listdata();
   }
- movementshisto: Listmovementsitem[]=[]
- incomeshistory:Listincomeshistory[]=[]
- async histori() {
-    this.history=true;
+  movementshisto: Listmovementsitem[] = []
+  incomeshistory: Listincomeshistory[] = []
+  async histori() {
+    this.history = true;
     this.salida = false;
     this.editar = false;
-    this.incomeH=false;
-    this.incomeRH=false;
-    const data= await this.api.listhistoryitems(this.find)
-    this.movementshisto=data
-   // console.log(data)
-  //  this.listdata();
+    this.incomeH = false;
+    this.incomeRH = false;
+    const data = await this.api.listhistoryitems(this.find)
+    this.movementshisto = data
+    // console.log(data)
+    //  this.listdata();
   }
 
 
   async incomeh() {
-    this.incomeH=true;
-    this.incomeRH=false;
-    this.history=false;
+    this.incomeH = true;
+    this.incomeRH = false;
+    this.history = false;
     this.salida = false;
     this.editar = false;
-    const data= await this.api.listincomeshistory(this.find)
-    this.incomeshistory=data
-  //console.log(data)
-  //this.listdata();
+    const data = await this.api.listincomeshistory(this.find)
+    this.incomeshistory = data
+    //console.log(data)
+    //this.listdata();
   }
   async incomehr() {
-    this.incomeH=false;
-    this.incomeRH=true;
-    this.history=false;
+    this.incomeH = false;
+    this.incomeRH = true;
+    this.history = false;
     this.salida = false;
     this.editar = false;
-    const data= await this.api.listincomeshistory(this.find)
-    this.incomeshistory=data
-  //console.log(data)
-  //this.listdata();
+    // const data = await this.api.listincomeshistory(this.find)
+    //this.incomeshistory = data
+    // console.log(data)
+    //this.listdata();
   }
-pvimpuesto(punit:any,ptax:any){
- return (((parseFloat(ptax)/100)+1) *parseFloat(punit))
-}
-pvitotal(punit:any,ptax:any,cant:any){
-  return ((((parseFloat(ptax)/100)+1) *parseFloat(punit))*parseFloat(cant))
- }
+  pvimpuesto(punit: any, ptax: any) {
+    return (((parseFloat(ptax) / 100) + 1) * parseFloat(punit))
+  }
+  pvitotal(punit: any, ptax: any, cant: any) {
+    return ((((parseFloat(ptax) / 100) + 1) * parseFloat(punit)) * parseFloat(cant))
+  }
 
   async listdata() {
     const data = await this.api.datanewitem('invsal');
-    
+
     this.brands = data.brand;
     this.colors = data.color;
     this.types = data.type;
     this.qualitys = data.quality;
-    this.stateproducts = data.stateproduct; 
+    this.stateproducts = data.stateproduct;
     this.stateinventoryflows = data.stateinventoryflow;
     //this.comesfroms = data.comesfrom;
     await this.datainit();
@@ -555,9 +555,9 @@ pvitotal(punit:any,ptax:any,cant:any){
       return;
     } else {
       const data = await this.api.savenewitem(this.nuevoForm.value);
-      if (data == 'OK') { 
+      if (data == 'OK') {
         this.router.navigate(['inventory']);
-      } else if (data.id) { 
+      } else if (data.id) {
         const dataget = await this.api.getpdfbase64(data.id);
         this.openPDFInNewTab(dataget.pdfbase64)
         // printJS({
@@ -591,19 +591,19 @@ pvitotal(punit:any,ptax:any,cant:any){
       this.save = '';
     }
   }
-  technician:TechnicianeMoveI []=[]// TechnicianeMoveI[] = [];
+  technician: TechnicianeMoveI[] = []// TechnicianeMoveI[] = [];
   outs: MovementnameI[] = [];
   codeauto = false;
   async changeLeagueOwnertype(e: any) {
-    
-   const as= await this.api.liststaffmovementtype(e)
-   //console.log(as)
-   this.technician=as
-    const found = this.outs.find((element:any) => element._id==e);
-    if(found?.name_movement=='REPARACION DAÑO'||found?.name_movement=='REPARACION' ){
+
+    const as = await this.api.liststaffmovementtype(e)
+    //console.log(as)
+    this.technician = as
+    const found = this.outs.find((element: any) => element._id == e);
+    if (found?.name_movement == 'REPARACION DAÑO' || found?.name_movement == 'REPARACION') {
       this.codeauto = false
 
-    }else{
+    } else {
       this.salidaForm.controls['numero_orden'].setValue('');
       this.codeauto = true
     }
@@ -660,23 +660,23 @@ pvitotal(punit:any,ptax:any,cant:any){
   }
 
   submittedoutmovement = false;
- 
-  async saveoutmovement() {
-   // console.log(this.salidaForm.value.numero_orden)
 
-     //   ;
+  async saveoutmovement() {
+    // console.log(this.salidaForm.value.numero_orden)
+
+    //   ;
     this.submittedoutmovement = true;
     if (this.salidaForm.invalid) {
       // console.log(JSON.stringify(this.salidaForm.value, null, 2));
       return;
-    } else { 
+    } else {
       const data = await this.api.movementoutsave(this.salidaForm.value);
-      if (data == 'OK') { 
+      if (data == 'OK') {
         this.listItems(this.datapage);
         this.closebutton.nativeElement.click();
         this.find = '';
         this.submittedoutmovement = false;
-      } 
+      }
     }
   }
   datacolor1(data: any) {
@@ -710,14 +710,14 @@ pvitotal(punit:any,ptax:any,cant:any){
     }
     return '';
   }
-    
+
   currentDate = new Date();
   validationssalidaform() {
 
     this.salidaForm = this.formBuilder.group({
       id_item: ['', Validators.required],
       codigo_movimiento: [
-         '' ,
+        '',
         [
           Validators.required,
           Validators.minLength(36),
@@ -762,8 +762,8 @@ pvitotal(punit:any,ptax:any,cant:any){
   delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-  openPDFInNewTab(pdfBase64:any) {
-    const binaryData = atob( pdfBase64);
+  openPDFInNewTab(pdfBase64: any) {
+    const binaryData = atob(pdfBase64);
     const arrayBuffer = new ArrayBuffer(binaryData.length);
     const byteArray = new Uint8Array(arrayBuffer);
 
@@ -783,25 +783,25 @@ pvitotal(punit:any,ptax:any,cant:any){
     // Agrega más datos según sea necesario
   ];
 
-  modalVisible4:boolean=false
-  name1:string=''
-  name2:string=''
-  name3:string=''
-  cantid:string=''
-  price:any=null
-  async printlocal(n1: any,n2:any,n3:any, can: any,pri:any) {
-    this.name1=n1
-    this.name2=n2
-    this.name3=n3
-    this.cantid=can
-    this.price=pri
+  modalVisible4: boolean = false
+  name1: string = ''
+  name2: string = ''
+  name3: string = ''
+  cantid: string = ''
+  price: any = null
+  async printlocal(n1: any, n2: any, n3: any, can: any, pri: any) {
+    this.name1 = n1
+    this.name2 = n2
+    this.name3 = n3
+    this.cantid = can
+    this.price = pri
     this.modalVisible4 = true;
   }
-  async closeprintlocal( ) {
+  async closeprintlocal() {
     this.modalVisible4 = false;
   }
-  async getreportsalesitems(){
-    const data=await this.apireprt.getreportsaleslistitems(this.datapage)
+  async getreportsalesitems() {
+    const data = await this.apireprt.getreportsaleslistitems(this.datapage)
     if (data) {
       this.openPDFInNewTab(data)
       // printJS({
@@ -818,18 +818,18 @@ pvitotal(punit:any,ptax:any,cant:any){
 
 
   getBranchSummary(branchbatchstock: any[]): string {
-  if (!branchbatchstock || branchbatchstock.length === 0) return '';
+    if (!branchbatchstock || branchbatchstock.length === 0) return '';
 
-  const map = new Map<string, number>();
+    const map = new Map<string, number>();
 
-  for (const b of branchbatchstock) {
-    const key = b.branchName || 'SIN NOMBRE';
-    const qty = b.quantity || 0;
-    map.set(key, (map.get(key) || 0) + qty);
+    for (const b of branchbatchstock) {
+      const key = b.branchName || 'SIN NOMBRE';
+      const qty = b.quantity || 0;
+      map.set(key, (map.get(key) || 0) + qty);
+    }
+
+    return Array.from(map.entries())
+      .map(([name, qty]) => `${name} (${qty})`)
+      .join(', ');
   }
-
-  return Array.from(map.entries())
-    .map(([name, qty]) => `${name} (${qty})`)
-    .join(', ');
-}
 }

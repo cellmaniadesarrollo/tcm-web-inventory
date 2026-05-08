@@ -1,0 +1,20 @@
+<div class="row p-3">
+  <div class="col-sm-6 my-auto">
+    <p class="text-black-50">
+      Página {{ datapage.pagination }} mostrando {{ currentCount }} resultados de {{ totalentries }}
+    </p>
+  </div>
+  <div class="col-sm-6 my-auto">
+    <div class="d-flex justify-content-end">
+      <div class="col-sm-2">
+        <form [formGroup]="numperpagesForm">
+          <select class="form-control select2" style="width: 100%"
+            formControlName="valueperpage" (change)="perPageChange.emit()">
+            <option *ngFor="let p of numperpagess" [ngValue]="p.tems">{{ p.value }}</option>
+          </select>
+        </form>
+      </div>
+      <pagination-controls (pageChange)="pageChange.emit($event)"></pagination-controls>
+    </div>
+  </div>
+</div>

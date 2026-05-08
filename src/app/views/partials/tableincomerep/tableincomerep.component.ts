@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { ListincomesI } from 'src/app/models/income.inteface';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { ApiService } from 'src/app/service/api/api.service';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+
 @Component({
   selector: 'app-tableincomerep',
   templateUrl: './tableincomerep.component.html',
@@ -10,41 +10,32 @@ import { ApiService } from 'src/app/service/api/api.service';
 export class TableincomerepComponent {
   @Input() fontSize: string = '16px';
   @Input() id: string = '';
-  constructor(
-    private api: ApiService,
-  ) { }
-  datapage = {
-    allclients: '0',
-    pagination: 1,
-    numperpage: '30',
-    findlike: '',
-  };
-  incomeslists: ListincomesI[] = [];
+  @Input() inventory: string = 'INVENTORYFLOW';
 
-  loading: boolean = true;
-  ngOnInit(): void { 
-      this.datapage.findlike = this.id
-      this.listItems(this.datapage); 
+  incomeslists: any[] = [];
+  loading = true;
+
+  constructor(private api: ApiService) { }
+
+  ngOnInit(): void {
+    this.listItems();
   }
 
-  async listItems(form: any) {
-
-    const data = await this.api.listincomesCSRS(form);
-   // console.log(data)
+  async listItems() {
+    this.loading = true;
+    const data = await this.api.listincomesCSRS({
+      allclients: '0',
+      findlike: this.id,
+      inventory: this.inventory,
+    });
     this.incomeslists = data.intake;
-    this.loading=false
+    this.loading = false;
   }
 
-
-  async aceptar(data: any) {
+  async aceptar(item: any) {
     Swal.fire({
       title: '¿Cambiar estado a aprobado?',
-      text:
-        data.quantity +
-        ' ' +
-        data.inventoryflow.modelitem +
-        ' ' +
-        data.inventoryflow.nameitem,
+      text: `${item.quantity} ${item.inventory_snapshot?.name_model} ${item.inventory_snapshot?.name_item}`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -53,22 +44,16 @@ export class TableincomerepComponent {
       allowOutsideClick: false,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const asa = await this.api.incomeapproved(data._id);
-        if (asa == 'OK') {
-          this.listItems(this.datapage);
-        }
+        const res = await this.api.incomeapproved(item._id);
+        if (res === 'OK') this.listItems();
       }
     });
   }
-  async NOaceptar(data: any) {
+
+  async NOaceptar(item: any) {
     Swal.fire({
       title: '¿Cambiar estado a rechazado?',
-      text:
-        data.quantity +
-        ' ' +
-        data.inventoryflow.modelitem +
-        ' ' +
-        data.inventoryflow.nameitem,
+      text: `${item.quantity} ${item.inventory_snapshot?.name_model} ${item.inventory_snapshot?.name_item}`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -77,20 +62,17 @@ export class TableincomerepComponent {
       allowOutsideClick: false,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const asa = await this.api.incomedesapproved(data._id);
-        if (asa == 'OK') {
-          this.listItems(this.datapage);
-        }
+        const res = await this.api.incomedesapproved(item._id);
+        if (res === 'OK') this.listItems();
       }
     });
   }
-  datacolor(data: any) {
-    switch (data) {
-      case 'RECHAZADO':
-        return 'table-danger';
-      case 'APROBADO':
-        return 'table-success';
+
+  datacolor(estado: string): string {
+    switch (estado) {
+      case 'RECHAZADO': return 'table-danger';
+      case 'APROBADO': return 'table-success';
+      default: return '';
     }
-    return '';
   }
 }
