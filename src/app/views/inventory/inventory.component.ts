@@ -75,8 +75,12 @@ export class InventoryComponent {
     { tems: '50', value: '50' },
     { tems: '100', value: '100' },
   ];
-
+  ordersFound: any[] = [];
+  selectedOrder: any = null;
+  searchingOrders: boolean = false;
+  orderSearchValue: string = '';
   submitted = false;
+  private orderSearchTimeout: any = null;
   constructor(
     private setdataService: SetdataService,
     private datePipe: DatePipe,
@@ -299,9 +303,10 @@ export class InventoryComponent {
 
   salidaForm: FormGroup = new FormGroup({
     id_item: new FormControl(''),
-    codigo_movimiento: new FormControl(''),
     tipo_salida: new FormControl(null),
     numero_orden: new FormControl(''),
+    findingId: new FormControl(''),
+    orderId: new FormControl(''),
     cantidad: new FormControl(''),
     entrega_a: new FormControl(null),
     observaciones: new FormControl(''),
@@ -413,6 +418,9 @@ export class InventoryComponent {
     this.history = false;
     this.incomeH = false;
     this.incomeRH = false;
+    this.selectedOrder = null;
+    this.orderSearchValue = '';
+    this.ordersFound = [];
     this.validationssalidaform();
     await this.listdataout();
     if (this.focus) {
@@ -583,7 +591,6 @@ export class InventoryComponent {
     // console.log(currentDateAndTime)
     this.salidaForm.setValue({
       id_item: null,
-      codigo_movimiento: uuid,
       tipo_salida: data.outs[3]._id,
       numero_orden: '',
       cantidad: this.functionvalue(this.maxvalue),
@@ -675,16 +682,10 @@ export class InventoryComponent {
 
     this.salidaForm = this.formBuilder.group({
       id_item: ['', Validators.required],
-      codigo_movimiento: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(36),
-          Validators.maxLength(36),
-        ],
-      ],
       tipo_salida: ['', Validators.required],
       numero_orden: [''],
+      orderId: [''],
+      findingId: [''],
       cantidad: [1, Validators.required],
       entrega_a: ['', Validators.required],
       observaciones: [''],
@@ -758,5 +759,52 @@ export class InventoryComponent {
   }
   async closeprintlocal() {
     this.modalVisible4 = false;
+  }
+
+  async onSearchOrder(value: string) {
+    this.orderSearchValue = value;
+
+    // Si hay orden seleccionada y el usuario borró/cambió el texto, limpia la selección
+    if (this.selectedOrder && value.trim() !== `#${this.selectedOrder.order_number} - ${this.selectedOrder.customer.firstName} ${this.selectedOrder.customer.lastName}`) {
+      this.selectedOrder = null;
+      this.salidaForm.controls['numero_orden'].setValue('');
+      this.salidaForm.controls['findingId'].setValue(null);
+    }
+
+    this.ordersFound = [];
+    if (!value || value.trim().length < 2) return;
+
+    // Si ya hay orden seleccionada y el texto no cambió, no busca
+    if (this.selectedOrder) return;
+
+    clearTimeout(this.orderSearchTimeout);
+    this.orderSearchTimeout = setTimeout(async () => {
+      this.searchingOrders = true;
+      try {
+        const result = await this.api.searchOrdersForMovement(value.trim());
+        this.ordersFound = result;
+      } catch (e) {
+        this.ordersFound = [];
+      } finally {
+        this.searchingOrders = false;
+      }
+    }, 350);
+  }
+
+  selectOrder(order: any) {
+    this.selectedOrder = order;
+    this.ordersFound = [];
+    this.orderSearchValue = `#${order.order_number} - ${order.customer.firstName} ${order.customer.lastName}`;
+    this.salidaForm.controls['numero_orden'].setValue(order.order_number);
+    this.salidaForm.controls['findingId'].setValue(null);
+    this.salidaForm.controls['orderId'].setValue(order.id);
+  }
+
+  clearOrderSelection() {
+    this.selectedOrder = null;
+    this.orderSearchValue = '';
+    this.salidaForm.controls['numero_orden'].setValue('');
+    this.salidaForm.controls['findingId'].setValue(null);
+    this.salidaForm.controls['orderId'].setValue(null);
   }
 }

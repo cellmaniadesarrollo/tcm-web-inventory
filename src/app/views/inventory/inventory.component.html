@@ -393,33 +393,74 @@
             </div>
           </div>
 
-          <form [formGroup]="salidaForm">
-            <div class="form-group">
-              <label class="border-lable-flt">
-                <input id="myInput" type="text" class="form-control" placeholder="Procedencia" autocomplete="off"
-                  formControlName="codigo_movimiento" (input)="imputremplace($event)" [ngClass]="{
-                    'is-invalid':
-                      submittedoutmovement && f1['codigo_movimiento'].errors
-                  }" />
-
-                <span lass="widget-title  shop-sidebar">codigo de movimiento</span>
-              </label>
-            </div>
+          <form [formGroup]="salidaForm"> 
             <div class="form-group">
               <div class="row">
                 <div class="col-sm-12">
                   <label *ngIf="codeauto; else templateElse">
                     Sin numero de orden</label>
-                  <ng-template #templateElse>
-                    <label class="border-lable-flt">
-                      <input type="text" class="form-control" placeholder="Numero de orden"
-                        formControlName="numero_orden" id="myInput2" [ngClass]="{
-                          'is-invalid':
-                            submittedoutmovement && f1['numero_orden'].errors
-                        }" />
-                      <span lass="widget-title  shop-sidebar">Numero de orden</span>
-                    </label>
-                  </ng-template>
+<ng-template #templateElse>
+  <div class="form-group position-relative">
+    <label class="border-lable-flt w-100">
+<input
+  type="text"
+  class="form-control"
+  placeholder="Buscar orden: #número, IMEI, cliente, modelo..."
+  [(ngModel)]="orderSearchValue"
+  [ngModelOptions]="{standalone: true}"
+  (input)="onSearchOrder(orderInput.value)"
+  #orderInput
+  id="myInput2"
+  autocomplete="off"
+/>
+      <span class="widget-title shop-sidebar">Orden de reparación</span>
+    </label>
+
+    <!-- Spinner -->
+    <div *ngIf="searchingOrders" class="text-center py-1">
+      <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+    </div>
+
+    <!-- Lista de resultados -->
+    <div
+      *ngIf="ordersFound.length > 0"
+      class="list-group position-absolute w-100 shadow-sm"
+      style="z-index: 1050; max-height: 220px; overflow-y: auto; top: 100%;"
+    >
+      <button
+        *ngFor="let order of ordersFound"
+        type="button"
+        class="list-group-item list-group-item-action py-2 px-3"
+        (click)="selectOrder(order)"
+      >
+        <div class="d-flex justify-content-between">
+          <strong>#{{ order.order_number }}</strong>
+          <small class="text-muted">{{ order.branch?.name }}</small>
+        </div>
+        <small>
+          {{ order.customer?.firstName }} {{ order.customer?.lastName }} —
+          {{ order.device?.model?.models_name }} {{ order.device?.model?.brand_name }}
+        </small>
+      </button>
+    </div>
+
+    <!-- Orden seleccionada: selector de hallazgo -->
+    <div *ngIf="selectedOrder">
+      <ng-select
+        placeholder="Seleccionar hallazgo *"
+        formControlName="findingId"
+        class="mt-2"
+      >
+        <ng-option
+          *ngFor="let finding of selectedOrder.findings"
+          [value]="finding.id"
+        >
+          {{ finding.description }}
+        </ng-option>
+      </ng-select>
+    </div>
+  </div>
+</ng-template>
                 </div>
               </div>
             </div>

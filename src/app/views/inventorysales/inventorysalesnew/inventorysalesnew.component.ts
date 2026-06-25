@@ -30,19 +30,20 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./inventorysalesnew.component.css']
 })
 export class InventorysalesnewComponent {
- @ViewChild('ngselects') ngselect: any;
- private subscriptions: Subscription = new Subscription();
+  @ViewChild('ngselects') ngselect: any;
+  private subscriptions: Subscription = new Subscription();
   constructor(
     private api: ApiService,
     private activerouter: ActivatedRoute,
     private router: Router,
     private config: NgSelectConfig,
     private formBuilder: FormBuilder,
-    private ubicacionService:UbicacionCompartidaService
-  ) {}
+    private ubicacionService: UbicacionCompartidaService
+  ) { }
+  private isSubmitting = false;
   nuevoForm: FormGroup = new FormGroup({
     cod_upc: new FormControl(''),
-    name_items: new FormControl(null), 
+    name_items: new FormControl(null),
     id_brand: new FormControl(''),
     id_model: new FormControl(''),
     id_type: new FormControl(''),
@@ -61,7 +62,7 @@ export class InventorysalesnewComponent {
       latitud: new FormControl(null), // Inicializa como null
       longitud: new FormControl(null) // Inicializa como null
     })
-  }); 
+  });
 
   brands: ListbrandI[] = [];
   nameite: ListnameI[] = [];
@@ -73,39 +74,39 @@ export class InventorysalesnewComponent {
   weights: ListsweightI[] = [];
   volumes: ListsvolumeI[] = [];
   // comesfroms: ListscomesfromI[] = [];
-  stateinventoryflows: ListsstateinventoryI[] = []; 
-  sucursal: any;user: any;
-  sucursal_name:string='DESCONOCIDA'
+  stateinventoryflows: ListsstateinventoryI[] = [];
+  sucursal: any; user: any;
+  sucursal_name: string = 'DESCONOCIDA'
   ngOnInit(): void {
-    this.validations(); 
-    this.listdata(); 
-this.subscriptions.add(
-  this.ubicacionService.coordenadas$.subscribe(coords => {
-    const { latitud, longitud } = coords;
+    this.validations();
+    this.listdata();
+    this.subscriptions.add(
+      this.ubicacionService.coordenadas$.subscribe(coords => {
+        const { latitud, longitud } = coords;
 
-    // Verificar si las coordenadas recibidas son válidas
-    const esUbicacionInvalida = latitud === 0 && longitud === 0;
+        // Verificar si las coordenadas recibidas son válidas
+        const esUbicacionInvalida = latitud === 0 && longitud === 0;
 
-    // Obtener el valor actual del formulario
-    const ubicacionActual = this.nuevoForm.get('ubicacion')?.value;
+        // Obtener el valor actual del formulario
+        const ubicacionActual = this.nuevoForm.get('ubicacion')?.value;
 
-    // Verificar si ya hay una ubicación válida establecida
-    const yaTieneUbicacion = ubicacionActual?.latitud !== null && ubicacionActual?.longitud !== null;
+        // Verificar si ya hay una ubicación válida establecida
+        const yaTieneUbicacion = ubicacionActual?.latitud !== null && ubicacionActual?.longitud !== null;
 
-    if (!esUbicacionInvalida && !yaTieneUbicacion) { 
-      this.nuevoForm.patchValue({
-        ubicacion: coords
-      });
-    }
-  })
-);
+        if (!esUbicacionInvalida && !yaTieneUbicacion) {
+          this.nuevoForm.patchValue({
+            ubicacion: coords
+          });
+        }
+      })
+    );
     this.subscriptions.add(
       this.ubicacionService.nombreSucursal$.subscribe(nombre => {
         this.sucursal_name = nombre;
       })
     );
   }
-  
+
   modalVisible: boolean = false;
   modalVisible1: boolean = false;
   modalVisible2: boolean = false;
@@ -113,7 +114,7 @@ this.subscriptions.add(
   modalVisible4: boolean = false;
   modalVisible5: boolean = false;
   modalVisible6: boolean = false;
-  nameinventory:string='invsal'
+  nameinventory: string = 'invsal'
   openModalname() {
     this.modalVisible = true;
   }
@@ -226,7 +227,7 @@ this.subscriptions.add(
 
   async changeLeagueOwner(event: any) {
     this.nuevoForm.controls['id_model'].setValue(null);
-    this.models = await this.api.listmodels(event);   
+    this.models = await this.api.listmodels(event);
   }
 
   async guardaritem() {
@@ -234,7 +235,7 @@ this.subscriptions.add(
   }
 
   async listdata() {
-    const data = await this.api.datanewitem('invsal'); 
+    const data = await this.api.datanewitem('invsal');
     this.brands = data.brand;
     this.colors = data.color;
     this.types = data.type;
@@ -246,15 +247,15 @@ this.subscriptions.add(
     this.datainit();
   }
   datainit() {
-      // Obtener coordenadas actuales del observable o del form
-  const ubicacionActual = this.nuevoForm.get('ubicacion')?.value;
+    // Obtener coordenadas actuales del observable o del form
+    const ubicacionActual = this.nuevoForm.get('ubicacion')?.value;
 
-  const coordenadasValidas = (ubicacionActual?.latitud !== null && ubicacionActual?.longitud !== null)
-    ? ubicacionActual
-    : { latitud: null, longitud: null };
+    const coordenadasValidas = (ubicacionActual?.latitud !== null && ubicacionActual?.longitud !== null)
+      ? ubicacionActual
+      : { latitud: null, longitud: null };
     this.nuevoForm.setValue({
       cod_upc: false,
-      name_items: null, 
+      name_items: null,
       id_brand: null,
       id_model: null,
       id_type: null,
@@ -265,7 +266,7 @@ this.subscriptions.add(
       id_stateinventoryflow: this.stateinventoryflows[0]._id,
       //id_comesfrom: null,
       get_print: false,
-ubicacion: coordenadasValidas
+      ubicacion: coordenadasValidas
     });
   }
 
@@ -276,7 +277,7 @@ ubicacion: coordenadasValidas
   validations() {
     this.nuevoForm = this.formBuilder.group({
       cod_upc: ['', Validators.required],
-      name_items: [null, Validators.required], 
+      name_items: [null, Validators.required],
       id_brand: [''],
       id_model: ['', Validators.required],
       id_type: ['', Validators.required],
@@ -294,10 +295,10 @@ ubicacion: coordenadasValidas
     });
   }
 
- 
- 
- 
- 
+
+
+
+
 
   codeauto = true;
   submitted = false;
@@ -311,25 +312,23 @@ ubicacion: coordenadasValidas
   isButtonDisabled = false;
   //submittedcomesfrom = false;
   onSubmit(form: any): void {
-    
+    if (this.isSubmitting) return; // ← Guard temprano
+
     this.isButtonDisabled = true;
+
     if (this.nuevoForm.invalid) {
-      //this.postForm(form);
-      // console.log(JSON.stringify(this.nuevoForm.value, null, 2));
+      this.submitted = true;
+      this.isButtonDisabled = false; // ← Rehabilitar si inválido
       return;
-    } else {
-      this.submitted = true; 
-          setTimeout(() => {
-      this.isButtonDisabled = false;
-    }, 5000);
-      this.postForm(form);
     }
-    // this.postForm(form);
-    // console.log(JSON.stringify(form, null, 2));
+
+    this.isSubmitting = true; // ← Bloquear
+    this.submitted = true;
+    this.postForm(form);
   }
 
   async postForm(form: any) {
-    
+
     const get = await this.api.savenewitemsales(form);
 
     if (get == 'OK') {
@@ -337,8 +336,8 @@ ubicacion: coordenadasValidas
       this.submitted = false;
     } else if (get.id) {
       const params = new URLSearchParams(get.id)
-      const url =`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
-      window.open(url, '_blank'); 
+      const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
+      window.open(url, '_blank');
       this.datainit();
       this.submitted = false;
     }
@@ -346,21 +345,21 @@ ubicacion: coordenadasValidas
   }
 
   async onSubmitclose() {
-    this.submitted = true; 
-    if (this.nuevoForm.invalid) { 
+    this.submitted = true;
+    if (this.nuevoForm.invalid) {
       return;
     } else {
-      this.submitted = true; 
-          setTimeout(() => {
-      this.isButtonDisabled = false;
-    }, 5000);
+      this.submitted = true;
+      setTimeout(() => {
+        this.isButtonDisabled = false;
+      }, 5000);
       const data = await this.api.savenewitemsales(this.nuevoForm.value);
       if (data == 'OK') {
         this.router.navigate(['inventorysales']);
       } else if (data.id) {
         const params = new URLSearchParams(data.id)
-        const url =`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
-        window.open(url, '_blank'); 
+        const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
+        window.open(url, '_blank');
         this.router.navigate(['inventorysales']);
       }
     }
@@ -371,14 +370,14 @@ ubicacion: coordenadasValidas
 
   get f(): { [key: string]: AbstractControl } {
     return this.nuevoForm.controls;
-  } 
+  }
   printbutton(e: any) {
     if (e.target.checked) {
       this.nuevoForm.controls['get_print'].setValue(true);
     } else {
       this.nuevoForm.controls['get_print'].setValue(false);
     }
-  } 
+  }
 
   onCheckboxChange(e: any) {
     if (e.target.checked) {
@@ -417,7 +416,7 @@ ubicacion: coordenadasValidas
     }
   }
 
-  
+
   openPDFInNewTab(pdfBase64: any) {
     const binaryData = atob(pdfBase64);
     const arrayBuffer = new ArrayBuffer(binaryData.length);

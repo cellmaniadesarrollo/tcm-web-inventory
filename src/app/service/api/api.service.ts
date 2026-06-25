@@ -20,7 +20,7 @@ import {
   Getpdfbase64,
   Getxmlticket,
   Getoneitem,
-} from 'src/app/models/item.inteface'; 
+} from 'src/app/models/item.inteface';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import {
   ListmovementsIN,
@@ -28,16 +28,16 @@ import {
 } from 'src/app/models/movements.interface';
 import { ListincomesIN } from 'src/app/models/income.inteface';
 import { ListsupliersI } from 'src/app/models/supliers.interface';
-import { link } from 'fs'; 
- import { environment } from '../../../environments/environment';
- import https from 'https'; // Importar el módulo https
+
+import { environment } from '../../../environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   private socket: any;
- private apiUrl = environment.apiUrl;
-  private axiosClient: AxiosInstance; 
+  private apiUrl = environment.apiUrl;
+  private axiosClient: AxiosInstance;
   private axiosClient1: AxiosInstance;
   private errorHandler: ErrorHandler;
   url: string = `${this.apiUrl}/` //'http:' + window.location.origin.split(':')[1] + ':4004/'; //'http://192.168.10.251:4003/' //'http://localhost:4003/'; //'http://54.173.37.208/:4004/'//'http://54.159.56.3:4001/';//
@@ -92,31 +92,31 @@ export class ApiService {
       }
     }
   }
-private normalizeError(error: any): ErrorResponse {
- 
-  Swal.close();
+  private normalizeError(error: any): ErrorResponse {
 
-  if (error.response?.status === 401) {
-    localStorage.removeItem('Token');
-    localStorage.removeItem('User');
-    localStorage.removeItem('Groups');
-    this.router.navigate(['login']);
+    Swal.close();
+
+    if (error.response?.status === 401) {
+      localStorage.removeItem('Token');
+      localStorage.removeItem('User');
+      localStorage.removeItem('Groups');
+      this.router.navigate(['login']);
+    }
+
+    this.errorHandler.handleError(error);
+
+    // Captura el mensaje real desde statusText (porque data no sirve)
+    const msg = error.response?.statusText || 'Error desconocido';
+    const code = error.response?.status || 500;
+
+    this.alerts.showError(msg, `Error ${code}`, 15000);
+
+    return {
+      id: '-1',
+      code,
+      message: msg,
+    };
   }
-
-  this.errorHandler.handleError(error);
-
-  // Captura el mensaje real desde statusText (porque data no sirve)
-  const msg = error.response?.statusText || 'Error desconocido';
-  const code = error.response?.status || 500;
-
-  this.alerts.showError(msg, `Error ${code}`, 15000);
-
-  return {
-    id: '-1',
-    code,
-    message: msg,
-  };
-}
   private normalizeSuccess(success: any): ErrorResponse {
     // this.errorHandler.handleError(success);
     this.alerts.showSuccess(success.statusText, success.data);
@@ -160,23 +160,23 @@ private normalizeError(error: any): ErrorResponse {
 
   public async LoginByEmail(from: LoginI): Promise<ResponseI> {
     try {
-     //console.log(this.url,environment)
+      //console.log(this.url,environment)
       var axiosResponse = await this.axiosClient1.request({
         method: 'post',
         url: this.url + 'login',
         data: from,
-      }); 
-      
+      });
+
       return axiosResponse.data;
     } catch (error) {
-      return Promise.reject(this.normalizeError(error)); 
+      return Promise.reject(this.normalizeError(error));
     }
   }
   public async datanewmarca(data: any, inventory: any): Promise<any> {
     try {
       await this.controltoken();
       var linkdata: string = '';
- 
+
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
         url: this.url + "brandnew",
@@ -191,8 +191,8 @@ private normalizeError(error: any): ErrorResponse {
   }
   public async datanewmodel(data: any, inventory: any): Promise<any> {
     try {
-      await this.controltoken(); 
-       var axiosResponse = await this.axiosClient.request({
+      await this.controltoken();
+      var axiosResponse = await this.axiosClient.request({
         method: 'post',
         url: this.url + 'modelnew',
         data,
@@ -208,7 +208,7 @@ private normalizeError(error: any): ErrorResponse {
   public async datanewnameitem(data: any, inventory: any): Promise<any> {
     try {
       var linkdata: string = '';
-      await this.controltoken(); 
+      await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
         url: this.url + 'nameiteminventarionew',
@@ -221,9 +221,9 @@ private normalizeError(error: any): ErrorResponse {
       return Promise.reject(this.normalizeError(error));
     }
   }
-  public async datanewcolor(data: any,inventory:any): Promise<any> {
+  public async datanewcolor(data: any, inventory: any): Promise<any> {
     try {
-      await this.controltoken(); 
+      await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
         url: this.url + 'colornew',
@@ -240,7 +240,7 @@ private normalizeError(error: any): ErrorResponse {
   public async datanewtype(data: any, inventory: any): Promise<any> {
     try {
       await this.controltoken();
- 
+
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
         url: this.url + 'tipoinventarionew',
@@ -253,9 +253,9 @@ private normalizeError(error: any): ErrorResponse {
       return Promise.reject(this.normalizeError(error));
     }
   }
-  public async datanewquality(data: any,inventory:any): Promise<any> {
+  public async datanewquality(data: any, inventory: any): Promise<any> {
     try {
-      await this.controltoken(); 
+      await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
         url: this.url + 'qualityinventarionew',
@@ -268,9 +268,9 @@ private normalizeError(error: any): ErrorResponse {
       return Promise.reject(this.normalizeError(error));
     }
   }
-  public async datanewstateproduct(data: any,inventory:any): Promise<any> {
+  public async datanewstateproduct(data: any, inventory: any): Promise<any> {
     try {
-      await this.controltoken(); 
+      await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
         url: this.url + 'stateproductinventarionew',
@@ -564,22 +564,22 @@ private normalizeError(error: any): ErrorResponse {
    * movements
    */
 
-  public async movementoutdata(id:any): Promise<any> {
+  public async movementoutdata(id: any): Promise<any> {
     //console.log(data);
     try {
       await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
         method: 'post',
         url: this.url + 'movementoutdata',
-        data:{id}
-            });
+        data: { id }
+      });
       // console.log(axiosResponse.data)
       return axiosResponse.data;
     } catch (error) {
       return Promise.reject(this.normalizeError(error));
     }
   }
-  public async movementoutdatafind(data:any): Promise<any> {
+  public async movementoutdatafind(data: any): Promise<any> {
     //console.log(data);
     try {
       await this.controltoken();
@@ -594,7 +594,7 @@ private normalizeError(error: any): ErrorResponse {
       return Promise.reject(this.normalizeError(error));
     }
   }
-  public async findmovemenusers(data:any): Promise<any> {
+  public async findmovemenusers(data: any): Promise<any> {
     //console.log(data);
     try {
       await this.controltoken();
@@ -660,7 +660,7 @@ private normalizeError(error: any): ErrorResponse {
     }
   }
   public async listmovements(data: any): Promise<ListmovementsIN> {
-      
+
     try {
       await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
@@ -671,7 +671,7 @@ private normalizeError(error: any): ErrorResponse {
           alltypes: data.alltypes,
           numperpage: data.numperpage,
           pagination: data.pagination,
-          findlike: data.findlike 
+          findlike: data.findlike
         },
       });
       return axiosResponse.data;
@@ -812,7 +812,7 @@ private normalizeError(error: any): ErrorResponse {
 
 
   public async listmovementsper(data: any): Promise<ListmovementsIN> {
-      
+
     try {
       await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
@@ -823,7 +823,7 @@ private normalizeError(error: any): ErrorResponse {
           alltypes: data.alltypes,
           numperpage: data.numperpage,
           pagination: data.pagination,
-          findlike: data.findlike 
+          findlike: data.findlike
         },
       });
       return axiosResponse.data;
@@ -831,8 +831,8 @@ private normalizeError(error: any): ErrorResponse {
       return Promise.reject(this.normalizeError(error));
     }
   }
-    public async listmovementssal(data: any): Promise<ListmovementsIN> {
-      
+  public async listmovementssal(data: any): Promise<ListmovementsIN> {
+
     try {
       await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
@@ -843,7 +843,7 @@ private normalizeError(error: any): ErrorResponse {
           alltypes: data.alltypes,
           numperpage: data.numperpage,
           pagination: data.pagination,
-          findlike: data.findlike 
+          findlike: data.findlike
         },
       });
       return axiosResponse.data;
@@ -929,7 +929,7 @@ private normalizeError(error: any): ErrorResponse {
         params: {
           id: data,
         },
-      }); 
+      });
       return axiosResponse.data;
     } catch (error) {
       return Promise.reject(this.normalizeError(error));
@@ -994,7 +994,7 @@ private normalizeError(error: any): ErrorResponse {
     }
   }
 
-  public async listincomesstart(data: any): Promise<ListincomesIN> { 
+  public async listincomesstart(data: any): Promise<ListincomesIN> {
     try {
       await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
@@ -1009,7 +1009,7 @@ private normalizeError(error: any): ErrorResponse {
       return Promise.reject(this.normalizeError(error));
     }
   }
-  public async listincomes(data: any): Promise<ListincomesIN> { 
+  public async listincomes(data: any): Promise<ListincomesIN> {
     try {
       await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
@@ -1031,7 +1031,7 @@ private normalizeError(error: any): ErrorResponse {
       var axiosResponse = await this.axiosClient.request({
         method: 'get',
         url: this.url + 'incomeslistCSRS',
-        params:  data,
+        params: data,
       });
       // console.log(axiosResponse.data)
 
@@ -1047,7 +1047,7 @@ private normalizeError(error: any): ErrorResponse {
       var axiosResponse = await this.axiosClient.request({
         method: 'get',
         url: this.url + 'incomeslistCSRSPER',
-        params:  data,
+        params: data,
       });
       // console.log(axiosResponse.data)
 
@@ -1063,7 +1063,7 @@ private normalizeError(error: any): ErrorResponse {
       var axiosResponse = await this.axiosClient.request({
         method: 'get',
         url: this.url + 'incomeslistCSRSSALE',
-        params:  data,
+        params: data,
       });
       // console.log(axiosResponse.data)
 
@@ -1200,7 +1200,7 @@ private normalizeError(error: any): ErrorResponse {
       var axiosResponse = await this.axiosClient.request({
         method: 'get',
         url: this.url + 'reportnewvalues',
-        params: data, 
+        params: data,
       });
       return axiosResponse.data;
     } catch (error) {
@@ -1239,12 +1239,12 @@ private normalizeError(error: any): ErrorResponse {
       return Promise.reject(this.normalizeError(error));
     }
   }
-  public async getlisinventorys( ): Promise<any> {
+  public async getlisinventorys(): Promise<any> {
     try {
       await this.controltoken();
       var axiosResponse = await this.axiosClient.request({
         method: 'get',
-        url: this.url + 'listinventorysnames', 
+        url: this.url + 'listinventorysnames',
       });
       // this.normalizeSuccess(axiosResponse);
       return axiosResponse.data;
@@ -1466,36 +1466,50 @@ private normalizeError(error: any): ErrorResponse {
   }
 
 
-/**
- * UBICACIONES
- */
+  /**
+   * UBICACIONES
+   */
 
-public async ubicacionessucursales (data: any): Promise<any> {
-  try {
-    await this.controltoken();
-    var axiosResponse = await this.axiosClient.request({
-      method: 'post',
-      url: this.url + 'ivsaleslist',
-      data,
-    });
-    this.normalizeSuccess(axiosResponse);
-    return axiosResponse.data;
-  } catch (error) {
-    return Promise.reject(this.normalizeError(error));
+  public async ubicacionessucursales(data: any): Promise<any> {
+    try {
+      await this.controltoken();
+      var axiosResponse = await this.axiosClient.request({
+        method: 'post',
+        url: this.url + 'ivsaleslist',
+        data,
+      });
+      this.normalizeSuccess(axiosResponse);
+      return axiosResponse.data;
+    } catch (error) {
+      return Promise.reject(this.normalizeError(error));
+    }
   }
-}
 
-public async ubicacionessucursaleslocal(): Promise<any> {
-  try { 
-    var axiosResponse = await this.axiosClient.request({
-      method: 'get',
-      url: 'https://localhost:5001/coords',  
-    }); 
-    this.normalizeSuccess(axiosResponse);
-    return axiosResponse.data;
-  } catch (error) {
-    return Promise.reject(this.normalizeError(error));
+  public async ubicacionessucursaleslocal(): Promise<any> {
+    try {
+      var axiosResponse = await this.axiosClient.request({
+        method: 'get',
+        url: 'https://localhost:5001/coords',
+      });
+      this.normalizeSuccess(axiosResponse);
+      return axiosResponse.data;
+    } catch (error) {
+      return Promise.reject(this.normalizeError(error));
+    }
   }
-}
+
+  public async searchOrdersForMovement(findby: string): Promise<any> {
+    try {
+      await this.controltoken();
+      const axiosResponse = await this.axiosClient.request({
+        method: 'post',
+        url: this.url + 'orders-replica/find-order-replica',
+        data: { findby },
+      });
+      return axiosResponse.data;
+    } catch (error) {
+      return Promise.reject(this.normalizeError(error));
+    }
+  }
 }
 
