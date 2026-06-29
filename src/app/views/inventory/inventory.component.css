@@ -37,3 +37,10 @@ select {
   margin: 0 auto; /* Centrar en la página */
   font-size: 1rem; /* Tamaño base de la fuente */
 }
+
+/* Switch manual orden — ajuste para AdminLTE */
+#manualOrderToggle {
+  width: 2rem;
+  height: 1rem;
+  cursor: pointer;
+}

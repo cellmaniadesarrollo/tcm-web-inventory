@@ -421,6 +421,7 @@ export class InventoryComponent {
     this.selectedOrder = null;
     this.orderSearchValue = '';
     this.ordersFound = [];
+    this.manualOrderMode = false;
     this.validationssalidaform();
     await this.listdataout();
     if (this.focus) {
@@ -575,29 +576,43 @@ export class InventoryComponent {
   }
   batches: ListBatches[] = []
   async listdataout() {
-    this.batches = []
+    this.batches = [];
     const data = await this.api.movementoutdata(this.find);
     this.technician = data.item;
     this.outs = data.outs;
-    this.batches = data.batches
-    console.log(data);
+    this.batches = data.batches;
 
     const currentDateAndTime = this.datePipe.transform(
       new Date(),
       "yyyy-MM-dd'T'HH:mm:ss"
     );
-    const uuid = uuidv4();
-    //console.log(uuid)
-    // console.log(currentDateAndTime)
-    this.salidaForm.setValue({
+
+    // Primero resetear todo en null para que ng-select no muestre X
+    this.salidaForm.patchValue({
       id_item: null,
-      tipo_salida: data.outs[3]._id,
+      tipo_salida: null,
       numero_orden: '',
+      orderId: '',
+      findingId: null,
       cantidad: this.functionvalue(this.maxvalue),
       entrega_a: null,
       observaciones: '',
       fecha: currentDateAndTime,
     });
+
+    // Buscar REPARACION
+    const reparacion = data.outs.find(
+      (o: any) => o.name_movement === 'REPARACION'
+    );
+
+    if (reparacion) {
+      // Primero cargar los técnicos de ese tipo
+      await this.changeLeagueOwnertype(reparacion._id);
+      // Luego setear el valor para que ng-select ya tenga la opción disponible
+      this.salidaForm.patchValue({
+        tipo_salida: reparacion._id,
+      });
+    }
   }
 
   functionvalue(data: any) {
@@ -803,6 +818,17 @@ export class InventoryComponent {
   clearOrderSelection() {
     this.selectedOrder = null;
     this.orderSearchValue = '';
+    this.salidaForm.controls['numero_orden'].setValue('');
+    this.salidaForm.controls['findingId'].setValue(null);
+    this.salidaForm.controls['orderId'].setValue(null);
+  }
+  manualOrderMode: boolean = false;
+
+  onToggleManualMode() {
+    // Limpia todo al cambiar de modo
+    this.selectedOrder = null;
+    this.orderSearchValue = '';
+    this.ordersFound = [];
     this.salidaForm.controls['numero_orden'].setValue('');
     this.salidaForm.controls['findingId'].setValue(null);
     this.salidaForm.controls['orderId'].setValue(null);
