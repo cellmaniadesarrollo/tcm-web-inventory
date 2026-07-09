@@ -34,8 +34,7 @@
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
-              "node_modules/admin-lte/dist/js/adminlte.min.js",
-              "node_modules/admin-lte/plugins/inputmask/inputmask.js",
+              "node_modules/admin-lte/dist/js/adminlte.min.js", 
               "src/assets/js/dymo.connect.framework.js"
             ]
           },

@@ -23,6 +23,7 @@ import { OutgoingTransfersComponent } from './views/outgoing-transfers/outgoing-
 import { NewTransferComponent } from './views/outgoing-transfers/new-transfer/new-transfer.component';
 import { ReceivingTransfersComponent } from './views/receiving-transfers/receiving-transfers.component';
 import { RepotsAllComponent } from './views/repots-all/repots-all.component';
+import { CancellationRequestsComponent } from './views/cancellation-requests/cancellation-requests.component';
  
 const routes: Routes = [
   {path:'',redirectTo:'login',pathMatch:'full'},
@@ -52,6 +53,7 @@ const routes: Routes = [
   {path:'receiving-transfers',component:ReceivingTransfersComponent},
 
    {path:'reports-all',component:RepotsAllComponent}, 
+   {path:'cancellation-request',component:CancellationRequestsComponent},
 ];
 
 @NgModule({

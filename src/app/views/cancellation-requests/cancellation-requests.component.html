@@ -1,0 +1,94 @@
+
+<div class="content-wrapper">
+<div class="cr-wrapper">
+  <div class="row mb-3">
+    <div class="col-sm-3">
+      <label class="mb-1">Estado</label>
+      <select class="form-control" [(ngModel)]="filters.status" (ngModelChange)="onFilterChange()">
+        <option *ngFor="let opt of statusOptions" [value]="opt">{{ opt }}</option>
+      </select>
+    </div>
+
+    <div class="col-sm-6">
+      <label class="mb-1">Buscar</label>
+      <input
+        type="search"
+        class="form-control"
+        placeholder="requestId, sku, producto, solicitante"
+        [(ngModel)]="filters.findlike"
+        (ngModelChange)="onSearchChange()"
+      />
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+      <thead class="thead-light">
+        <tr>
+          <th>Solicitud</th>
+          <th>Orden</th>
+          <th>Producto</th>
+          <th>Cant.</th>
+          <th>Solicitante</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of rows">
+          <td>{{ row.requestId }}</td>
+          <td>{{ row.orderId }}</td>
+          <td>
+            {{ row.productName }}
+            <div class="text-muted small">{{ row.sku }}</div>
+          </td>
+          <td>{{ row.quantity }}</td>
+          <td>{{ row.requestedByFirstName }} {{ row.requestedByLastName }}</td>
+          <td><span [ngClass]="statusBadgeClass(row.status)">{{ row.status }}</span></td>
+          <td>{{ row.createdAt | date: 'short' }}</td>
+          <td>
+            <ng-container *ngIf="row.status === 'PENDING'; else noActions">
+              <button class="btn btn-sm btn-success mr-1" (click)="openResolveModal(row, 'accept')">
+                <i class="fa fa-check"></i>
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="openResolveModal(row, 'reject')">
+                <i class="fa fa-times"></i>
+              </button>
+            </ng-container>
+            <ng-template #noActions>—</ng-template>
+          </td>
+        </tr>
+        <tr *ngIf="!loading && rows.length === 0">
+          <td colspan="8" class="text-center text-muted">No hay solicitudes para los filtros seleccionados.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="loading" class="text-center py-3">
+      <i class="fa fa-spinner fa-spin fa-2x"></i>
+    </div>
+  </div>
+
+  <nav *ngIf="pageNumbers > 1">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="page === 1">
+        <a class="page-link" href="javascript:void(0)" (click)="goToPage(page - 1)">Anterior</a>
+      </li>
+      <li class="page-item disabled">
+        <span class="page-link">Página {{ page }} de {{ pageNumbers }}</span>
+      </li>
+      <li class="page-item" [class.disabled]="page === pageNumbers">
+        <a class="page-link" href="javascript:void(0)" (click)="goToPage(page + 1)">Siguiente</a>
+      </li>
+    </ul>
+  </nav>
+
+  <app-cancellation-request-resolve-dialog
+    *ngIf="resolveModalVisible"
+    [row]="selectedRow"
+    [action]="selectedAction"
+    (closeModalEvent)="closeResolveModal($event)"
+  ></app-cancellation-request-resolve-dialog>
+</div>
+</div>

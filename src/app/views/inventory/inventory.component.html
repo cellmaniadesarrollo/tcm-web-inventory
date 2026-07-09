@@ -460,6 +460,7 @@
           </div>
 
           <!-- Lista de resultados -->
+          <!-- Lista de resultados -->
           <div
             *ngIf="ordersFound.length > 0"
             class="list-group position-absolute w-100 shadow-sm"
@@ -480,22 +481,6 @@
                 {{ order.device?.model?.models_name }} {{ order.device?.model?.brand_name }}
               </small>
             </button>
-          </div>
-
-          <!-- Hallazgo -->
-          <div *ngIf="selectedOrder">
-            <ng-select
-              placeholder="Seleccionar hallazgo *"
-              formControlName="findingId"
-              class="mt-2"
-            >
-              <ng-option
-                *ngFor="let finding of selectedOrder.findings"
-                [value]="finding.id"
-              >
-                {{ finding.description }}
-              </ng-option>
-            </ng-select>
           </div>
         </ng-template>
 

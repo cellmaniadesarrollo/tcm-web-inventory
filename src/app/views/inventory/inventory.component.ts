@@ -305,7 +305,6 @@ export class InventoryComponent {
     id_item: new FormControl(''),
     tipo_salida: new FormControl(null),
     numero_orden: new FormControl(''),
-    findingId: new FormControl(''),
     orderId: new FormControl(''),
     cantidad: new FormControl(''),
     entrega_a: new FormControl(null),
@@ -593,7 +592,6 @@ export class InventoryComponent {
       tipo_salida: null,
       numero_orden: '',
       orderId: '',
-      findingId: null,
       cantidad: this.functionvalue(this.maxvalue),
       entrega_a: null,
       observaciones: '',
@@ -699,7 +697,6 @@ export class InventoryComponent {
       id_item: ['', Validators.required],
       tipo_salida: ['', Validators.required],
       numero_orden: [''],
-      orderId: [''],
       findingId: [''],
       cantidad: [1, Validators.required],
       entrega_a: ['', Validators.required],
@@ -783,7 +780,7 @@ export class InventoryComponent {
     if (this.selectedOrder && value.trim() !== `#${this.selectedOrder.order_number} - ${this.selectedOrder.customer.firstName} ${this.selectedOrder.customer.lastName}`) {
       this.selectedOrder = null;
       this.salidaForm.controls['numero_orden'].setValue('');
-      this.salidaForm.controls['findingId'].setValue(null);
+      this.salidaForm.controls['orderId'].setValue(null);
     }
 
     this.ordersFound = [];
@@ -811,7 +808,6 @@ export class InventoryComponent {
     this.ordersFound = [];
     this.orderSearchValue = `#${order.order_number} - ${order.customer.firstName} ${order.customer.lastName}`;
     this.salidaForm.controls['numero_orden'].setValue(order.order_number);
-    this.salidaForm.controls['findingId'].setValue(null);
     this.salidaForm.controls['orderId'].setValue(order.id);
   }
 
@@ -819,7 +815,6 @@ export class InventoryComponent {
     this.selectedOrder = null;
     this.orderSearchValue = '';
     this.salidaForm.controls['numero_orden'].setValue('');
-    this.salidaForm.controls['findingId'].setValue(null);
     this.salidaForm.controls['orderId'].setValue(null);
   }
   manualOrderMode: boolean = false;
@@ -830,7 +825,6 @@ export class InventoryComponent {
     this.orderSearchValue = '';
     this.ordersFound = [];
     this.salidaForm.controls['numero_orden'].setValue('');
-    this.salidaForm.controls['findingId'].setValue(null);
     this.salidaForm.controls['orderId'].setValue(null);
   }
 }

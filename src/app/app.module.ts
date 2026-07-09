@@ -20,7 +20,7 @@ import { NgToastModule } from 'ng-angular-popup'
 import { NgbModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common';
 import { SidebarComponent } from './views/templates/sidebar/sidebar.component';
-
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -83,6 +83,11 @@ import { MovementsTableComponent } from './views/movements/movements-table/movem
 import { MovementsPaginationComponent } from './views/movements/movements-pagination/movements-pagination.component';
 import { MovementDetailModalComponent } from './views/movements/movement-detail-modal/movement-detail-modal.component';
 import { MovementReportModalComponent } from './views/movements/movement-report-modal/movement-report-modal.component';
+import { CancellationRequestsComponent } from './views/cancellation-requests/cancellation-requests.component';
+import { CancellationRequestResolveDialogComponent } from './views/cancellation-requests/cancellation-request-resolve-dialog/cancellation-request-resolve-dialog.component';
+
+
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -125,6 +130,9 @@ import { MovementReportModalComponent } from './views/movements/movement-report-
     MovementsPaginationComponent,
     MovementDetailModalComponent,
     MovementReportModalComponent,
+    CancellationRequestsComponent,
+    CancellationRequestResolveDialogComponent,
+
 
   ],
   imports: [
@@ -166,8 +174,17 @@ import { MovementReportModalComponent } from './views/movements/movement-report-
     MatCheckboxModule,
     MatSelectModule,
     MatChipsModule,
-    MatAutocompleteModule
-
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule,
+    MatDialogModule
   ],
   providers: [
     DatePipe,

@@ -1511,5 +1511,35 @@ export class ApiService {
       return Promise.reject(this.normalizeError(error));
     }
   }
+
+
+
+  public async cancellationRequestsList(data: any): Promise<any> {
+    try {
+      await this.controltoken();
+      var axiosResponse = await this.axiosClient.request({
+        method: 'get',
+        url: this.url + 'cancellation-requests',
+        params: data,
+      });
+      return axiosResponse.data;
+    } catch (error) {
+      return Promise.reject(this.normalizeError(error));
+    }
+  }
+
+  public async cancellationRequestResolve(requestId: string, data: any): Promise<any> {
+    try {
+      await this.controltoken();
+      var axiosResponse = await this.axiosClient.request({
+        method: 'post',
+        url: this.url + `cancellation-requests/${requestId}/resolve`,
+        data: data,
+      });
+      return axiosResponse.data;
+    } catch (error) {
+      return Promise.reject(this.normalizeError(error));
+    }
+  }
 }
 

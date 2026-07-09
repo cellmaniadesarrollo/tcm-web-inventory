@@ -98,6 +98,12 @@
                 <p>Movimientos</p>
               </a>
             </li>
+              <li class="nav-item" *ngIf="nivel1">
+              <a class="nav-link" routerLink="/cancellation-request" routerLinkActive="active">
+                <i class="nav-icon bi bi-arrow-down-up"></i>
+                <p>Retornos</p>
+              </a>
+            </li>
             <li class="nav-item" *ngIf="nivel1">
               <a class="nav-link" routerLink="/incomerep" routerLinkActive="active">
                 <i class="nav-icon bi bi-check-square"></i>
