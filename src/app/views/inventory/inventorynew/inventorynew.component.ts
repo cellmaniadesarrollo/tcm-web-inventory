@@ -36,11 +36,11 @@ export class InventorynewComponent {
     private router: Router,
     private config: NgSelectConfig,
     private formBuilder: FormBuilder
-  ) {}
+  ) { }
   nuevoForm: FormGroup = new FormGroup({
     cod_upc: new FormControl(''),
     name_items: new FormControl(null),
-   // stock: new FormControl(''),
+    // stock: new FormControl(''),
     id_brand: new FormControl(''),
     id_model: new FormControl(''),
     id_type: new FormControl(''),
@@ -51,10 +51,10 @@ export class InventorynewComponent {
     weight: new FormControl(''),
     volume: new FormControl(''),
     id_weightnomen: new FormControl(''),
-    id_volumenomen: new FormControl(''), 
+    id_volumenomen: new FormControl(''),
     // id_comesfrom: new FormControl(''),
     get_print: new FormControl(''),
-  }); 
+  });
 
   brands: ListbrandI[] = [];
   nameite: ListnameI[] = [];
@@ -68,10 +68,10 @@ export class InventorynewComponent {
   // comesfroms: ListscomesfromI[] = [];
   stateinventoryflows: ListsstateinventoryI[] = [];
   ngOnInit(): void {
-    this.validations(); 
+    this.validations();
     this.listdata();
   }
-  
+
   modalVisible: boolean = false;
   modalVisible1: boolean = false;
   modalVisible2: boolean = false;
@@ -79,7 +79,7 @@ export class InventorynewComponent {
   modalVisible4: boolean = false;
   modalVisible5: boolean = false;
   modalVisible6: boolean = false;
-  nameinventory:string='invfl'
+  nameinventory: string = 'invfl'
   openModalname() {
     this.modalVisible = true;
   }
@@ -192,7 +192,7 @@ export class InventorynewComponent {
 
   async changeLeagueOwner(event: any) {
     this.nuevoForm.controls['id_model'].setValue(null);
-    this.models = await this.api.listmodels(event);   
+    this.models = await this.api.listmodels(event);
   }
 
   async guardaritem() {
@@ -200,7 +200,7 @@ export class InventorynewComponent {
   }
 
   async listdata() {
-    const data = await this.api.datanewitem('invfl'); 
+    const data = await this.api.datanewitem('invfl');
     this.brands = data.brand;
     this.colors = data.color;
     this.types = data.type;
@@ -215,14 +215,14 @@ export class InventorynewComponent {
     this.nuevoForm.setValue({
       cod_upc: false,
       name_items: null,
-    //  stock: 0,
+      //  stock: 0,
       id_brand: null,
       id_model: null,
       id_type: null,
       id_color: null,
       id_quality: null,
       id_stateproduct_inventoryflow: null,
-      observations: '', 
+      observations: '',
       //id_comesfrom: null,
       get_print: false,
     });
@@ -237,23 +237,23 @@ export class InventorynewComponent {
     this.nuevoForm = this.formBuilder.group({
       cod_upc: ['', Validators.required],
       name_items: [null, Validators.required],
-    //  stock: ['', Validators.required],
+      //  stock: ['', Validators.required],
       id_brand: [''],
       id_model: ['', Validators.required],
       id_type: ['', Validators.required],
       id_color: ['', Validators.required],
       id_quality: ['', Validators.required],
       id_stateproduct_inventoryflow: ['', Validators.required],
-      observations: [''], 
+      observations: [''],
       //  id_comesfrom: ['', Validators.required],
       get_print: [true, Validators.required],
     });
   }
 
- 
- 
- 
- 
+
+
+
+
 
   codeauto = true;
   submitted = false;
@@ -264,78 +264,65 @@ export class InventorynewComponent {
   submittedcolor = false;
   submittedquality = false;
   submittedstateproduct = false;
-    isButtonDisabled = false;
+  isButtonDisabled = false;
   //submittedcomesfrom = false;
   onSubmit(form: any): void {
     this.submitted = true;
 
     if (this.nuevoForm.invalid) {
-      //this.postForm(form);
-      // console.log(JSON.stringify(this.nuevoForm.value, null, 2));
       return;
-    } else {
-            this.submitted = true; 
-          setTimeout(() => {
-      this.isButtonDisabled = false;
-    }, 5000);
-      this.postForm(form);
     }
-    // this.postForm(form);
-    // console.log(JSON.stringify(form, null, 2));
+
+    this.isButtonDisabled = true; // <-- bloquear YA, antes de llamar al backend
+    this.postForm(form);
   }
 
   async postForm(form: any) {
-    const get = await this.api.savenewitem(form);
+    try {
+      const get = await this.api.savenewitem(form);
 
-    if (get == 'OK') {
-      this.datainit();
-      this.submitted = false;
-    } else if (get.id) {
-      const params = new URLSearchParams(get.id)
-      const url =`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
-      window.open(url, '_blank');
-      // const dataget = await this.api.getpdfbase64(get.id);
-      // this.openPDFInNewTab(dataget.pdfbase64);
-      //console.log(dataget)
-      // printJS({
-      //   printable: dataget.pdfbase64,
-      //   type: 'pdf',
-      //   base64: true,
-      //   showModal: true,
-      // });
-      this.datainit();
-      this.submitted = false;
+      if (get == 'OK') {
+        this.datainit();
+        this.submitted = false;
+      } else if (get.id) {
+        const params = new URLSearchParams(get.id);
+        const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;
+        window.open(url, '_blank');
+        this.datainit();
+        this.submitted = false;
+      }
+    } catch (error) {
+      console.error('Error al guardar el item:', error);
+      // aquí podrías mostrar un toast/alerta al usuario
+    } finally {
+      this.isButtonDisabled = false; // <-- SIEMPRE se rehabilita, haya error o no
     }
-    //console.log(get);
   }
+
+
 
   async onSubmitclose() {
     this.submitted = true;
     if (this.nuevoForm.invalid) {
       console.log(JSON.stringify(this.nuevoForm.value, null, 2));
       return;
-    } else {
-            this.submitted = true; 
-          setTimeout(() => {
-      this.isButtonDisabled = false;
-    }, 5000);
+    }
+
+    this.isButtonDisabled = true;
+    try {
       const data = await this.api.savenewitem(this.nuevoForm.value);
       if (data == 'OK') {
         this.router.navigate(['inventory']);
       } else if (data.id) {
-        const params = new URLSearchParams(data.id)
-        const url =`http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
+        const params = new URLSearchParams(data.id);
+        const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;
         window.open(url, '_blank');
-        // const dataget = await this.api.getpdfbase64(data.id);
-        // this.openPDFInNewTab(dataget.pdfbase64);
-        // printJS({
-        //   printable: dataget.pdfbase64,
-        //   type: 'pdf',
-        //   base64: true,
-        //   showModal: true,
-        // });
         this.router.navigate(['inventory']);
       }
+    } catch (error) {
+      console.error('Error al guardar y cerrar:', error);
+    } finally {
+      this.isButtonDisabled = false;
     }
   }
   cancelar() {
@@ -344,14 +331,14 @@ export class InventorynewComponent {
 
   get f(): { [key: string]: AbstractControl } {
     return this.nuevoForm.controls;
-  } 
+  }
   printbutton(e: any) {
     if (e.target.checked) {
       this.nuevoForm.controls['get_print'].setValue(true);
     } else {
       this.nuevoForm.controls['get_print'].setValue(false);
     }
-  } 
+  }
 
   onCheckboxChange(e: any) {
     if (e.target.checked) {
@@ -390,7 +377,7 @@ export class InventorynewComponent {
     }
   }
 
-  
+
   openPDFInNewTab(pdfBase64: any) {
     const binaryData = atob(pdfBase64);
     const arrayBuffer = new ArrayBuffer(binaryData.length);
