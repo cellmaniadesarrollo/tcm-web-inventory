@@ -312,56 +312,90 @@ export class InventorysalesnewComponent {
   isButtonDisabled = false;
   //submittedcomesfrom = false;
   onSubmit(form: any): void {
-    if (this.isSubmitting) return; // ← Guard temprano
+    if (this.isSubmitting) return;
 
-    this.isButtonDisabled = true;
+    this.submitted = true;
 
     if (this.nuevoForm.invalid) {
-      this.submitted = true;
-      this.isButtonDisabled = false; // ← Rehabilitar si inválido
       return;
     }
 
-    this.isSubmitting = true; // ← Bloquear
-    this.submitted = true;
+    this.isSubmitting = true;
+    this.isButtonDisabled = true;
+    this.startButtonSafetyTimer(); // blindaje extra
     this.postForm(form);
+  }
+  private safetyTimeoutId: any = null;
+
+  private startButtonSafetyTimer(ms: number = 8000) {
+    if (this.safetyTimeoutId) clearTimeout(this.safetyTimeoutId);
+    this.safetyTimeoutId = setTimeout(() => {
+      console.warn('Blindaje: reactivando botón por timeout de seguridad');
+      this.isButtonDisabled = false;
+      this.isSubmitting = false;
+      this.safetyTimeoutId = null;
+    }, ms);
+  }
+
+  private clearButtonSafetyTimer() {
+    if (this.safetyTimeoutId) {
+      clearTimeout(this.safetyTimeoutId);
+      this.safetyTimeoutId = null;
+    }
   }
 
   async postForm(form: any) {
+    try {
+      const get = await this.api.savenewitemsales(form);
 
-    const get = await this.api.savenewitemsales(form);
-
-    if (get == 'OK') {
-      this.datainit();
-      this.submitted = false;
-    } else if (get.id) {
-      const params = new URLSearchParams(get.id)
-      const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
-      window.open(url, '_blank');
-      this.datainit();
-      this.submitted = false;
+      if (get == 'OK') {
+        this.datainit();
+        this.submitted = false;
+      } else if (get.id) {
+        const params = new URLSearchParams(get.id);
+        const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;
+        window.open(url, '_blank');
+        this.datainit();
+        this.submitted = false;
+      }
+    } catch (error) {
+      console.error('Error al guardar el item:', error);
+    } finally {
+      this.isButtonDisabled = false;
+      this.isSubmitting = false;
+      this.clearButtonSafetyTimer();
     }
-    //console.log(get);
   }
 
+
   async onSubmitclose() {
+    if (this.isSubmitting) return;
+
     this.submitted = true;
     if (this.nuevoForm.invalid) {
       return;
-    } else {
-      this.submitted = true;
-      setTimeout(() => {
-        this.isButtonDisabled = false;
-      }, 5000);
+    }
+
+    this.isSubmitting = true;
+    this.isButtonDisabled = true;
+    this.startButtonSafetyTimer();
+
+    try {
       const data = await this.api.savenewitemsales(this.nuevoForm.value);
       if (data == 'OK') {
         this.router.navigate(['inventorysales']);
       } else if (data.id) {
-        const params = new URLSearchParams(data.id)
-        const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //
+        const params = new URLSearchParams(data.id);
+        const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;
         window.open(url, '_blank');
         this.router.navigate(['inventorysales']);
       }
+    } catch (error) {
+      console.error('Error al guardar y cerrar:', error);
+    } finally {
+      this.isButtonDisabled = false;
+      this.isSubmitting = false;
+      this.clearButtonSafetyTimer();
     }
   }
   cancelar() {
