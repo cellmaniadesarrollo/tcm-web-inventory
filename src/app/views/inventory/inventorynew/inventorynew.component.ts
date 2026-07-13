@@ -274,6 +274,7 @@ export class InventorynewComponent {
     }
 
     this.isButtonDisabled = true; // <-- bloquear YA, antes de llamar al backend
+    this.startButtonSafetyTimer();
     this.postForm(form);
   }
 
@@ -296,6 +297,7 @@ export class InventorynewComponent {
       // aquí podrías mostrar un toast/alerta al usuario
     } finally {
       this.isButtonDisabled = false; // <-- SIEMPRE se rehabilita, haya error o no
+      this.clearButtonSafetyTimer();
     }
   }
 
@@ -391,5 +393,29 @@ export class InventorynewComponent {
     const url = URL.createObjectURL(blob);
 
     window.open(url, '_blank');
+  }
+
+
+  private safetyTimeoutId: any = null;
+
+  private startButtonSafetyTimer(ms: number = 8000) {
+    // Limpia cualquier timer previo por si acaso
+    if (this.safetyTimeoutId) {
+      clearTimeout(this.safetyTimeoutId);
+    }
+    this.safetyTimeoutId = setTimeout(() => {
+      if (this.isButtonDisabled) {
+        console.warn('Blindaje: se reactivó el botón por timeout de seguridad');
+        this.isButtonDisabled = false;
+      }
+      this.safetyTimeoutId = null;
+    }, ms);
+  }
+
+  private clearButtonSafetyTimer() {
+    if (this.safetyTimeoutId) {
+      clearTimeout(this.safetyTimeoutId);
+      this.safetyTimeoutId = null;
+    }
   }
 }
