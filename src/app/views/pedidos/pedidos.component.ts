@@ -2,7 +2,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { PedidoService } from 'src/app/service/pedido/pedido.service';
-import { ApiService } from 'src/app/service/api/api.service';
+import { CrearPedido } from 'src/app/service/pedido/CrearPedido.service';
 import { NuevoPedidoComponent } from './components/nuevo-pedido/nuevo-pedido.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -35,7 +35,7 @@ export class PedidosComponent implements OnInit {
   activeTab: number = 0;
 
   constructor(
-    private api: ApiService,
+    private apiPedido: CrearPedido,
     private pedidoService: PedidoService,
     private router: Router,
     private dialog: MatDialog,
@@ -77,7 +77,7 @@ export class PedidosComponent implements OnInit {
         pagination: this.currentPage
       };
 
-      const res: any = await this.api.listincomes(params);
+      const res: any = await this.apiPedido.listincomes(params);
       
       if (res && res.intake) {
         this.items = res.intake.map((income: any) => {

@@ -1,6 +1,6 @@
 // nuevo-pedido.component.ts (VERSIÓN COMPLETA CORREGIDA)
 import { Component, Inject, OnInit, Output, EventEmitter } from '@angular/core';
-import { ApiService } from 'src/app/service/api/api.service';
+import { CrearPedido } from 'src/app/service/pedido/CrearPedido.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   AbstractControl,
@@ -35,7 +35,7 @@ export class NuevoPedidoComponent implements OnInit {
   @Output() productoCreado = new EventEmitter<any>();
 
   constructor(
-    private api: ApiService,
+    private apiPedido: CrearPedido,
     private activerouter: ActivatedRoute,
     private router: Router,
     private config: NgSelectConfig,
@@ -164,7 +164,7 @@ export class NuevoPedidoComponent implements OnInit {
 
   async postForm(form: any) {
     try {
-      const get = await this.api.savenewitemsales(form);
+      const get = await this.apiPedido.savenewitemsales(form);
 
       if (get == 'OK' || get.id) {
         const productId = form.name_items;
@@ -234,7 +234,7 @@ export class NuevoPedidoComponent implements OnInit {
 
     this.isButtonDisabled = true;
     try {
-      const data = await this.api.savenewitemsales(this.nuevoForm.value);
+      const data = await this.apiPedido.savenewitemsales(this.nuevoForm.value);
       if (data == 'OK' || data.id) {
         const productId = this.nuevoForm.value.name_items;
         const productoCompleto = this.nameite.find(i => i._id === productId);
@@ -291,7 +291,7 @@ export class NuevoPedidoComponent implements OnInit {
   // ============ SERVICIOS Y MODALES HIJOS ============
 
   async listdata() {
-    const data = await this.api.datanewitem('invfl');
+    const data = await this.apiPedido.datanewitem('invfl');
     this.brands = data.brand;
     this.colors = data.color;
     this.types = data.type;
@@ -339,7 +339,7 @@ export class NuevoPedidoComponent implements OnInit {
 
   async changeLeagueOwner(brandId: any) {
     this.nuevoForm.controls['id_model'].setValue(null);
-    this.models = await this.api.listmodels(brandId);
+    this.models = await this.apiPedido.listmodels(brandId);
     this.modelsFiltrados = [...this.models];
     if (this.models && this.models.length > 0) {
       this.nuevoForm.controls['id_model'].setValue(this.models[0]._id);
@@ -420,7 +420,7 @@ export class NuevoPedidoComponent implements OnInit {
   async closeModalmodel(event: { data: any }) {
     if (event.data.close) this.modalVisible2 = false;
     if (event.data.data.id) {
-      this.models = await this.api.listmodels(event.data.data.brand);
+      this.models = await this.apiPedido.listmodels(event.data.data.brand);
       this.modelsFiltrados = [...this.models];
       this.nuevoForm.controls['id_brand'].setValue(event.data.data.brand);
       this.nuevoForm.controls['id_model'].setValue(event.data.data.id);
