@@ -1,0 +1,200 @@
+/* Contenedor principal estilo card */
+.table-container-card {
+  border-radius: 8px;
+  background-color: white;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+/* Cabecera superior */
+.table-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background-color: #6c757d;
+  color: white;
+}
+
+.table-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.actions-group {
+  display: flex;
+  gap: 10px;
+}
+
+.table-body-content {
+  padding: 16px;
+  position: relative;
+}
+
+/* Fila de Filtros */
+.filters-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-search-box {
+  min-width: 280px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Ajustes de densidad visual para inputs de Material */
+.dense-form-field ::v-deep .mat-mdc-text-field-wrapper {
+  height: 42px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.dense-form-field ::v-deep .mat-mdc-form-field-infix {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  min-height: 42px !important;
+}
+
+/* Colores personalizados para los Button Toggles */
+.toggle-success[aria-pressed="true"] { background-color: #eef8f0 !important; color: #2e7d32 !important; }
+.toggle-warning[aria-pressed="true"] { background-color: #fff8e1 !important; color: #f57c00 !important; }
+.toggle-danger[aria-pressed="true"] { background-color: #fbe9e7 !important; color: #d32f2f !important; }
+
+/* Tabla Contenedor Scroll */
+.responsive-table-container {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.custom-mat-table {
+  width: 100%;
+}
+
+.custom-mat-table th {
+  background-color: #f5f5f5;
+  color: #333;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.custom-mat-table td {
+  font-size: 13px;
+  color: #424242;
+  padding: 8px 16px !important;
+}
+
+.font-weight-bold { font-weight: bold; }
+.text-primary { color: #3f51b5; }
+.text-danger { color: #d32f2f; }
+.text-warning { color: #f57c00; }
+
+/* Badges y estados dentro de la tabla */
+.color-badge {
+  color: rgb(8, 1, 1);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}
+
+.status-pill-table {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: white;
+}
+.status-success { background-color: #2e7d32; }
+.status-warning { background-color: #f57c00; }
+.status-danger { background-color: #d32f2f; }
+.status-secondary { background-color: #757575; }
+
+.text-center-header, .text-center-actions {
+  text-align: center !important;
+}
+
+/* Loading overlay */
+.table-loading-shade {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}
+
+/* Estado Vacío */
+.empty-table-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #bdbdbd;
+  margin-bottom: 8px;
+}
+
+/* Footer & Paginación */
+.footer-pagination-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.pagination-info-text {
+  font-size: 13px;
+}
+
+.pagination-controls-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dense-page-size {
+  width: 80px;
+}
+.dense-page-size ::v-deep .mat-mdc-text-field-wrapper {
+  height: 36px !important;
+}
+.dense-page-size ::v-deep .mat-mdc-form-field-infix {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  min-height: 36px !important;
+}
+
+.custom-pager-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.current-page-indicator {
+  padding: 0 8px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Personalización del botón Success de Material */
+.mat-flat-button.mat-success {
+  background-color: #2c9c42;
+  color: white;
+}

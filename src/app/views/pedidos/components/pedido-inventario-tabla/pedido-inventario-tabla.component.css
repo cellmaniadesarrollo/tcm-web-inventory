@@ -1,0 +1,39 @@
+/* pedido-inventario-tabla.component.css */
+.badge.bg-info {
+  background-color: #17a2b8 !important;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.badge.bg-dark {
+  background-color: #343a40 !important;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.badge.bg-secondary {
+  background-color: #6c757d !important;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.table td {
+  vertical-align: middle;
+}

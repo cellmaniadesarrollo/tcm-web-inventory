@@ -24,13 +24,14 @@ import { NewTransferComponent } from './views/outgoing-transfers/new-transfer/ne
 import { ReceivingTransfersComponent } from './views/receiving-transfers/receiving-transfers.component';
 import { RepotsAllComponent } from './views/repots-all/repots-all.component';
 import { CancellationRequestsComponent } from './views/cancellation-requests/cancellation-requests.component';
- 
+import { PedidosComponent } from './views/pedidos/pedidos.component';
+import { NuevoPedidoComponent } from './views/pedidos/components/nuevo-pedido/nuevo-pedido.component'; // <-- IMPORTAR
+
 const routes: Routes = [
   {path:'',redirectTo:'login',pathMatch:'full'},
   {path:'login',component:LoginComponent},
   {path:'dashboard',component:DashboardComponent},
   {path:'inventory',component:InventoryComponent },
- // {path:'inventory/:id',component:InventoryComponent },
   {path:'inventorynew',component:InventorynewComponent },
   {path:'movements/:id',component:MovementsComponent },
   {path:'movements',component:MovementsComponent },
@@ -47,13 +48,13 @@ const routes: Routes = [
   {path:'inventorysales',component:InventorysalesComponent },
   {path:'inventorysalesnew',component:InventorysalesnewComponent },
   {path:'movementssales',component:MovementssalesComponent},
-  // {path:'ticket-printing',component:TicketPrinterComponent},
   {path:'outgoing-transfers',component:OutgoingTransfersComponent},
   {path:'new-transfers',component:NewTransferComponent},
   {path:'receiving-transfers',component:ReceivingTransfersComponent},
-
-   {path:'reports-all',component:RepotsAllComponent}, 
-   {path:'cancellation-request',component:CancellationRequestsComponent},
+  {path:'pedido', component: PedidosComponent},
+  {path:'pedido/nuevo', component: NuevoPedidoComponent},
+  {path:'reports-all',component:RepotsAllComponent}, 
+  {path:'cancellation-request',component:CancellationRequestsComponent},
 ];
 
 @NgModule({
@@ -61,4 +62,21 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-export const routingComponents=[LoginComponent,DashboardComponent,InventoryComponent,InventorynewComponent,MovementsComponent,IncomeComponent,IncomerepComponent,PerfilComponent,InventoryperComponent,InventorypernewComponent,SuppliersComponent,MovementsperComponent,ReloadComponent]
+
+export const routingComponents = [
+  LoginComponent,
+  DashboardComponent,
+  InventoryComponent,
+  InventorynewComponent,
+  MovementsComponent,
+  IncomeComponent,
+  IncomerepComponent,
+  PerfilComponent,
+  InventoryperComponent,
+  InventorypernewComponent,
+  SuppliersComponent,
+  MovementsperComponent,
+  ReloadComponent,
+  PedidosComponent,
+  NuevoPedidoComponent
+];

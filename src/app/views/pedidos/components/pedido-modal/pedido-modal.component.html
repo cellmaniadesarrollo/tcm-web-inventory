@@ -1,0 +1,354 @@
+<!-- pedido-modal.component.html -->
+<h2 mat-dialog-title class="modal-header-centered">
+  <span *ngIf="!newproveedor && mostrarListaPedidos">📋 Seleccionar Pedido (Inventario)</span>
+  <span *ngIf="!newproveedor && !mostrarListaPedidos && !pedidoSeleccionado">Nuevo ingreso</span>
+  <span *ngIf="!newproveedor && !mostrarListaPedidos && pedidoSeleccionado">Ingreso para: {{ pedidoSeleccionado.name }}</span>
+  <span *ngIf="newproveedor">Nuevo Proveedor</span>
+  <button mat-icon-button mat-dialog-close class="close-button" aria-label="Cerrar">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+
+<mat-dialog-content class="mat-typography custom-dialog-content">
+  
+  <!-- ============ LISTA DE PEDIDOS EN INVENTARIO ============ -->
+  <div *ngIf="mostrarListaPedidos && !newproveedor" class="pedidos-lista-container">
+    
+    <div class="pedidos-header-actions">
+      <div class="pedidos-title-section">
+        <mat-icon color="primary">inventory</mat-icon>
+        <span class="pedidos-title">Pedidos en Inventario</span>
+        <span class="badge-count">{{ pedidosInventario.length }}</span>
+      </div>
+      <button mat-icon-button (click)="cargarPedidosInventario()" matTooltip="Actualizar" [disabled]="loadingPedidosInventario">
+        <mat-icon [class.spinning]="loadingPedidosInventario">refresh</mat-icon>
+      </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- ✅ PASAR LA LISTA DE SELECCIONADOS -->
+    <app-pedido-inventario-tabla
+      [pedidos]="pedidosInventario"
+      [loading]="loadingPedidosInventario"
+      [pedidosSeleccionados]="pedidosSeleccionadosIds"
+      (seleccionarPedido)="seleccionarPedido($event)">
+    </app-pedido-inventario-tabla>
+  </div>
+
+  <!-- ============ FORMULARIO DE INGRESO ============ -->
+  <div *ngIf="!newproveedor && !mostrarListaPedidos">
+    
+    <!-- Mostrar el pedido seleccionado -->
+    <div *ngIf="pedidoSeleccionado" class="pedido-seleccionado-info">
+      <mat-card appearance="outlined" class="pedido-info-card">
+        <mat-card-content>
+          <div class="pedido-info-row">
+            <span class="pedido-info-label">Pedido:</span>
+            <span class="pedido-info-value">{{ pedidoSeleccionado.name }}</span>
+          </div>
+          <div class="pedido-info-row">
+            <span class="pedido-info-label">Cantidad solicitada:</span>
+            <span class="pedido-info-value">{{ pedidoSeleccionado.quantity || 1 }}</span>
+          </div>
+          <div class="pedido-info-row">
+            <span class="pedido-info-label">Precio estimado:</span>
+            <span class="pedido-info-value">{{ pedidoSeleccionado.estimatedPrice | currency }}</span>
+          </div>
+          <div class="pedido-info-row" *ngIf="pedidoSeleccionado.description">
+            <span class="pedido-info-label">Descripción:</span>
+            <span class="pedido-info-value">{{ pedidoSeleccionado.description }}</span>
+          </div>
+        </mat-card-content>
+        <button mat-stroked-button color="warn" size="small" (click)="volverAListaPedidos()" class="btn-volver-pedidos">
+          <mat-icon>arrow_back</mat-icon> Cambiar pedido
+        </button>
+      </mat-card>
+    </div>
+
+    <form [formGroup]="incomesaveForm" class="flex-container">
+      
+      <!-- Proveedor -->
+      <div class="row-flex">
+        <button mat-mini-fab color="primary" type="button" matTooltip="Nuevo proveedor" (click)="nuevoproveedor()" class="prefix-button">
+          <mat-icon>add</mat-icon>
+        </button>
+        <mat-form-field appearance="outline" class="grow">
+          <mat-label>Proveedor</mat-label>
+          <mat-select formControlName="id_proveedor">
+            <mat-option *ngFor="let item of supplierslist" [value]="item._id">
+              {{ item.razon_social }} {{ item.countriel?.name_countrie }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="submitted && f['id_proveedor'].errors">
+            Proveedor requerido
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Tipo documento y Número -->
+      <div class="row-flex grid-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo documento</mat-label>
+          <mat-select formControlName="tipo_documento" (selectionChange)="changes()">
+            <mat-option *ngFor="let type of typedocument" [value]="type._id">
+              {{ type.name_type_document }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Número de {{ typedocumenttext }}</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Número de {{ typedocumenttext }}"
+            formControlName="numero_documento"
+            onkeyup="this.value=this.value.toUpperCase();"
+          />
+          <mat-error *ngIf="submitted && f['numero_documento'].errors">
+            Número requerido
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Buscar Producto -->
+      <div class="row-flex text-search-container">
+        <div class="search-wrapper">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Buscar Producto</mat-label>
+          <input
+            matInput
+            type="search"
+            placeholder="Buscar Producto"
+            autocomplete="off"
+            formControlName="item"
+            (input)="onSearchInput($event); filtrarSugerencias(); makechoice('')"
+            [readonly]="blockbusquedapro"
+            (keydown)="makechoice($event)"
+          />
+          <button mat-icon-button matSuffix type="button" [disabled]="blockbusquedapro" (click)="makechoice('Enter')">
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+          <button 
+            mat-mini-fab 
+            color="primary" 
+            class="btn-crear-producto"
+            (click)="abrirNuevoProducto()"
+            matTooltip="Crear nuevo producto"
+            type="button">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+
+        <div class="spinner-overlay" *ngIf="loaderpro">
+          <mat-spinner diameter="30"></mat-spinner>
+        </div>
+
+        <mat-action-list class="autocomplete-panel custom-scrollbar" *ngIf="!loaderpro && mostrarSugerencias && items.length > 0">
+          <button mat-list-item *ngFor="let item of items" (click)="seleccionarSugerencia('«'+ item.upc +'» '+item.nameitem+' '+item.modelitem+' '+item.quality+' '+item.stateproduc+' '+item.colors1, item._id)">
+            «{{ item.upc }}» {{ item.nameitem }} {{ item.modelitem }} {{ item.quality }} {{ item.stateproduc }} {{ item.colors1 }}
+          </button>
+        </mat-action-list>
+      </div>
+
+      <!-- Cantidad, Precio unitario, Impuesto, % -->
+      <div class="row-flex grid-sub-details">
+        <mat-form-field appearance="outline">
+          <mat-label>Cantidad</mat-label>
+          <input matInput type="number" formControlName="cantidad" placeholder="Cantidad" />
+          <mat-error *ngIf="submitted && f['cantidad'].errors">Requerido</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Precio unitario</mat-label>
+          <input matInput type="number" step=".01" min="0" formControlName="preciounit" placeholder="Precio unitario" (input)="totalpriceds()" />
+          <mat-error *ngIf="submitted && f['preciounit'].errors">Requerido</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Impuesto</mat-label>
+          <mat-select formControlName="inpuesto" (selectionChange)="findpercentaje()">
+            <mat-option *ngFor="let tax of taxesnames" [value]="tax._id">
+              {{ tax.tax_name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>%</mat-label>
+          <mat-select formControlName="porcentaje" (selectionChange)="totalpriceds()">
+            <mat-option *ngFor="let percentaje of taxespercentaje" [value]="percentaje._id">
+              {{ percentaje.percentaje }} %
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="total-display">
+          <span class="mat-hint">Total:</span>
+          <strong>{{ totalprice }}</strong>
+        </div>
+      </div>
+
+      <!-- Precio venta, IVA, Fecha -->
+      <div class="row-flex grid-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Precio venta</mat-label>
+          <input matInput type="number" step=".01" min="0" formControlName="precioventa" placeholder="Precio venta" (focus)="seleccionarTexto($event)" />
+          <mat-error *ngIf="submitted && f['precioventa'].errors">Requerido</mat-error>
+        </mat-form-field>
+
+        <div class="iva-display">
+          <span class="text-danger fw-bold">{{ precioventaConIva | number:'1.2-2' }} (c/IVA)</span>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha</mat-label>
+          <input matInput type="datetime-local" formControlName="fecha" />
+          <mat-error *ngIf="submitted && f['fecha'].errors">Requerido</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- IMEIs -->
+      <div formArrayName="imeis" *ngIf="isCelular" class="full-width imei-section">
+        <div *ngFor="let imei of imeisFormArray.controls; let i = index" class="row-flex mb-2">
+          <mat-form-field appearance="outline" class="grow no-padding">
+            <mat-label>Ingrese IMEI {{ i + 1 }}</mat-label>
+            <input matInput type="text" [formControlName]="i" (blur)="onImeiBlur(i)" />
+          </mat-form-field>
+          <button mat-flat-button color="warn" type="button" (click)="removeImei(i)" *ngIf="imeisFormArray.length > 1" class="imei-delete-btn">
+            Eliminar
+          </button>
+          <div *ngIf="imeiMessages[i]" [style.color]="imei.valid ? 'green' : 'red'" class="imei-message">
+            {{ imeiMessages[i] }}
+          </div>
+        </div>
+        <button mat-stroked-button color="primary" type="button" class="mt-2" (click)="addImei()">
+          <mat-icon>add</mat-icon> Agregar IMEI
+        </button>
+      </div>
+
+      <!-- Observaciones -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Observaciones</mat-label>
+        <textarea matInput formControlName="observaciones" placeholder="Observaciones" rows="2"></textarea>
+      </mat-form-field>
+
+      <!-- Checkboxes -->
+      <div class="checkbox-container">
+        <mat-checkbox formControlName="get_print">Imprimir etiqueta</mat-checkbox>
+        
+        <mat-form-field appearance="outline" class="compact-select" *ngIf="incomesaveForm.get('get_print')?.value">
+          <mat-select formControlName="selected_printer">
+            <mat-option value="dymo">Dymo</mat-option>
+            <mat-option value="zebra">Zebra</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-checkbox formControlName="bodega" class="ms-3">3er Piso</mat-checkbox>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============ FORMULARIO DE NUEVO PROVEEDOR ============ -->
+  <div *ngIf="newproveedor">
+    <form [formGroup]="supplierForm" class="flex-container">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>RUC/DNI</mat-label>
+        <input matInput formControlName="RUC" placeholder="RUC/DNI" />
+        <mat-error *ngIf="submitted1 && f1['RUC'].errors">Requerido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Razón Social</mat-label>
+        <input matInput formControlName="razonsocial" placeholder="Razón Social" />
+        <mat-error *ngIf="submitted1 && f1['razonsocial'].errors">Requerido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Dirección</mat-label>
+        <input matInput formControlName="direccion" placeholder="Dirección" />
+        <mat-error *ngIf="submitted1 && f1['direccion'].errors">Requerido</mat-error>
+      </mat-form-field>
+
+      <div class="row-flex grid-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="telefono" placeholder="Teléfono" />
+          <mat-error *ngIf="submitted1 && f1['telefono'].errors">Requerido</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" placeholder="Email" />
+          <mat-error *ngIf="submitted1 && f1['email'].errors">Requerido</mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>RIMPE</mat-label>
+        <mat-select formControlName="rimpe">
+          <mat-option *ngFor="let item of rimpeitems" [value]="item._id">
+            {{ item.name_rimpe }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="submitted1 && f1['rimpe'].errors">Requerido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>País</mat-label>
+        <mat-select formControlName="pais">
+          <mat-option *ngFor="let item of countriesitems" [value]="item._id">
+            {{ item.name_countrie }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="submitted1 && f1['pais'].errors">Requerido</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+
+</mat-dialog-content>
+
+<!-- ============ FOOTER ============ -->
+<mat-dialog-actions align="end" class="modal-footer-container">
+  
+  <!-- Footer cuando se muestra la lista de pedidos -->
+  <ng-container *ngIf="mostrarListaPedidos && !newproveedor">
+    <button mat-stroked-button color="warn" mat-dialog-close>
+      <mat-icon>close</mat-icon> Cancelar
+    </button>
+  </ng-container>
+
+  <!-- Footer del formulario de ingreso -->
+  <ng-container *ngIf="!newproveedor && !mostrarListaPedidos">
+    <button mat-flat-button color="success" [disabled]="bloquear" (click)="onSubmitclose(incomesaveForm.value)">
+      <span *ngIf="!bloquear">Ingresar y cerrar</span>
+      <span *ngIf="bloquear" class="loading-btn-content">
+        <mat-spinner diameter="18"></mat-spinner> Guardando...
+      </span>
+    </button>
+<!-- 
+    <button mat-flat-button color="primary" [disabled]="bloquear1" (click)="onSubmitcloseoff(incomesaveForm.value)">
+      <span *ngIf="!bloquear1">Ingresar</span>
+      <span *ngIf="bloquear1" class="loading-btn-content">
+        <mat-spinner diameter="18"></mat-spinner> Guardando...
+      </span>
+    </button> -->
+
+    <button mat-stroked-button color="warn" mat-dialog-close [disabled]="bloquear">
+      <mat-icon>close</mat-icon> Cancelar
+    </button>
+  </ng-container>
+
+  <!-- Footer de nuevo proveedor -->
+  <ng-container *ngIf="newproveedor">
+    <button mat-flat-button color="success" (click)="savesupplier(supplierForm.value)">
+      <mat-icon>save</mat-icon> Guardar proveedor
+    </button>
+    <button mat-stroked-button color="warn" (click)="nuevoproveedor()">
+      <mat-icon>close</mat-icon> Cancelar
+    </button>
+  </ng-container>
+
+</mat-dialog-actions>

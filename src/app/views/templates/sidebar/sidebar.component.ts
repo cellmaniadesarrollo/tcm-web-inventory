@@ -73,6 +73,8 @@ export class SidebarComponent {
         return true;
       case '/incomerep':
         return true;
+      case '/pedido':
+        return true;
       default:
         return false;
     }

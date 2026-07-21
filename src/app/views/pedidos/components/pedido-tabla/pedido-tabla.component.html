@@ -1,0 +1,60 @@
+<!-- pedido-tabla.component.html -->
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Cantidad</th>
+        <th>Precio Est.</th>
+        <th>Estado</th>
+        <th>Creado Por</th>
+        <th>SKU</th>
+        <th>Batch</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pedido of pedidos">
+        <td>{{ pedido.name }}</td>
+        <td>{{ pedido.quantity }}</td>
+        <td>{{ pedido.estimatedPrice | currency }}</td>
+        <td>
+          <span class="badge" [ngClass]="{
+            'bg-warning': pedido.status === 'pendiente',
+            'bg-info': pedido.status === 'inventario',
+            'bg-success': pedido.status === 'completado',
+            'bg-danger': pedido.status === 'rechazado'
+          }">{{ pedido.status }}</span>
+        </td>
+        <td>{{ pedido.createdBy ? pedido.createdBy.nombre + ' ' + pedido.createdBy.apellido : 'Sistema' }}</td>
+        <td>{{ pedido.sku || '—' }}</td>
+        <td>{{ pedido.batchId || '—' }}</td>
+        <td>
+          <!-- ✅ SOLO PARA PEDIDOS PENDIENTES -->
+          <ng-container *ngIf="pedido.status === 'pendiente'">
+            <!-- Botón INVENTARIAR - Cambia estado a inventario -->
+            <button class="btn btn-sm btn-info me-1" 
+                    (click)="onInventariarPedido(pedido)"
+                    matTooltip="Marcar como inventariado">
+              <i class="fa fa-boxes"></i> Inventariar
+            </button>
+            
+            <!-- Botón RECHAZAR -->
+            <button class="btn btn-sm btn-danger" 
+                    (click)="onRechazarPedido(pedido)">
+              <i class="fa fa-times"></i> Rechazar
+            </button>
+          </ng-container>
+          
+          <!-- Para pedidos ya procesados -->
+          <span *ngIf="pedido.status !== 'pendiente'" class="text-muted small">
+            <i class="fa fa-check-circle text-success"></i> Procesado
+          </span>
+        </td>
+      </tr>
+      <tr *ngIf="pedidos.length === 0 && !loading">
+        <td colspan="8" class="text-center">No se encontraron pedidos.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
