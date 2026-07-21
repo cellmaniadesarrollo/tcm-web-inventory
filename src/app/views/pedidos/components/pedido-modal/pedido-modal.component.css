@@ -1,0 +1,281 @@
+/* ==========================================================================
+   ESTILOS GENERALES DEL MODAL (MAT-DIALOG)
+   ========================================================================== */
+
+.modal-header-centered {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  margin: 0;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.custom-dialog-content {
+  padding: 20px 24px !important;
+  max-height: 70vh; /* Previene que el modal se desborde de la pantalla */
+}
+
+.modal-footer-container {
+  padding: 16px 24px !important;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+  gap: 8px; /* Espaciado uniforme entre botones */
+}
+
+/* ==========================================================================
+   ESTRUCTURAS DE LAYOUT (FLEXBOX & GRID)
+   ========================================================================== */
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Espaciado vertical entre filas */
+  width: 100%;
+  margin-top: 8px;
+}
+
+.row-flex {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Clases de utilidad de crecimiento */
+.grow {
+  flex-grow: 1;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Grillas responsivas para los campos del formulario */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  align-items: center;
+  gap: 16px;
+}
+
+/* Grilla específica para Cantidad, Precio, Impuestos */
+.grid-sub-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  align-items: center;
+  gap: 12px;
+}
+
+/* ==========================================================================
+   SECCIONES ESPECÍFICAS
+   ========================================================================== */
+
+/* 1. Encabezado de la lista de pedidos */
+.pedidos-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+}
+
+.pedidos-title-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pedidos-title {
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.badge-count {
+  background-color: #3f51b5;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* 2. Tarjeta informativa del pedido seleccionado */
+.pedido-seleccionado-info {
+  margin-bottom: 20px;
+}
+
+.pedido-info-card {
+  background-color: #f4f6f9;
+  border: 1px dashed #b0bec5 !important;
+}
+
+.pedido-info-row {
+  display: flex;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+.pedido-info-label {
+  font-weight: bold;
+  color: #546e7a;
+  width: 140px;
+  flex-shrink: 0;
+}
+
+.pedido-info-value {
+  color: #263238;
+}
+
+.btn-volver-pedidos {
+  margin: 0 16px 16px 16px !important;
+}
+
+/* 3. Buscador de productos y panel de autocompletado */
+.text-search-container {
+  position: relative; /* Clave para posicionar el panel de sugerencias */
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.search-wrapper {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-crear-producto {
+  margin-bottom: 22px; /* Alineación perfecta con el mat-form-field outline */
+}
+
+.autocomplete-panel {
+  position: absolute;
+  top: 64px;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* 4. Displays de Totales e IVA */
+.total-display {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #e8f5e9;
+  border-radius: 4px;
+  height: 52px;
+  margin-bottom: 22px; /* Alineación con los campos */
+  border: 1px solid #c8e6c9;
+}
+
+.total-display strong {
+  color: #2e7d32;
+  font-size: 1.1rem;
+}
+
+.iva-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  margin-bottom: 22px;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  text-align: center;
+  padding: 0 8px;
+}
+
+/* 5. Sección de IMEIs */
+.imei-section {
+  background-color: #fafafa;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #eaeaea;
+}
+
+.imei-delete-btn {
+  margin-bottom: 22px;
+  height: 48px !important;
+}
+
+.imei-message {
+  font-size: 0.8rem;
+  margin-top: -15px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+/* 6. Checkboxes e Impresión */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.compact-select {
+  width: 120px;
+  margin-bottom: -10px; /* Compensa el padding inferior interno de material */
+}
+
+/* ==========================================================================
+   UTILIDADES Y ANIMACIONES
+   ========================================================================== */
+
+/* Animación de rotación para el botón de refrescar */
+.spinning {
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Contenedor del spinner dentro de los botones de guardado */
+.loading-btn-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Overlay de carga interno para búsquedas */
+.spinner-overlay {
+  position: absolute;
+  right: 60px;
+  top: 15px;
+  z-index: 2;
+}
+
+/* Barra de scroll personalizada (opcional, para estética moderna) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

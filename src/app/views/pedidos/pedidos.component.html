@@ -1,0 +1,72 @@
+<!-- pedidos.component.html -->
+<div class="content-wrapper">
+  <div class="p-4">
+    
+    <!-- TABS para cambiar entre Inventario y Pedidos -->
+    <mat-tab-group class="main-tabs" (selectedTabChange)="onTabChange($event)">
+      
+      <!-- TAB 1: INVENTARIO (Productos existentes) -->
+      <mat-tab label="Inventario">
+        <div class="tab-content pt-3">
+          <app-inventario-tabla
+            [items]="items"
+            [loading]="loading"
+            [totalEntries]="totalEntries"
+            [currentPage]="currentPage"
+            [itemsPerPage]="itemsPerPage"
+            [busquedaFiltro]="busquedaFiltro"
+            [estadoFiltro]="estadoFiltro"
+            (pageChange)="onPageChange($event)"
+            (filtroChange)="onFiltrosCambiados($event)"
+            (verDetalle)="verDetalle($event)"
+            (editarProducto)="editarProducto($event)"
+            (nuevoPedido)="irANuevoPedido()"
+            (nuevoProducto)="irANuevoProducto()">
+          </app-inventario-tabla>
+        </div>
+      </mat-tab>
+      
+      <!-- TAB 2: PEDIDOS PENDIENTES -->
+      <mat-tab label="Pedidos Pendientes">
+        <div class="tab-content pt-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Pedidos pendientes de aprobación</h5>
+            <button class="btn btn-outline-primary btn-sm" (click)="cargarPedidosPendientes()">
+              <i class="fa fa-refresh"></i> Actualizar
+            </button>
+          </div>
+          <!-- ✅ ACTUALIZADO: Eventos corregidos -->
+          <app-pedido-tabla
+            [pedidos]="pedidosPendientes"
+            [loading]="loadingPedidos"
+            (inventariarPedido)="onInventariarPedido($event)"
+            (rechazarPedido)="onRechazarPedido($event)"
+            (seleccionarPedido)="onSeleccionarPedido($event)">
+          </app-pedido-tabla>
+        </div>
+      </mat-tab>
+      
+      <!-- TAB 3: PEDIDOS EN INVENTARIO -->
+      <mat-tab label="Pedidos en Inventario">
+        <div class="tab-content pt-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Pedidos ya procesados en inventario</h5>
+            <button class="btn btn-outline-info btn-sm" (click)="cargarPedidosEnInventario()">
+              <i class="fa fa-refresh"></i> Actualizar
+            </button>
+          </div>
+          <!-- ✅ ACTUALIZADO: Eventos corregidos -->
+          <app-pedido-tabla
+            [pedidos]="pedidosInventario"
+            [loading]="loadingPedidos"
+            (inventariarPedido)="onInventariarPedido($event)"
+            (rechazarPedido)="onRechazarPedido($event)"
+            (seleccionarPedido)="onSeleccionarPedido($event)">
+          </app-pedido-tabla>
+        </div>
+      </mat-tab>
+      
+    </mat-tab-group>
+    
+  </div>
+</div>

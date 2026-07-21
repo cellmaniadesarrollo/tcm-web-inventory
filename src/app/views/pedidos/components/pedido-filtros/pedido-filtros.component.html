@@ -1,0 +1,17 @@
+<div class="row mb-3 align-items-center">
+  <div class="col-md-8">
+    <div class="btn-group" role="group">
+      <button type="button" class="btn" [ngClass]="estadoActual === 'todos' ? 'btn-primary' : 'btn-outline-primary'" (click)="onCambioEstado('todos')">Todos</button>
+      <button type="button" class="btn" [ngClass]="estadoActual === 'active' ? 'btn-success' : 'btn-outline-success'" (click)="onCambioEstado('active')">Aceptados</button>
+      <button type="button" class="btn" [ngClass]="estadoActual === 'rechazado' ? 'btn-danger' : 'btn-outline-danger'" (click)="onCambioEstado('rechazado')">Rechazados</button>
+      <button type="button" class="btn" [ngClass]="estadoActual === 'inventario' ? 'btn-warning' : 'btn-outline-warning'" (click)="onCambioEstado('inventario')">Inventario</button>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Buscar pedido..." [(ngModel)]="textoBusqueda" (keyup.enter)="onBuscar()">
+      <button class="btn btn-secondary" type="button" (click)="onBuscar()">Buscar</button>
+    </div>
+  </div>
+</div>

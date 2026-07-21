@@ -6,9 +6,7 @@
     <span class="brand-text font-weight-light"><strong>Team CellMania</strong></span>
   </a>
 
-  <!-- Sidebar -->
   <div class="sidebar">
-    <!-- Sidebar user panel (optional) -->
     <div class="cursor-poiner user-panel mt-3 pb-3 mb-3 d-flex" (click)="perfil()">
       <div *ngIf="userimg; else content">
         <div class="image">
@@ -20,14 +18,12 @@
           <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i>
         </div>
       </ng-template>
-      <!-- <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i> -->
 
       <div class="info">
         <a class="d-block">{{ user }}</a>
       </div>
     </div>
 
-    <!-- Sidebar Menu -->
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false"
         *ngIf="nivel1">
@@ -71,9 +67,17 @@
           </a>
         </li>
       </ul>
-      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false"
+        *ngIf="nivel1 || nivel2">
+        <li class="nav-item btn6">
+          <a class="cursor-pointer nav-link" routerLink="/pedido" routerLinkActive="bg-primary">
+            <i class="nav-icon bi bi-clipboard-check-fill"></i>
+            <p>Gestión Pedidos</p>
+          </a>
+        </li>
       </ul>
+
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true"
         *ngIf="nivel1 || nivel2">
         <li class="nav-item btn6">
@@ -172,7 +176,6 @@
               <a class="nav-link" routerLink="/outgoing-transfers" routerLinkActive="active">
                 <i class="nav-icon bi bi-arrow-right-square"></i>
                 <p>Transferencia Saliente</p>
-
               </a>
               <a class="nav-link" routerLink="/receiving-transfers" routerLinkActive="active">
                 <i class="nav-icon bi bi-arrow-left-square"></i>
@@ -180,15 +183,8 @@
               </a>
             </li>
           </ul>
-
         </li>
       </ul>
-
-
     </nav>
-
-
-    <!-- /.sidebar-menu -->
-  </div>
-  <!-- /.sidebar -->
-</aside>
+    </div>
+  </aside>

@@ -1,0 +1,299 @@
+<h2 mat-dialog-title class="modal-header-centered">
+  <mat-icon class="header-icon">add_circle</mat-icon> Nuevo Producto
+  <button mat-icon-button mat-dialog-close class="close-button" aria-label="Cerrar">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+
+<mat-dialog-content class="mat-typography custom-dialog-content">
+  <form [formGroup]="nuevoForm" class="flex-container">
+    
+    <!-- ✅ ALERTA MEJORADA CON DETALLES -->
+    <div *ngIf="submitted && nuevoForm.invalid" class="validation-alert">
+      <mat-icon>error_outline</mat-icon>
+      <div>
+        <strong>¡Error!</strong> Por favor complete todos los campos requeridos:
+        <ul class="error-list">
+          <li *ngIf="nuevoForm.get('cod_upc')?.hasError('required') && !codeauto">
+            <mat-icon>warning</mat-icon> Código del Producto es requerido
+          </li>
+          <li *ngIf="nuevoForm.get('name_items')?.hasError('required')">
+            <mat-icon>warning</mat-icon> Producto es requerido
+          </li>
+          <li *ngIf="nuevoForm.get('id_model')?.hasError('required')">
+            <mat-icon>warning</mat-icon> Modelo es requerido
+          </li>
+          <li *ngIf="nuevoForm.get('id_type')?.hasError('required')">
+            <mat-icon>warning</mat-icon> Tipo es requerido
+          </li>
+          <li *ngIf="nuevoForm.get('id_color')?.hasError('required')">
+            <mat-icon>warning</mat-icon> Color es requerido
+          </li>
+          <li *ngIf="nuevoForm.get('id_quality')?.hasError('required')">
+            <mat-icon>warning</mat-icon> Calidad es requerida
+          </li>
+          <li *ngIf="nuevoForm.get('id_stateproduct_inventoryflow')?.hasError('required')">
+            <mat-icon>warning</mat-icon> Estado del Producto es requerido
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid-main-columns">
+      
+      <div class="form-card">
+        <div class="card-header-accent">
+          <mat-icon>info</mat-icon> <span>Información del Producto</span>
+        </div>
+        
+        <div class="card-body-content">
+          
+          <div class="row-flex align-items-center mb-1">
+            <div class="switch-container">
+              <mat-slide-toggle id="codigoAuto" (change)="onCheckboxChange($event)" [checked]="codeauto">
+              </mat-slide-toggle>
+            </div>
+            <div class="grow">
+              <label *ngIf="codeauto; else templateElse" class="text-muted text-sm hint-loader">
+                <mat-spinner diameter="14" class="inline-spinner"></mat-spinner> Código generado automáticamente
+              </label>
+              <ng-template #templateElse>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Código del Producto</mat-label>
+                  <mat-icon matPrefix>tag</mat-icon>
+                  <input matInput type="text" formControlName="cod_upc" placeholder="Ingrese el código" />
+                  <mat-error *ngIf="submitted && f['cod_upc'].errors">El código es requerido</mat-error>
+                </mat-form-field>
+              </ng-template>
+            </div>
+          </div>
+
+          <!-- Producto -->
+          <div class="row-flex">
+            <mat-form-field appearance="outline" class="grow">
+              <mat-label>Producto</mat-label>
+              <mat-select formControlName="name_items" required>
+                <div class="select-search-header">
+                  <mat-icon class="search-icon">search</mat-icon>
+                  <input class="search-input" placeholder="Buscar producto..." 
+                         (input)="filtrarProductos($any($event.target).value)" (keydown)="$event.stopPropagation()">
+                </div>
+                <mat-option *ngFor="let item of nameiteFiltrados" [value]="item._id">
+                  {{ item.name_nameitems }}
+                </mat-option>
+                <mat-option *ngIf="nameiteFiltrados.length === 0" disabled>No se encontraron resultados</mat-option>
+              </mat-select>
+              <button mat-icon-button matSuffix type="button" matTooltip="Nuevo Producto" (click)="openModalname()" class="suffix-add-btn">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+              <mat-error *ngIf="submitted && f['name_items'].errors">Producto requerido</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Marca -->
+          <div class="row-flex">
+            <mat-form-field appearance="outline" class="grow">
+              <mat-label>Marca</mat-label>
+              <mat-select formControlName="id_brand" (selectionChange)="changeLeagueOwner($event.value)">
+                <div class="select-search-header">
+                  <mat-icon class="search-icon">search</mat-icon>
+                  <input class="search-input" placeholder="Buscar marca..." 
+                         (input)="filtrarMarcas($any($event.target).value)" (keydown)="$event.stopPropagation()">
+                </div>
+                <mat-option *ngFor="let brand of brandsFiltradas" [value]="brand._id">
+                  {{ brand.name_brands }}
+                </mat-option>
+                <mat-option *ngIf="brandsFiltradas.length === 0" disabled>No se encontraron marcas</mat-option>
+              </mat-select>
+              <button mat-icon-button matSuffix type="button" matTooltip="Nueva Marca" (click)="openModalbrand()" class="suffix-add-btn">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+
+          <!-- Modelo -->
+          <div class="row-flex">
+            <mat-form-field appearance="outline" class="grow">
+              <mat-label>Modelo</mat-label>
+              <mat-select formControlName="id_model" required>
+                <div class="select-search-header">
+                  <mat-icon class="search-icon">search</mat-icon>
+                  <input class="search-input" placeholder="Buscar modelo..." 
+                         (input)="filtrarModelos($any($event.target).value)" (keydown)="$event.stopPropagation()">
+                </div>
+                <mat-option *ngFor="let model of modelsFiltrados" [value]="model._id">
+                  <div class="flex-justify-between">
+                    <span>{{ model.business_model }}</span>
+                    <span class="custom-badge-id">{{ model._id }}</span>
+                  </div>
+                </mat-option>
+                <mat-option *ngIf="modelsFiltrados.length === 0" disabled>No se encontraron modelos</mat-option>
+              </mat-select>
+              <button mat-icon-button matSuffix type="button" matTooltip="Nuevo Modelo" (click)="openModalmodel()" class="suffix-add-btn">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+              <mat-error *ngIf="submitted && f['id_model'].errors">Modelo requerido</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Tipo -->
+          <div class="row-flex">
+            <mat-form-field appearance="outline" class="grow">
+              <mat-label>Tipo</mat-label>
+              <mat-select formControlName="id_type" required>
+                <div class="select-search-header">
+                  <mat-icon class="search-icon">search</mat-icon>
+                  <input class="search-input" placeholder="Buscar tipo..." 
+                         (input)="filtrarTipos($any($event.target).value)" (keydown)="$event.stopPropagation()">
+                </div>
+                <mat-option *ngFor="let type of typesFiltrados" [value]="type._id">
+                  {{ type.type_inventoryflow }}
+                </mat-option>
+                <mat-option *ngIf="typesFiltrados.length === 0" disabled>No se encontraron tipos</mat-option>
+              </mat-select>
+              <button mat-icon-button matSuffix type="button" matTooltip="Nuevo Tipo" (click)="openModaltype()" class="suffix-add-btn">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+              <mat-error *ngIf="submitted && f['id_type'].errors">Tipo requerido</mat-error>
+            </mat-form-field>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="card-header-accent success-accent">
+          <mat-icon>palette</mat-icon> <span>Especificaciones</span>
+        </div>
+        
+        <div class="card-body-content">
+
+          <!-- Color -->
+          <div class="row-flex">
+            <mat-form-field appearance="outline" class="grow">
+              <mat-label>Color</mat-label>
+              <mat-select formControlName="id_color" required>
+                <div class="select-search-header">
+                  <mat-icon class="search-icon">search</mat-icon>
+                  <input class="search-input" placeholder="Buscar color..." 
+                         (input)="filtrarColores($any($event.target).value)" (keydown)="$event.stopPropagation()">
+                </div>
+                <mat-option *ngFor="let color of colorsFiltrados" [value]="color._id">
+                  <span class="color-dot-indicator">●</span> {{ color.color_name }}
+                </mat-option>
+                <mat-option *ngIf="colorsFiltrados.length === 0" disabled>No se encontraron colores</mat-option>
+              </mat-select>
+              <button mat-icon-button matSuffix type="button" matTooltip="Nuevo Color" (click)="openModalcolor()" class="suffix-add-btn">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+              <mat-error *ngIf="submitted && f['id_color'].errors">Color requerido</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Calidad -->
+          <div class="row-flex">
+            <mat-form-field appearance="outline" class="grow">
+              <mat-label>Calidad</mat-label>
+              <mat-select formControlName="id_quality" required>
+                <div class="select-search-header">
+                  <mat-icon class="search-icon">search</mat-icon>
+                  <input class="search-input" placeholder="Buscar calidad..." 
+                         (input)="filtrarCalidades($any($event.target).value)" (keydown)="$event.stopPropagation()">
+                </div>
+                <mat-option *ngFor="let quality of qualitysFiltradas" [value]="quality._id">
+                  {{ quality.quality_inventoryflow }}
+                </mat-option>
+                <mat-option *ngIf="qualitysFiltradas.length === 0" disabled>No se encontraron resultados</mat-option>
+              </mat-select>
+              <button mat-icon-button matSuffix type="button" matTooltip="Nueva Calidad" (click)="openModalquality()" class="suffix-add-btn">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+              <mat-error *ngIf="submitted && f['id_quality'].errors">Calidad requerida</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Estado del Producto -->
+          <div class="row-flex">
+            <mat-form-field appearance="outline" class="grow">
+              <mat-label>Estado del Producto</mat-label>
+              <mat-select formControlName="id_stateproduct_inventoryflow" required>
+                <div class="select-search-header">
+                  <mat-icon class="search-icon">search</mat-icon>
+                  <input class="search-input" placeholder="Buscar estado..." 
+                         (input)="filtrarEstados($any($event.target).value)" (keydown)="$event.stopPropagation()">
+                </div>
+                <mat-option *ngFor="let stateproduct of stateproductsFiltrados" [value]="stateproduct._id">
+                  <span class="status-pill" [ngClass]="{
+                    'status-success': stateproduct.stateproduct_inventoryflow === 'NUEVO',
+                    'status-warning': stateproduct.stateproduct_inventoryflow === 'USADO',
+                    'status-danger': stateproduct.stateproduct_inventoryflow === 'DAÑADO'
+                  }">{{ stateproduct.stateproduct_inventoryflow }}</span>
+                </mat-option>
+                <mat-option *ngIf="stateproductsFiltrados.length === 0" disabled>No se encontraron resultados</mat-option>
+              </mat-select>
+              <button mat-icon-button matSuffix type="button" matTooltip="Nuevo Estado" (click)="openModalstate()" class="suffix-add-btn">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+              <mat-error *ngIf="submitted && f['id_stateproduct_inventoryflow'].errors">Estado requerido</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="row-flex row-textarea">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Observaciones</mat-label>
+              <mat-icon matPrefix>edit</mat-icon>
+              <input
+                matInput
+                type="text"
+                formControlName="observations"
+                placeholder="Observaciones adicionales..."
+                onkeyup="this.value=this.value.toUpperCase();"
+              />
+            </mat-form-field>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="modal-footer-container">
+  <div class="footer-layout-flex">
+    <div class="print-checkbox-section">
+      <mat-checkbox formControlName="get_print" (change)="printbutton($event)">
+        <mat-icon class="v-align-icon">print</mat-icon> Imprimir etiqueta
+      </mat-checkbox>
+    </div>
+    
+    <div class="buttons-action-group">
+      <button mat-flat-button color="primary" [disabled]="isButtonDisabled" (click)="onSubmit(nuevoForm.value)">
+        <span *ngIf="isButtonDisabled" class="loading-btn-content">
+          <mat-spinner diameter="16"></mat-spinner>
+        </span>
+        <mat-icon *ngIf="!isButtonDisabled">save</mat-icon> Guardar
+      </button>
+
+      <!-- <button mat-flat-button color="success" [disabled]="isButtonDisabled" (click)="onSubmitclose()">
+        <span *ngIf="isButtonDisabled" class="loading-btn-content">
+          <mat-spinner diameter="16"></mat-spinner>
+        </span>
+        <mat-icon *ngIf="!isButtonDisabled">check_circle</mat-icon> Guardar y Cerrar
+      </button> -->
+
+      <button mat-stroked-button color="warn" type="button" (click)="cancelar()">
+        <mat-icon>close</mat-icon> Cancelar
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>
+
+<!-- Modales hijos -->
+<app-createnameitems *ngIf="modalVisible" [inventory]="nameinventory" (closeModalEvent)="closeModalname($event)"></app-createnameitems>
+<app-createbrand *ngIf="modalVisible1" [inventory]="nameinventory" (closeModalEvent)="closeModalbrand($event)"></app-createbrand>
+<app-createmodel *ngIf="modalVisible2" [inventory]="nameinventory" (closeModalEvent)="closeModalmodel($event)"></app-createmodel>
+<app-createtype *ngIf="modalVisible3" [inventory]="nameinventory" (closeModalEvent)="closeModaltype($event)"></app-createtype>
+<app-createcolor *ngIf="modalVisible4" [inventory]="nameinventory" (closeModalEvent)="closeModalcolor($event)"></app-createcolor>
+<app-createquality *ngIf="modalVisible5" [inventory]="nameinventory" (closeModalEvent)="closeModalquality($event)"></app-createquality>
+<app-createstateiteminventory *ngIf="modalVisible6" [inventory]="nameinventory" (closeModalEvent)="closeModalstate($event)"></app-createstateiteminventory>
