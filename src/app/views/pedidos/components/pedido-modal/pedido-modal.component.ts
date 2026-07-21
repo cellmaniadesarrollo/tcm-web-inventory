@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
-import { ApiService } from 'src/app/service/api/api.service';
+import { CrearPedido } from 'src/app/service/pedido/CrearPedido.service';
 import { Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 
@@ -38,7 +38,7 @@ export class PedidoModalComponent implements OnInit {
   ];
 
   constructor(
-    private api: ApiService,
+    private apiPedido: CrearPedido,
     private router: Router,
     private formBuilder: FormBuilder,
     private pedidoService: PedidoService,
@@ -156,7 +156,7 @@ export class PedidoModalComponent implements OnInit {
     this.mostrarListaPedidos = true;
     this.pedidosSeleccionadosIds = [];
     
-    const data = await this.api.getdataincome();
+    const data = await this.apiPedido.getdataincome();
     this.typedocument = data.dat;
     this.supplierslist = data.datsup;
     this.taxesnames = data.dattax;
@@ -290,7 +290,7 @@ export class PedidoModalComponent implements OnInit {
         // ✅ PRIMERO: Buscar por UPC (MÁS ESPECÍFICO)
         if (upcValue && upcValue.length > 0) {
           console.log('🔍 Buscando por UPC:', upcValue);
-          const results = await this.api.finditemincome(upcValue);
+          const results = await this.apiPedido.finditemincome(upcValue);
           console.log('📦 Resultados de búsqueda por UPC:', results.length);
           
           if (results && results.length > 0) {
@@ -324,7 +324,7 @@ export class PedidoModalComponent implements OnInit {
         // ✅ TERCERO: Buscar por nombre y filtrar por ID
         if (nombreProducto && nombreProducto.length > 2) {
           console.log('🔍 Buscando por nombre:', nombreProducto);
-          const results = await this.api.finditemincome(nombreProducto);
+          const results = await this.apiPedido.finditemincome(nombreProducto);
           console.log('📦 Resultados de búsqueda por nombre:', results.length);
           
           if (results && results.length > 0) {
@@ -439,14 +439,14 @@ export class PedidoModalComponent implements OnInit {
     try {
       this.loaderpro = true;
       
-      const results = await this.api.finditemincome('');
+      const results = await this.apiPedido.finditemincome('');
       this.items = results || [];
       console.log('📋 Items recargados:', this.items.length);
       
       const skuEnFormulario = this.extraerSkuDelProducto();
       if (skuEnFormulario) {
         console.log('🔍 Buscando por SKU en recarga:', skuEnFormulario);
-        const skuResults = await this.api.finditemincome(skuEnFormulario);
+        const skuResults = await this.apiPedido.finditemincome(skuEnFormulario);
         
         if (skuResults && skuResults.length > 0) {
           const combined = [...this.items, ...skuResults];
@@ -459,7 +459,7 @@ export class PedidoModalComponent implements OnInit {
       }
       
       if (this.terminoDeBusqueda && this.terminoDeBusqueda.length > 2) {
-        const searchResults = await this.api.finditemincome(this.terminoDeBusqueda);
+        const searchResults = await this.apiPedido.finditemincome(this.terminoDeBusqueda);
         const combined = [...this.items, ...(searchResults || [])];
         const unique = combined.filter((item: any, index: number, self: any[]) => 
           index === self.findIndex((i: any) => i._id === item._id)
@@ -495,7 +495,7 @@ export class PedidoModalComponent implements OnInit {
       
       if (nombreProducto && nombreProducto.length > 2) {
         console.log('🔍 Buscando por nombre en API:', nombreProducto);
-        const results = await this.api.finditemincome(nombreProducto);
+        const results = await this.apiPedido.finditemincome(nombreProducto);
         console.log('📦 Resultados de búsqueda por nombre en API:', results.length);
         
         if (results && results.length > 0) {
@@ -719,7 +719,7 @@ export class PedidoModalComponent implements OnInit {
         }, 1000);
         this.loaderpro = true;
         
-        this.items = await this.api.finditemincome(this.terminoDeBusqueda);
+        this.items = await this.apiPedido.finditemincome(this.terminoDeBusqueda);
         
         console.log(`🔍 Resultados de búsqueda para: "${this.terminoDeBusqueda}"`);
         console.log(`📦 Total de resultados: ${this.items.length}`);
@@ -796,7 +796,7 @@ export class PedidoModalComponent implements OnInit {
   }
 
   async findpercentaje() {
-    this.taxespercentaje = await this.api.getfindpercentaje(
+    this.taxespercentaje = await this.apiPedido.getfindpercentaje(
       this.incomesaveForm.controls['inpuesto'].getRawValue()
     );
     this.incomesaveForm.controls['porcentaje'].setValue(
@@ -814,7 +814,7 @@ export class PedidoModalComponent implements OnInit {
   async nuevoproveedor() {
     if (!this.newproveedor) {
       this.newproveedor = true;
-      const datanew = await this.api.getdatanewsupplier();
+      const datanew = await this.apiPedido.getdatanewsupplier();
       this.rimpeitems = datanew.rimpe;
       this.countriesitems = datanew.countries;
       this.supplierForm = this.formBuilder.group({
@@ -845,9 +845,9 @@ export class PedidoModalComponent implements OnInit {
     if (this.supplierForm.invalid) {
       return;
     } else {
-      const data = await this.api.savesuppliersincome(form);
+      const data = await this.apiPedido.savesuppliersincome(form);
       if (data == 'OK') {
-        const dataIncome = await this.api.getdataincome();
+        const dataIncome = await this.apiPedido.getdataincome();
         this.supplierslist = dataIncome.datsup;
         this.newproveedor = false;
         this.submitted1 = false;
@@ -940,7 +940,7 @@ export class PedidoModalComponent implements OnInit {
     } else {
       this.myedit = false;
       try {
-        const data = await this.api.saveincome(form);
+        const data = await this.apiPedido.saveincome(form);
 
         if (data == 'OK' || data.id || data.batchId) {
           if (this.pedidoSeleccionado) {
@@ -1037,7 +1037,7 @@ export class PedidoModalComponent implements OnInit {
       this.myedit = false;
       let data;
       try {
-        data = await this.api.saveincome(form);
+        data = await this.apiPedido.saveincome(form);
         this.bloquear = false;
         this.bloquear1 = false;
       } catch (error: any) {

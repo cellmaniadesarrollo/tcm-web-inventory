@@ -1,0 +1,218 @@
+/* imprimir-modal.component.css */
+
+/* ======== TÍTULO ======== */
+.modal-title {
+  display: flex;
+  align-items: center;
+}
+
+.dialog-icon {
+  vertical-align: middle;
+  margin-right: 10px;
+  color: #0054D2;
+}
+
+/* ======== INFORMACIÓN DEL PRODUCTO ======== */
+.product-info {
+  padding: 16px 0;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 16px;
+}
+
+.product-icon {
+  font-size: 56px;
+  width: 56px;
+  height: 56px;
+  color: #0054D2;
+}
+
+.product-name {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-top: 8px;
+}
+
+.stock-disponible {
+  color: #0054D2;
+  font-size: 1.1em;
+}
+
+/* ======== BOTONES DE CANTIDAD RÁPIDA ======== */
+.btn-outline-secondary {
+  min-width: 44px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid #dee2e6;
+  background-color: #fff;
+  color: #495057;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.btn-outline-secondary.active {
+  background-color: #0054D2;
+  color: white;
+  border-color: #0054D2;
+}
+
+.btn-outline-secondary:active {
+  transform: scale(0.95);
+}
+
+/* ======== SELECTOR DE TIPO DE IMPRESIÓN ======== */
+.option-icon {
+  vertical-align: middle;
+  margin-right: 8px;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* ======== RESUMEN DE IMPRESIÓN ======== */
+.resumen-impresion {
+  margin-top: 16px;
+}
+
+.alert {
+  padding: 10px 16px;
+  border-radius: 6px;
+  background-color: #e7f3ff;
+  border: 1px solid #b8d9ff;
+  color: #0054D2;
+}
+
+.alert-info {
+  background-color: #e7f3ff;
+  border-color: #b8d9ff;
+  color: #0054D2;
+}
+
+/* ======== BOTONES DE ACCIÓN ======== */
+mat-dialog-actions {
+  padding: 16px 24px;
+  border-top: 1px solid #e9ecef;
+  margin: 0;
+  gap: 8px;
+}
+
+.btn-cancelar {
+  color: #6c757d;
+}
+
+.btn-cancelar:hover {
+  background-color: #f8f9fa;
+}
+
+.btn-imprimir {
+  min-width: 120px;
+}
+
+.btn-imprimir mat-icon {
+  margin-right: 6px;
+}
+
+.btn-imprimir:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ======== RESPONSIVE ======== */
+@media (max-width: 576px) {
+  .btn-outline-secondary {
+    min-width: 36px;
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  
+  .product-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .btn-imprimir {
+    min-width: 80px;
+    font-size: 12px;
+  }
+  
+  mat-dialog-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  mat-dialog-actions button {
+    width: 100%;
+    margin: 4px 0;
+  }
+}
+
+/* ======== ANIMACIONES ======== */
+.modal-content {
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ======== SCROLL ======== */
+.mat-mdc-dialog-content {
+  max-height: 75vh;
+  padding: 16px 24px;
+}
+
+/* ======== ESTILOS ADICIONALES ======== */
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+.mt-2 {
+  margin-top: 8px;
+}
+
+.mt-3 {
+  margin-top: 16px;
+}
+
+.mb-2 {
+  margin-bottom: 8px;
+}
+
+.mb-4 {
+  margin-bottom: 24px;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
