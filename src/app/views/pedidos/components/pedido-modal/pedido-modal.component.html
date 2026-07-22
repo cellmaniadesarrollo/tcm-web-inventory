@@ -153,43 +153,64 @@
         </mat-action-list>
       </div>
 
-      <!-- Cantidad, Precio unitario, Impuesto, % -->
-      <div class="row-flex grid-sub-details">
-        <mat-form-field appearance="outline">
-          <mat-label>Cantidad</mat-label>
-          <input matInput type="number" formControlName="cantidad" placeholder="Cantidad" />
-          <mat-error *ngIf="submitted && f['cantidad'].errors">Requerido</mat-error>
-        </mat-form-field>
+      <!-- ============ CAMPOS DE CANTIDAD, PRECIO, IMPUESTOS ============ -->
+      <!-- ✅ Usamos ng-container para agrupar según tipo de documento -->
+      <ng-container [ngSwitch]="esComprobante()">
+        
+        <!-- ✅ Versión con impuestos (NO COMPROBANTE) -->
+        <div class="row-flex grid-sub-details" *ngSwitchCase="false">
+          <mat-form-field appearance="outline">
+            <mat-label>Cantidad</mat-label>
+            <input matInput type="number" formControlName="cantidad" placeholder="Cantidad" />
+            <mat-error *ngIf="submitted && f['cantidad'].errors">Requerido</mat-error>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Precio unitario</mat-label>
-          <input matInput type="number" step=".01" min="0" formControlName="preciounit" placeholder="Precio unitario" (input)="totalpriceds()" />
-          <mat-error *ngIf="submitted && f['preciounit'].errors">Requerido</mat-error>
-        </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Precio unitario</mat-label>
+            <input matInput type="number" step=".01" min="0" formControlName="preciounit" placeholder="Precio unitario" (input)="totalpriceds()" />
+            <mat-error *ngIf="submitted && f['preciounit'].errors">Requerido</mat-error>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Impuesto</mat-label>
-          <mat-select formControlName="inpuesto" (selectionChange)="findpercentaje()">
-            <mat-option *ngFor="let tax of taxesnames" [value]="tax._id">
-              {{ tax.tax_name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Impuesto</mat-label>
+            <mat-select formControlName="inpuesto" (selectionChange)="findpercentaje()">
+              <mat-option *ngFor="let tax of taxesnames" [value]="tax._id">
+                {{ tax.tax_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>%</mat-label>
-          <mat-select formControlName="porcentaje" (selectionChange)="totalpriceds()">
-            <mat-option *ngFor="let percentaje of taxespercentaje" [value]="percentaje._id">
-              {{ percentaje.percentaje }} %
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>%</mat-label>
+            <mat-select formControlName="porcentaje" (selectionChange)="totalpriceds()">
+              <mat-option *ngFor="let percentaje of taxespercentaje" [value]="percentaje._id">
+                {{ percentaje.percentaje }} %
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-        <div class="total-display">
-          <span class="mat-hint">Total:</span>
-          <strong>{{ totalprice }}</strong>
+          <div class="total-display">
+            <span class="mat-hint">Total:</span>
+            <strong>{{ totalprice }}</strong>
+          </div>
         </div>
-      </div>
+
+        <!-- ✅ Versión simplificada (COMPROBANTE) - Sin impuestos -->
+        <div class="row-flex grid-2" *ngSwitchCase="true">
+          <mat-form-field appearance="outline">
+            <mat-label>Cantidad</mat-label>
+            <input matInput type="number" formControlName="cantidad" placeholder="Cantidad" />
+            <mat-error *ngIf="submitted && f['cantidad'].errors">Requerido</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Precio unitario</mat-label>
+            <input matInput type="number" step=".01" min="0" formControlName="preciounit" placeholder="Precio unitario" (input)="totalpriceds()" />
+            <mat-error *ngIf="submitted && f['preciounit'].errors">Requerido</mat-error>
+          </mat-form-field>
+        </div>
+
+      </ng-container>
 
       <!-- Precio venta, IVA, Fecha -->
       <div class="row-flex grid-3">
@@ -328,13 +349,6 @@
         <mat-spinner diameter="18"></mat-spinner> Guardando...
       </span>
     </button>
-<!-- 
-    <button mat-flat-button color="primary" [disabled]="bloquear1" (click)="onSubmitcloseoff(incomesaveForm.value)">
-      <span *ngIf="!bloquear1">Ingresar</span>
-      <span *ngIf="bloquear1" class="loading-btn-content">
-        <mat-spinner diameter="18"></mat-spinner> Guardando...
-      </span>
-    </button> -->
 
     <button mat-stroked-button color="warn" mat-dialog-close [disabled]="bloquear">
       <mat-icon>close</mat-icon> Cancelar

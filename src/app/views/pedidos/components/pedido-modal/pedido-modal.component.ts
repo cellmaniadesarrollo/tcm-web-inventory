@@ -133,6 +133,18 @@ export class PedidoModalComponent implements OnInit {
     });
   }
 
+  // ============ VERIFICAR SI ES COMPROBANTE ============
+  esComprobante(): boolean {
+    const tipoDocumento = this.incomesaveForm.get('tipo_documento')?.value;
+    if (!tipoDocumento) return false;
+    
+    // Buscar el tipo de documento en la lista
+    const found = this.typedocument.find((element: any) => element._id == tipoDocumento);
+    const nombreTipo = found?.name_type_document?.toUpperCase() || '';
+    
+    return nombreTipo === 'COMPROBANTE' || nombreTipo.includes('COMPROBANTE');
+  }
+
   // ============ CALCULAR PRECIO CON IVA ============
   calcularPrecioConIva() {
     const precioVenta = Number(this.incomesaveForm.get('precioventa')?.value) || 0;
@@ -796,6 +808,11 @@ export class PedidoModalComponent implements OnInit {
   }
 
   async findpercentaje() {
+    // ✅ Si es COMPROBANTE, no hacer nada
+    if (this.esComprobante()) {
+      return;
+    }
+    
     this.taxespercentaje = await this.apiPedido.getfindpercentaje(
       this.incomesaveForm.controls['inpuesto'].getRawValue()
     );
@@ -808,6 +825,17 @@ export class PedidoModalComponent implements OnInit {
     const data = this.incomesaveForm.value.tipo_documento;
     const found = this.typedocument.find((element: any) => element._id == data);
     this.typedocumenttext = found?.name_type_document || '';
+    
+    // ✅ Si es COMPROBANTE, establecer valores por defecto en impuestos
+    if (this.esComprobante()) {
+      // Establecer valores por defecto (primer impuesto y porcentaje)
+      if (this.taxesnames.length > 0 && this.taxespercentaje.length > 0) {
+        this.incomesaveForm.patchValue({
+          inpuesto: this.taxesnames[0]?._id || '',
+          porcentaje: this.taxespercentaje[0]?._id || ''
+        });
+      }
+    }
   }
 
   // ============ NUEVO PROVEEDOR ============
