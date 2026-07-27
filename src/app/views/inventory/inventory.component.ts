@@ -592,6 +592,7 @@ export class InventoryComponent {
       tipo_salida: null,
       numero_orden: '',
       orderId: '',
+      es_manual: false,          // 👈 nuevo
       cantidad: this.functionvalue(this.maxvalue),
       entrega_a: null,
       observaciones: '',
@@ -697,7 +698,8 @@ export class InventoryComponent {
       id_item: ['', Validators.required],
       tipo_salida: ['', Validators.required],
       numero_orden: [''],
-      findingId: [''],
+      orderId: [null],
+      es_manual: [false],
       cantidad: [1, Validators.required],
       entrega_a: ['', Validators.required],
       observaciones: [''],
@@ -820,11 +822,11 @@ export class InventoryComponent {
   manualOrderMode: boolean = false;
 
   onToggleManualMode() {
-    // Limpia todo al cambiar de modo
     this.selectedOrder = null;
     this.orderSearchValue = '';
     this.ordersFound = [];
     this.salidaForm.controls['numero_orden'].setValue('');
     this.salidaForm.controls['orderId'].setValue(null);
+    this.salidaForm.controls['es_manual'].setValue(this.manualOrderMode); // 👈 nuevo
   }
 }
