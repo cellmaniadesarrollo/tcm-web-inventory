@@ -151,4 +151,24 @@ export class PedidoService {
   public async inventariarPedido(id: string): Promise<SinglePedidoResponse> {
     return this.cambiarEstado(id, 'inventario');
   }
+
+    /**
+   * Obtiene el conteo de pedidos pendientes
+   * Usado para mostrar el badge en el sidebar
+   */
+  public async getPedidosPendientesCount(): Promise<number> {
+    try {
+      await this.apiService.controltoken();
+
+      const axiosResponse = await this.apiService['axiosClient'].request({
+        method: 'get',
+        url: `${this.apiService.url}pedidos/pendientes/count`
+      });
+
+      return axiosResponse.data?.count || 0;
+    } catch (error) {
+      console.error('Error al obtener conteo de pedidos pendientes:', error);
+      return 0;
+    }
+  }
 }

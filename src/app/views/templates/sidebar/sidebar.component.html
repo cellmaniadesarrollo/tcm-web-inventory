@@ -33,17 +33,6 @@
             <p>Inicio</p>
           </a>
         </li>
-        <!-- <li class="nav-item btn6">
-          <a
-            class="cursor-pointer nav-link"
-            routerLink="/ticket-printing"
-            routerLinkActive="bg-primary"
-          >
-          <i class="nav-icon bi bi-ticket"></i> 
-            <p>Impresion de tickets</p>
-          </a>
-        </li> -->
-
       </ul>
 
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false"
@@ -68,12 +57,27 @@
         </li>
       </ul>
 
+      <!-- ✅ GESTIÓN PEDIDOS CON BADGE DE PENDIENTES -->
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false"
         *ngIf="nivel1 || nivel2">
         <li class="nav-item btn6">
-          <a class="cursor-pointer nav-link" routerLink="/pedido" routerLinkActive="bg-primary">
+          <a class="cursor-pointer nav-link" routerLink="/pedido" routerLinkActive="bg-primary" style="position: relative;">
             <i class="nav-icon bi bi-clipboard-check-fill"></i>
-            <p>Gestión Pedidos</p>
+            <p>
+              Gestión Pedidos
+              <!-- ✅ BADGE ROJO CON CONTADOR -->
+              <span *ngIf="pedidosPendientesCount > 0" 
+                    class="badge badge-danger ml-2" 
+                    style="font-size: 12px; padding: 3px 8px; border-radius: 20px; animation: pulse 2s infinite;">
+                {{ pedidosPendientesCount }}
+              </span>
+              <!-- ✅ BADGE VERDE CUANDO NO HAY PENDIENTES -->
+              <span *ngIf="pedidosPendientesCount === 0" 
+                    class="badge badge-success ml-2" 
+                    style="font-size: 12px; padding: 3px 8px; border-radius: 20px;">
+                ✓
+              </span>
+            </p>
           </a>
         </li>
       </ul>
@@ -102,7 +106,7 @@
                 <p>Movimientos</p>
               </a>
             </li>
-              <li class="nav-item" *ngIf="nivel1">
+            <li class="nav-item" *ngIf="nivel1">
               <a class="nav-link" routerLink="/cancellation-request" routerLinkActive="active">
                 <i class="nav-icon bi bi-arrow-down-up"></i>
                 <p>Retornos</p>
@@ -186,5 +190,5 @@
         </li>
       </ul>
     </nav>
-    </div>
-  </aside>
+  </div>
+</aside>
