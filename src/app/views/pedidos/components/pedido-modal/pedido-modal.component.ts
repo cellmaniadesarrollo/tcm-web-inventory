@@ -138,7 +138,6 @@ export class PedidoModalComponent implements OnInit {
     const tipoDocumento = this.incomesaveForm.get('tipo_documento')?.value;
     if (!tipoDocumento) return false;
     
-    // Buscar el tipo de documento en la lista
     const found = this.typedocument.find((element: any) => element._id == tipoDocumento);
     const nombreTipo = found?.name_type_document?.toUpperCase() || '';
     
@@ -256,20 +255,13 @@ export class PedidoModalComponent implements OnInit {
   }
 
   // ============================================================
-  //  ✅ ABRIR MODAL DE NUEVO PRODUCTO - BUSCA POR UPC PRIMERO
+  //  ✅ ABRIR MODAL DE NUEVO PRODUCTO
   // ============================================================
 
-  /**
-   * Delay helper
-   */
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  /**
-   * ✅ Abre el modal de Nuevo Producto
-   * PRIMERO busca por UPC, luego por ID, luego por nombre, luego construye manual
-   */
   abrirNuevoProducto(): void {
     const dialogRef = this.dialog.open(NuevoPedidoComponent, {
       width: '950px',
@@ -282,7 +274,6 @@ export class PedidoModalComponent implements OnInit {
       console.log('📦 Producto creado recibido:', producto);
       
       if (producto && producto.id) {
-        // ✅ ESPERAR 2 SEGUNDOS PARA QUE EL PRODUCTO ESTÉ DISPONIBLE
         await this.delay(2000);
         
         const productoData = producto.producto || {};
@@ -292,92 +283,61 @@ export class PedidoModalComponent implements OnInit {
         const modeloProducto = productoData.modelitem?.business_model || 
                               (typeof productoData.modelitem === 'string' ? productoData.modelitem : '');
         
-        console.log('🔍 UPC del producto creado:', upcValue);
-        console.log('🔍 Nombre del producto creado:', nombreProducto);
-        console.log('🔍 ID del producto creado:', idProducto);
-        console.log('🔍 Modelo del producto creado:', modeloProducto);
-        
         let itemEncontrado = null;
         
-        // ✅ PRIMERO: Buscar por UPC (MÁS ESPECÍFICO)
         if (upcValue && upcValue.length > 0) {
-          console.log('🔍 Buscando por UPC:', upcValue);
           const results = await this.apiPedido.finditemincome(upcValue);
-          console.log('📦 Resultados de búsqueda por UPC:', results.length);
-          
           if (results && results.length > 0) {
-            // Buscar por ID exacto
             itemEncontrado = results.find((i: any) => i._id === idProducto);
             if (itemEncontrado) {
-              console.log('✅ Producto encontrado por ID:', itemEncontrado);
               this.aplicarSeleccionProducto(itemEncontrado);
               return;
             }
-            // Buscar por UPC exacto
             itemEncontrado = results.find((i: any) => i.upc === upcValue);
             if (itemEncontrado) {
-              console.log('✅ Producto encontrado por UPC:', itemEncontrado);
               this.aplicarSeleccionProducto(itemEncontrado);
               return;
             }
           }
         }
         
-        // ✅ SEGUNDO: Buscar por ID en todos los items (recargar lista)
-        console.log('🔍 Buscando por ID en todos los items...');
         await this.recargarItems();
         itemEncontrado = this.items.find((i: any) => i._id === idProducto);
         if (itemEncontrado) {
-          console.log('✅ Producto encontrado por ID en lista:', itemEncontrado);
           this.aplicarSeleccionProducto(itemEncontrado);
           return;
         }
         
-        // ✅ TERCERO: Buscar por nombre y filtrar por ID
         if (nombreProducto && nombreProducto.length > 2) {
-          console.log('🔍 Buscando por nombre:', nombreProducto);
           const results = await this.apiPedido.finditemincome(nombreProducto);
-          console.log('📦 Resultados de búsqueda por nombre:', results.length);
-          
           if (results && results.length > 0) {
-            // Buscar por ID exacto
             itemEncontrado = results.find((i: any) => i._id === idProducto);
             if (itemEncontrado) {
-              console.log('✅ Producto encontrado por ID en resultados:', itemEncontrado);
               this.aplicarSeleccionProducto(itemEncontrado);
               return;
             }
-            
-            // Si no encuentra por ID, buscar por nombre + modelo
             if (modeloProducto) {
               itemEncontrado = results.find((i: any) => 
                 i.nameitem?.toUpperCase() === nombreProducto.toUpperCase() &&
                 i.modelitem?.toUpperCase().includes(modeloProducto.toUpperCase())
               );
               if (itemEncontrado) {
-                console.log('✅ Producto encontrado por nombre y modelo:', itemEncontrado);
                 this.aplicarSeleccionProducto(itemEncontrado);
                 return;
               }
             }
-            
-            // Buscar por nombre exacto y que tenga el UPC (si tenemos UPC)
             if (upcValue) {
               itemEncontrado = results.find((i: any) => 
                 i.nameitem?.toUpperCase() === nombreProducto.toUpperCase() &&
                 i.upc === upcValue
               );
               if (itemEncontrado) {
-                console.log('✅ Producto encontrado por nombre y UPC:', itemEncontrado);
                 this.aplicarSeleccionProducto(itemEncontrado);
                 return;
               }
             }
           }
         }
-        
-        // ✅ CUARTO: Construir manualmente con los datos del modal
-        console.log('⚠️ Producto no encontrado en API, construyendo manualmente...');
         
         const getValue = (field: any) => {
           if (!field) return '';
@@ -413,23 +373,18 @@ export class PedidoModalComponent implements OnInit {
           ...productoData
         };
         
-        console.log('📦 Item construido manualmente:', itemManual);
         this.aplicarSeleccionProducto(itemManual);
         
-        // ✅ Agregar a la lista local
         const existe = this.items.some((i: any) => i._id === itemManual._id);
         if (!existe) {
           this.items.unshift(itemManual);
-          console.log('✅ Producto agregado a la lista local');
         }
         
-        // ✅ Recargar lista en segundo plano
         setTimeout(() => {
           this.recargarItems();
         }, 500);
         
-        const mensaje = `✅ Producto "${itemManual.nameitem}" seleccionado ${upcValue ? `(UPC: ${upcValue})` : ''}`;
-        this.snackBar.open(mensaje, 'Cerrar', { duration: 3000 });
+        this.snackBar.open(`✅ Producto "${itemManual.nameitem}" seleccionado`, 'Cerrar', { duration: 3000 });
       }
     });
 
@@ -444,41 +399,11 @@ export class PedidoModalComponent implements OnInit {
     });
   }
 
-  /**
-   * ✅ Recargar la lista de items para búsqueda
-   */
   async recargarItems(): Promise<void> {
     try {
       this.loaderpro = true;
-      
       const results = await this.apiPedido.finditemincome('');
       this.items = results || [];
-      console.log('📋 Items recargados:', this.items.length);
-      
-      const skuEnFormulario = this.extraerSkuDelProducto();
-      if (skuEnFormulario) {
-        console.log('🔍 Buscando por SKU en recarga:', skuEnFormulario);
-        const skuResults = await this.apiPedido.finditemincome(skuEnFormulario);
-        
-        if (skuResults && skuResults.length > 0) {
-          const combined = [...this.items, ...skuResults];
-          const unique = combined.filter((item: any, index: number, self: any[]) => 
-            index === self.findIndex((i: any) => i._id === item._id)
-          );
-          this.items = unique;
-          console.log('📋 Items combinados con SKU:', this.items.length);
-        }
-      }
-      
-      if (this.terminoDeBusqueda && this.terminoDeBusqueda.length > 2) {
-        const searchResults = await this.apiPedido.finditemincome(this.terminoDeBusqueda);
-        const combined = [...this.items, ...(searchResults || [])];
-        const unique = combined.filter((item: any, index: number, self: any[]) => 
-          index === self.findIndex((i: any) => i._id === item._id)
-        );
-        this.items = unique;
-        console.log('📋 Items combinados con búsqueda:', this.items.length);
-      }
     } catch (error) {
       console.error('Error al recargar items:', error);
     } finally {
@@ -486,188 +411,50 @@ export class PedidoModalComponent implements OnInit {
     }
   }
 
-  /**
-   * ✅ Busca un producto por ID o NOMBRE - MÉTODO DE RESPALDO
-   */
-  async buscarYSeleccionarProducto(productId: string, nombreProducto?: string): Promise<void> {
-    try {
-      this.loaderpro = true;
-      console.log('🔍 Buscando producto por ID:', productId);
-      console.log('🔍 Nombre del producto:', nombreProducto);
-      
-      let item = null;
-      
-      item = this.items.find((i: any) => i._id === productId);
-      
-      if (item) {
-        console.log('✅ Producto encontrado en lista local por ID:', item);
-        this.agregarYSeleccionarItem(item);
-        return;
-      }
-      
-      if (nombreProducto && nombreProducto.length > 2) {
-        console.log('🔍 Buscando por nombre en API:', nombreProducto);
-        const results = await this.apiPedido.finditemincome(nombreProducto);
-        console.log('📦 Resultados de búsqueda por nombre en API:', results.length);
-        
-        if (results && results.length > 0) {
-          item = results.find((i: any) => i._id === productId);
-          if (!item) {
-            item = results.find((i: any) => 
-              i.nameitem?.toUpperCase() === nombreProducto.toUpperCase() ||
-              i.name_nameitems?.toUpperCase() === nombreProducto.toUpperCase()
-            );
-          }
-          if (item) {
-            console.log('✅ Producto encontrado en API:', item);
-            this.agregarYSeleccionarItem(item);
-            return;
-          }
-        }
-      }
-      
-      console.log('🔍 Recargando lista completa...');
-      await this.recargarItems();
-      
-      item = this.items.find((i: any) => i._id === productId);
-      
-      if (!item && nombreProducto) {
-        item = this.items.find((i: any) => 
-          i.nameitem?.toUpperCase() === nombreProducto.toUpperCase() ||
-          i.name_nameitems?.toUpperCase() === nombreProducto.toUpperCase() ||
-          i.nameitem?.toLowerCase().includes(nombreProducto.toLowerCase()) ||
-          i.name_nameitems?.toLowerCase().includes(nombreProducto.toLowerCase())
-        );
-      }
-      
-      if (item) {
-        console.log('✅ Producto encontrado después de recargar:', item);
-        this.agregarYSeleccionarItem(item);
-      } else {
-        console.warn('⚠️ Producto no encontrado:', productId);
-        this.snackBar.open('❌ Producto no encontrado, intenta buscarlo manualmente', 'Cerrar', { duration: 3000 });
-      }
-      
-    } catch (error) {
-      console.error('❌ Error al buscar producto:', error);
-    } finally {
-      this.loaderpro = false;
-    }
-  }
-
-  /**
-   * ✅ Extrae el SKU del producto desde el formulario
-   */
   private extraerSkuDelProducto(): string | null {
     const textoItem = this.incomesaveForm.get('item')?.value || '';
-    
     const patrones = [
       /INS:\s*([A-Z0-9]+)/i,
       /SKU:\s*([A-Z0-9]+)/i,
       /COD:\s*([A-Z0-9]+)/i,
       /#([A-Z0-9]{8,})/i
     ];
-    
     for (const patron of patrones) {
       const match = textoItem.match(patron);
       if (match && match[1]) {
         return match[1].trim();
       }
     }
-    
-    const itemId = this.incomesaveForm.get('id_item')?.value;
-    if (itemId) {
-      const item = this.items.find((i: any) => i._id === itemId);
-      if (item && item.sku) {
-        return item.sku;
-      }
-    }
-    
     return null;
   }
 
-  /**
-   * ✅ Extrae la parte del SKU después de "INS:"
-   */
-  private extraerParteSku(sku: string): string | null {
-    if (!sku) return null;
-    const match = sku.match(/INS:\s*([A-Z0-9]+)/i);
-    if (match && match[1]) {
-      return match[1].trim();
-    }
-    return sku;
-  }
-
-  /**
-   * ✅ Agrega un item a la lista y lo selecciona
-   */
   private agregarYSeleccionarItem(item: any): void {
-    if (!item) {
-      console.warn('⚠️ Item vacío, no se puede seleccionar');
-      return;
-    }
-    
-    console.log('✅ Producto encontrado:', item);
-    
+    if (!item) return;
     const existe = this.items.some((i: any) => i._id === item._id);
     if (!existe) {
       this.items.unshift(item);
-      console.log('✅ Producto agregado a la lista de items');
     }
-    
     this.aplicarSeleccionProducto(item);
   }
 
-  /**
-   * ✅ Aplica la selección del producto en el formulario
-   */
   aplicarSeleccionProducto(item: any): void {
-    if (!item) {
-      console.warn('⚠️ Item vacío, no se puede seleccionar');
-      return;
-    }
-    
-    console.log('✅ Aplicando selección del producto:', item);
+    if (!item) return;
     
     const upc = item.upc || '';
     const sku = item.sku || '';
     const nameitem = item.nameitem || item.name_nameitems || '';
-    const modelitem = item.modelitem || '';
-    const quality = item.quality || '';
-    const stateproduc = item.stateproduc || '';
-    const colors1 = item.colors1 || '';
     
-    console.log('🔍 UPC del item seleccionado:', upc);
-    console.log('🔍 SKU del item seleccionado:', sku);
-    console.log('🔍 Nombre del item seleccionado:', nameitem);
-    console.log('🔍 Modelo del item seleccionado:', modelitem);
-    
-    // ✅ CONSTRUIR TEXTO CON UPC
-    let texto = '';
-    if (upc) {
-      texto = `«${upc}» ${nameitem}`;
-    } else {
-      texto = nameitem;
-    }
-    
-    // ✅ Si tiene SKU, agregarlo
+    let texto = upc ? `«${upc}» ${nameitem}` : nameitem;
     if (sku) {
       texto = `«${upc}» SKU: ${sku} ${nameitem}`.trim();
     }
     
-    console.log('📝 Texto a seleccionar:', texto);
-    
     this.seleccionarSugerencia(texto, item._id);
-    
     this.incomesaveForm.patchValue({
       item: texto,
       id_item: item._id
     });
-    
     this.mostrarSugerencias = false;
-    
-    const mensaje = `✅ Producto "${nameitem || item.name_nameitems}" seleccionado ${upc ? `(UPC: ${upc})` : ''}`;
-    this.snackBar.open(mensaje, 'Cerrar', { duration: 2000 });
   }
 
   // ============ MÉTODOS PARA IMEI ============
@@ -730,19 +517,7 @@ export class PedidoModalComponent implements OnInit {
           this.blockbusquedapro = false;
         }, 1000);
         this.loaderpro = true;
-        
         this.items = await this.apiPedido.finditemincome(this.terminoDeBusqueda);
-        
-        console.log(`🔍 Resultados de búsqueda para: "${this.terminoDeBusqueda}"`);
-        console.log(`📦 Total de resultados: ${this.items.length}`);
-        
-        if (this.items.length > 0) {
-          console.log('📋 Lista de resultados:');
-          this.items.forEach((item: any, index: number) => {
-            console.log(`  ${index + 1}. ID: ${item._id} | Nombre: ${item.nameitem || item.name_nameitems} | UPC: "${item.upc || 'NO TIENE'}"`);
-          });
-        }
-        
         this.loaderpro = false;
       }
     }
@@ -808,11 +583,9 @@ export class PedidoModalComponent implements OnInit {
   }
 
   async findpercentaje() {
-    // ✅ Si es COMPROBANTE, no hacer nada
     if (this.esComprobante()) {
       return;
     }
-    
     this.taxespercentaje = await this.apiPedido.getfindpercentaje(
       this.incomesaveForm.controls['inpuesto'].getRawValue()
     );
@@ -826,9 +599,7 @@ export class PedidoModalComponent implements OnInit {
     const found = this.typedocument.find((element: any) => element._id == data);
     this.typedocumenttext = found?.name_type_document || '';
     
-    // ✅ Si es COMPROBANTE, establecer valores por defecto en impuestos
     if (this.esComprobante()) {
-      // Establecer valores por defecto (primer impuesto y porcentaje)
       if (this.taxesnames.length > 0 && this.taxespercentaje.length > 0) {
         this.incomesaveForm.patchValue({
           inpuesto: this.taxesnames[0]?._id || '',
@@ -886,8 +657,6 @@ export class PedidoModalComponent implements OnInit {
   // ============ FUNCIONES AUXILIARES ============
   private extraerBatchId(data: any): string | null {
     if (!data) return null;
-    if (typeof data === 'string') return null;
-
     const rutas = [
       () => data.batchId,
       () => data.data?.batchId,
@@ -898,12 +667,10 @@ export class PedidoModalComponent implements OnInit {
       () => data.id,
       () => data._id
     ];
-
     for (const ruta of rutas) {
       try {
         const valor = ruta();
         if (valor && typeof valor === 'string' && valor.length > 8) {
-          console.log('✅ batchId encontrado:', valor);
           return valor;
         }
       } catch (e) {}
@@ -913,8 +680,6 @@ export class PedidoModalComponent implements OnInit {
 
   private extraerSku(data: any): string | null {
     if (!data) return null;
-    if (typeof data === 'string') return null;
-
     const rutas = [
       () => data.sku,
       () => data.data?.sku,
@@ -923,12 +688,10 @@ export class PedidoModalComponent implements OnInit {
       () => data.batch?.sku,
       () => data.data?.batch?.sku,
     ];
-
     for (const ruta of rutas) {
       try {
         const valor = ruta();
         if (valor && typeof valor === 'string') {
-          console.log('✅ SKU encontrado:', valor);
           return valor;
         }
       } catch (e) {}
@@ -936,7 +699,120 @@ export class PedidoModalComponent implements OnInit {
     return null;
   }
 
-  // ============ GUARDAR ============
+  // ============================================================
+  //  ✅ NUEVOS MÉTODOS PARA IMPRESIÓN
+  // ============================================================
+
+  /**
+   * Imprime el ticket usando los datos del backend
+   */
+  private async imprimirTicket(data: any): Promise<void> {
+    try {
+      console.log('🖨️ Iniciando proceso de impresión...');
+      
+      const printData = data?.print;
+      const incomeId = data?.incomeId || data?.id;
+      
+      if (!printData || !printData.id) {
+        console.warn('⚠️ No hay datos de impresión disponibles');
+        this.snackBar.open('⚠️ Ingreso guardado, pero no se pudo imprimir', 'Cerrar', { duration: 3000 });
+        return;
+      }
+
+      console.log('🖨️ Datos de impresión:', printData);
+      console.log('🖨️ Tipo de impresora:', printData.printer);
+
+      const { id, printer } = printData;
+
+      // Construir parámetros
+      const params = new URLSearchParams();
+      if (id.topText1) params.append('topText1', id.topText1);
+      if (id.topText2) params.append('topText2', id.topText2);
+      if (id.bottomText1) params.append('bottomText1', id.bottomText1);
+      if (id.cant) params.append('cant', String(id.cant));
+      if (id.qrText) params.append('qrText', id.qrText);
+      if (id.price) params.append('price', String(id.price));
+      if (id.f) params.append('f', id.f);
+      if (id.iva !== undefined) params.append('iva', String(id.iva));
+      if (incomeId) params.append('id', incomeId);
+
+      const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;
+      console.log('🌐 URL de impresión:', url);
+
+      if (printer === 'dymo') {
+        // DYMO - usar el servicio
+        console.log('🖨️ Imprimiendo en Dymo...');
+        try {
+          await this.apiPedido.printticketlocal({ id: incomeId });
+          console.log('✅ Impresión Dymo enviada');
+          this.snackBar.open('🖨️ Imprimiendo en Dymo...', 'Cerrar', { duration: 2000 });
+        } catch (error) {
+          console.error('❌ Error en Dymo, fallback a normal:', error);
+          this.abrirVentanaImpresion(url);
+        }
+      } else {
+        // ZEBRA / NORMAL
+        console.log('🖨️ Imprimiendo en Zebra/Normal...');
+        this.abrirVentanaImpresion(url);
+        this.snackBar.open('🖨️ Enviando a imprimir...', 'Cerrar', { duration: 2000 });
+      }
+
+    } catch (error) {
+      console.error('❌ Error en imprimirTicket:', error);
+      this.snackBar.open('⚠️ Error al imprimir, pero el ingreso fue guardado', 'Cerrar', { duration: 3000 });
+    }
+  }
+
+  /**
+   * Abre ventana de impresión con fallback
+   */
+  private abrirVentanaImpresion(url: string): void {
+    try {
+      const ventana = window.open(url, '_blank');
+      if (!ventana) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (error) {
+      console.error('❌ Error al abrir ventana:', error);
+      this.snackBar.open('⚠️ No se pudo abrir la ventana de impresión', 'Cerrar', { duration: 3000 });
+    }
+  }
+
+  /**
+   * Limpia el formulario
+   */
+  private limpiarFormulario(): void {
+    this.terminoDeBusqueda = '';
+    this.submitted = false;
+    this.pedidoSeleccionado = null;
+    this.mostrarListaPedidos = true;
+    
+    this.incomesaveForm.patchValue({
+      id_item: null,
+      cantidad: 1,
+      precioventa: 0,
+      preciounit: 0,
+      observaciones: '',
+      item: '',
+      pedidoId: null
+    });
+    
+    this.imeisArr.clear();
+    this.imeiMessages = [];
+    this.isCelular = false;
+    this.cargarPedidosInventario();
+  }
+
+  // ============================================================
+  //  ✅ GUARDAR (CERRANDO) - CORREGIDO
+  // ============================================================
+
   async onSubmitclose(form: any) {
     if (!form.numero_documento || form.numero_documento.trim() === '') {
       this.snackBar.open('❌ El número de documento es requerido', 'Cerrar', { duration: 3000 });
@@ -949,90 +825,83 @@ export class PedidoModalComponent implements OnInit {
     }
 
     if (this.isCelular) {
-      if (this.imeisArr.length === 0) return;
+      if (this.imeisArr.length === 0) {
+        this.snackBar.open('❌ Debes ingresar al menos un IMEI', 'Cerrar', { duration: 3000 });
+        return;
+      }
       for (let imei of this.imeisArr.controls) {
-        if (imei.invalid) return;
+        if (imei.invalid) {
+          this.snackBar.open('❌ IMEI inválido', 'Cerrar', { duration: 3000 });
+          return;
+        }
       }
     }
     
     this.submitted = true;
     this.bloquear = true;
     this.bloquear1 = true;
-    setTimeout(() => {
-      this.bloquear = false;
-      this.bloquear1 = false;
-    }, 2000);
 
     if (this.incomesaveForm.invalid) {
+      this.bloquear = false;
+      this.bloquear1 = false;
       return;
-    } else {
+    }
+
+    try {
       this.myedit = false;
-      try {
-        const data = await this.apiPedido.saveincome(form);
+      const data = await this.apiPedido.saveincome(form);
+      console.log('📦 Respuesta del servidor:', JSON.stringify(data, null, 2));
+      
+      this.bloquear = false;
+      this.bloquear1 = false;
 
-        if (data == 'OK' || data.id || data.batchId) {
-          if (this.pedidoSeleccionado) {
-            try {
-              console.log('📦 Respuesta del servidor:', JSON.stringify(data, null, 2));
-              
-              const batchId = this.extraerBatchId(data);
-              let sku = this.extraerSku(data);
-              
-              if (!sku) {
-                const itemId = this.incomesaveForm.get('id_item')?.value;
-                const item = this.items.find((i: any) => i._id === itemId);
-                sku = item?.sku || form.item || `PROD-${Date.now()}`;
-              }
-              
-              console.log('🔍 BatchId encontrado:', batchId);
-              console.log('🔍 SKU encontrado:', sku);
-              console.log('🔍 Pedido ID:', this.pedidoSeleccionado._id);
-              
-              if (batchId && sku) {
-                const actualPrice = form.precioventa || 0;
-                
-                const resultado = await this.pedidoService.asignarSkuYBatch(
-                  this.pedidoSeleccionado._id,
-                  {
-                    sku: sku,
-                    batchId: batchId,
-                    actualPrice: actualPrice
-                  }
-                );
-                
-                console.log('✅ Pedido actualizado con SKU y Batch:', resultado);
-              } else {
-                console.warn('⚠️ No se pudo asignar SKU y Batch: falta batchId o sku');
-              }
-            } catch (error) {
-              console.error('Error al asignar SKU y Batch:', error);
+      if (data?.success || data?.id || data?.batchId) {
+        
+        // Asignar SKU y Batch al pedido
+        if (this.pedidoSeleccionado) {
+          try {
+            const batchId = data.batchId || this.extraerBatchId(data);
+            let sku = data.sku || this.extraerSku(data);
+            if (!sku) {
+              const itemId = this.incomesaveForm.get('id_item')?.value;
+              const item = this.items.find((i: any) => i._id === itemId);
+              sku = item?.sku || form.item || `PROD-${Date.now()}`;
             }
+            if (batchId && sku) {
+              await this.pedidoService.asignarSkuYBatch(
+                this.pedidoSeleccionado._id,
+                { sku, batchId, actualPrice: form.precioventa || 0 }
+              );
+            }
+          } catch (error) {
+            console.error('Error al asignar SKU y Batch:', error);
           }
-
-          if (data.id) {
-            const params = new URLSearchParams(data.id);
-            const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;
-            window.open(url, '_blank');
-          }
-          this.submitted = false;
-          this.closeModalEvent.emit({ reload: true });
-          this.dialogRef.close(true);
         }
-      } catch (error) {
-        console.error('Error en onSubmitclose:', error);
-        this.bloquear = false;
-        this.bloquear1 = false;
+
+        // ✅ IMPRIMIR TICKET
+        await this.imprimirTicket(data);
+
+        // Limpiar y cerrar
+        this.limpiarFormulario();
+        this.submitted = false;
+        this.closeModalEvent.emit({ reload: true });
+        this.dialogRef.close(true);
+        this.snackBar.open('✅ Ingreso guardado exitosamente', 'Cerrar', { duration: 3000 });
       }
+    } catch (error) {
+      console.error('Error en onSubmitclose:', error);
+      this.bloquear = false;
+      this.bloquear1 = false;
+      this.snackBar.open('❌ Error al guardar el ingreso', 'Cerrar', { duration: 3000 });
     }
   }
 
+  // ============================================================
+  //  ✅ GUARDAR (SIN CERRAR) - CORREGIDO
+  // ============================================================
+
   async onSubmitcloseoff(form: any) {
     console.log('📦 Formulario a enviar:', form);
-    console.log('📦 id_proveedor:', form.id_proveedor);
-    console.log('📦 id_item:', form.id_item);
-    console.log('📦 cantidad:', form.cantidad);
-    console.log('📦 precioventa:', form.precioventa);
-    console.log('📦 numero_documento:', form.numero_documento);
     
     if (!form.numero_documento || form.numero_documento.trim() === '') {
       this.snackBar.open('❌ El número de documento es requerido', 'Cerrar', { duration: 3000 });
@@ -1049,9 +918,15 @@ export class PedidoModalComponent implements OnInit {
     }
 
     if (this.isCelular) {
-      if (this.imeisArr.length === 0) return;
+      if (this.imeisArr.length === 0) {
+        this.snackBar.open('❌ Debes ingresar al menos un IMEI', 'Cerrar', { duration: 3000 });
+        return;
+      }
       for (let imei of this.imeisArr.controls) {
-        if (imei.invalid) return;
+        if (imei.invalid) {
+          this.snackBar.open('❌ IMEI inválido', 'Cerrar', { duration: 3000 });
+          return;
+        }
       }
     }
     
@@ -1060,79 +935,57 @@ export class PedidoModalComponent implements OnInit {
     this.bloquear1 = true;
 
     if (this.incomesaveForm.invalid) {
+      this.bloquear = false;
+      this.bloquear1 = false;
       return;
-    } else {
-      this.myedit = false;
-      let data;
-      try {
-        data = await this.apiPedido.saveincome(form);
-        this.bloquear = false;
-        this.bloquear1 = false;
-      } catch (error: any) {
-        console.error('❌ Error en saveincome:', error);
-        console.error('❌ Detalles:', error.response?.data);
-        this.bloquear = false;
-        this.bloquear1 = false;
-        
-        const errorMsg = error.response?.data?.message || error.message || 'Error al guardar el ingreso';
-        this.snackBar?.open(`❌ ${errorMsg}`, 'Cerrar', { duration: 5000 });
-        return;
-      }
+    }
 
-      if (data == 'OK' || data.id || data.batchId) {
+    try {
+      this.myedit = false;
+      const data = await this.apiPedido.saveincome(form);
+      console.log('📦 Respuesta COMPLETA del servidor:', JSON.stringify(data, null, 2));
+      
+      this.bloquear = false;
+      this.bloquear1 = false;
+
+      if (data?.success || data?.id || data?.batchId) {
+        
+        // Asignar SKU y Batch al pedido
         if (this.pedidoSeleccionado) {
           try {
-            console.log('📦 Respuesta COMPLETA del servidor:', JSON.stringify(data, null, 2));
-            
-            const batchId = this.extraerBatchId(data);
-            let sku = this.extraerSku(data);
-            
+            const batchId = data.batchId || this.extraerBatchId(data);
+            let sku = data.sku || this.extraerSku(data);
             if (!sku) {
               const itemId = this.incomesaveForm.get('id_item')?.value;
               const item = this.items.find((i: any) => i._id === itemId);
               sku = item?.sku || form.item || `PROD-${Date.now()}`;
             }
-            
-            console.log('🔍 BatchId encontrado:', batchId);
-            console.log('🔍 SKU encontrado:', sku);
-            console.log('🔍 Pedido ID:', this.pedidoSeleccionado._id);
-            
             if (batchId && sku) {
-              const actualPrice = form.precioventa || 0;
-              
-              const resultado = await this.pedidoService.asignarSkuYBatch(
+              await this.pedidoService.asignarSkuYBatch(
                 this.pedidoSeleccionado._id,
-                {
-                  sku: sku,
-                  batchId: batchId,
-                  actualPrice: actualPrice
-                }
+                { sku, batchId, actualPrice: form.precioventa || 0 }
               );
-              
-              console.log('✅ Pedido actualizado con SKU y Batch:', resultado);
-            } else {
-              console.warn('⚠️ No se pudo asignar SKU y Batch: falta batchId o sku');
             }
           } catch (error) {
             console.error('Error al asignar SKU y Batch:', error);
           }
         }
 
-        if (data.id) {
-          const params = new URLSearchParams(data.id);
-          const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;
-          window.open(url, '_blank');
-        }
-        this.terminoDeBusqueda = '';
+        // ✅ IMPRIMIR TICKET
+        await this.imprimirTicket(data);
+
+        // Limpiar formulario (sin cerrar)
+        this.limpiarFormulario();
         this.submitted = false;
-        this.incomesaveForm.controls['id_item'].setValue(null);
-        this.incomesaveForm.controls['cantidad'].setValue(1);
-        this.incomesaveForm.controls['precioventa'].setValue(0);
-        this.incomesaveForm.controls['preciounit'].setValue(0);
-        this.incomesaveForm.controls['observaciones'].setValue('');
-        this.imeisArr.clear();
         this.closeModalEvent.emit({ reload: true });
+        this.snackBar.open('✅ Ingreso guardado exitosamente', 'Cerrar', { duration: 3000 });
       }
+    } catch (error: any) {
+      console.error('❌ Error en onSubmitcloseoff:', error);
+      this.bloquear = false;
+      this.bloquear1 = false;
+      const errorMsg = error.response?.data?.message || error.message || 'Error al guardar el ingreso';
+      this.snackBar.open(`❌ ${errorMsg}`, 'Cerrar', { duration: 5000 });
     }
   }
 
