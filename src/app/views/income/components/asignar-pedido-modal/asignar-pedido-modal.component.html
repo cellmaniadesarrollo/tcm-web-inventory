@@ -1,0 +1,175 @@
+<!-- asignar-pedido-modal.component.html -->
+<div class="modal-header-custom">
+  <div class="d-flex align-items-center gap-2">
+    <mat-icon color="primary" class="fs-4">assignment</mat-icon>
+    <h5 class="mb-0">Asignar a Pedido</h5>
+    <span class="badge bg-light text-dark ms-2">{{ data.sku }}</span>
+  </div>
+  <button mat-icon-button (click)="cerrarModal()" class="btn-close-custom">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="mat-typography py-3">
+  <!-- Información del producto -->
+  <div class="product-info-box mb-3">
+    <div class="row g-2">
+      <div class="col-md-4">
+        <small class="text-muted d-block">SKU</small>
+        <strong class="text-primary">{{ data.sku }}</strong>
+      </div>
+      <div class="col-md-4">
+        <small class="text-muted d-block">Precio</small>
+        <strong>{{ data.actualPrice | currency }}</strong>
+      </div>
+      <div class="col-md-4" *ngIf="data.itemName">
+        <small class="text-muted d-block">Producto</small>
+        <strong class="text-truncate d-block" style="max-width: 180px;" title="{{ data.itemName }}">
+          {{ data.itemName }}
+        </strong>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider class="mb-3"></mat-divider>
+
+  <!-- Buscador -->
+  <div class="search-box mb-3">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Buscar pedido</mat-label>
+      <input matInput 
+             (keyup)="aplicarFiltro($event)" 
+             placeholder="Buscar por nombre..."
+             [disabled]="loading" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <!-- Tabla de pedidos -->
+  <div class="table-container custom-scrollbar">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 full-width-table">
+
+      <!-- Nombre Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let pedido">{{ pedido.name }}</td>
+      </ng-container>
+
+      <!-- Cantidad Column -->
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+        <td mat-cell *matCellDef="let pedido">{{ pedido.quantity }}</td>
+      </ng-container>
+
+      <!-- Precio Est. Column -->
+      <ng-container matColumnDef="estimatedPrice">
+        <th mat-header-cell *matHeaderCellDef>Precio Est.</th>
+        <td mat-cell *matCellDef="let pedido">{{ pedido.estimatedPrice | currency }}</td>
+      </ng-container>
+
+      <!-- Estado Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Estado</th>
+        <td mat-cell *matCellDef="let pedido">
+          <mat-chip-set>
+            <mat-chip class="badge-info" disabled>En Inventario</mat-chip>
+          </mat-chip-set>
+        </td>
+      </ng-container>
+
+      <!-- Creado Por Column -->
+      <ng-container matColumnDef="createdBy">
+        <th mat-header-cell *matHeaderCellDef>Creado Por</th>
+        <td mat-cell *matCellDef="let pedido">
+          {{ getCreatedBy(pedido) }}
+        </td>
+      </ng-container>
+
+      <!-- SKU Column -->
+      <ng-container matColumnDef="sku">
+        <th mat-header-cell *matHeaderCellDef>SKU</th>
+        <td mat-cell *matCellDef="let pedido">
+          <mat-chip-set>
+            <mat-chip class="badge-secondary" disabled>Sin asignar</mat-chip>
+          </mat-chip-set>
+        </td>
+      </ng-container>
+
+      <!-- Batch Column -->
+      <ng-container matColumnDef="batchId">
+        <th mat-header-cell *matHeaderCellDef>Batch</th>
+        <td mat-cell *matCellDef="let pedido">
+          <mat-chip-set>
+            <mat-chip class="badge-secondary" disabled>Sin asignar</mat-chip>
+          </mat-chip-set>
+        </td>
+      </ng-container>
+
+      <!-- Acción Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef class="text-center">Acción</th>
+        <td mat-cell *matCellDef="let pedido" class="text-center">
+          <button mat-flat-button 
+                  color="primary" 
+                  size="small" 
+                  (click)="seleccionarPedido(pedido)"
+                  [disabled]="pedido.skuAsignado">
+            <mat-icon>check</mat-icon> Seleccionar
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Definición de filas -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+          class="hover-row"
+          [class.selected-row]="pedidoSeleccionado?._id === row._id"
+          (click)="seleccionarPedido(row)"
+          [style.cursor]="row.skuAsignado ? 'not-allowed' : 'pointer'">
+      </tr>
+
+    </table>
+
+    <!-- Estado de Carga -->
+    <div *ngIf="loading" class="table-loading-overlay">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span>Cargando pedidos...</span>
+    </div>
+
+    <!-- Estado Vacío -->
+    <div *ngIf="dataSource.data.length === 0 && !loading" class="table-empty-message">
+      <mat-icon color="primary">info</mat-icon>
+      <p>No hay pedidos en inventario pendientes de SKU/Batch.</p>
+    </div>
+
+  </div>
+
+  <!-- Paginador -->
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" 
+                 showFirstLastButtons
+                 aria-label="Seleccionar página">
+  </mat-paginator>
+
+</mat-dialog-content>
+
+<!-- FOOTER -->
+<mat-dialog-actions align="end" class="p-3 border-top">
+  <button mat-stroked-button color="warn" (click)="cerrarModal()" [disabled]="asignando">
+    Cancelar
+  </button>
+  <button 
+    mat-flat-button 
+    color="primary" 
+    class="btn-asignar"
+    (click)="confirmarAsignacion()" 
+    [disabled]="!pedidoSeleccionado || asignando || pedidoSeleccionado?.skuAsignado"
+  >
+    <span *ngIf="!asignando">
+      <mat-icon>check</mat-icon> Asignar Pedido
+    </span>
+    <span *ngIf="asignando" class="d-flex align-items-center gap-2">
+      <span class="spinner-border spinner-border-sm" role="status"></span>
+      Asignando...
+    </span>
+  </button>
+</mat-dialog-actions>

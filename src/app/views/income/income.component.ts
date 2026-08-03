@@ -1,9 +1,13 @@
+// income.component.ts
 import { Component, ViewChild } from '@angular/core';
 import { ApiService } from '../../service/api/api.service';
 import { PdfViewerService } from 'src/app/service/pdf-viewer/pdf-viewer.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { formatDate } from '@angular/common';
 import { serialValidator } from './serial-validator';
+import { MatDialog } from '@angular/material/dialog';
+import { AsignarPedidoModalComponent } from './components/asignar-pedido-modal/asignar-pedido-modal.component';
+import { PedidoService } from 'src/app/service/pedido/pedido.service';
 import {
   AbstractControl,
   FormGroup,
@@ -33,6 +37,7 @@ import { SetdataService } from 'src/app/service/setdata/setdata.service';
 import { SocketService } from 'src/app/service/socket/socket.service';
 import { Subscription } from 'rxjs';
 import { DymoserviceService } from 'src/app/service/dymoservice/dymoservice.service';
+
 @Component({
   selector: 'app-income',
   templateUrl: './income.component.html',
@@ -44,6 +49,7 @@ export class IncomeComponent {
   @ViewChild('closebutton33') closebutton33: any;
   @ViewChild('closebutton34') closebutton34: any;
   @ViewChild('closebutton1') closebutton1: any;
+  
   serialRules = [
     {
       name: 'CELULAR',
@@ -51,18 +57,19 @@ export class IncomeComponent {
       requiredLength: 15,
       numericOnly: true
     }
-
   ];
 
-
   serialMessage: string = '';
+  
   constructor(
     private api: ApiService,
     private pdfViewerService: PdfViewerService,
     private router: Router,
     private formBuilder: FormBuilder,
     private socketService: SocketService,
-    private apiticketdymmo: DymoserviceService
+    private apiticketdymmo: DymoserviceService,
+    private dialog: MatDialog,
+    private pedidoService: PedidoService
   ) { }
 
   numperpagess = [
@@ -75,7 +82,6 @@ export class IncomeComponent {
   totalentries: any;
   pagination: any;
 
-
   filterForm = new FormGroup({
     allclients: new FormControl('0'),
     inventory: new FormControl('0'),
@@ -83,7 +89,6 @@ export class IncomeComponent {
     numperpage: new FormControl('30'),
     findlike: new FormControl(''),
   });
-
 
   dateformnamesvalue: FormGroup = new FormGroup({
     datestart: new FormControl(''),
@@ -108,9 +113,9 @@ export class IncomeComponent {
     bodega: new FormControl(false),
     iva: new FormControl(true),
     selected_printer: new FormControl(''),
-    // 🚨 AGREGAR ESTO
     imeis: this.formBuilder.array([])
   });
+  
   incomeseditForm: FormGroup = new FormGroup({
     id: new FormControl(null),
     numero_documento: new FormControl(''),
@@ -142,8 +147,8 @@ export class IncomeComponent {
   private subscribedChannel: string = 'income';
   private messageSubscription: Subscription | null = null;
   myedit: boolean = true
+  
   ngOnInit(): void {
-    // Suscribirse al canal al iniciar el componente
     this.socketService.subscribeToChannel(this.subscribedChannel);
     this.incomesaveForm.get('precioventa')?.valueChanges.subscribe(() => {
       this.calcularPrecioConIva();
@@ -152,7 +157,7 @@ export class IncomeComponent {
     this.incomesaveForm.get('iva')?.valueChanges.subscribe(() => {
       this.calcularPrecioConIva();
     });
-    // Suscribirse al observable de mensajes para recibir los mensajes del canal
+    
     this.messageSubscription = this.socketService.message$.subscribe((message) => {
       if (message && message === 'RELOAD') {
         console.log('Received message from channel:', message);
@@ -161,17 +166,13 @@ export class IncomeComponent {
     });
     this.listItemsstart(this.filterForm.value);
   }
+  
   ngOnDestroy() {
-    // Desuscribirse del canal cuando el componente sea destruido
     this.socketService.unsubscribeFromChannel(this.subscribedChannel);
-
-    // Desuscribir el observable de mensajes
     if (this.messageSubscription) {
       this.messageSubscription.unsubscribe();
     }
   }
-
-
 
   filterinit(allclients: string, inventory: string, pagination: any, numperpage: string, findlike: any) {
     this.filterForm = this.formBuilder.group({
@@ -182,8 +183,8 @@ export class IncomeComponent {
       findlike: [findlike],
     })
   }
+  
   onFormChanges(): void {
-    // Suscribirse a cambios en todo el formulario
     this.filterForm.valueChanges.subscribe((formValues) => {
       if (
         this.filterForm.get('allclients')?.dirty ||
@@ -198,20 +199,63 @@ export class IncomeComponent {
     });
   }
 
+  // ============================================================
+  // ✅ listItemsstart - CON RELACIÓN DE PEDIDOS
+  // ============================================================
   async listItemsstart(form: any) {
     this.loading = true;
-    const data = await this.api.listincomesstart(form);
-    this.loading = false;
-    this.statusincomes = data.statuslist || [];
-    this.incomeslists = data.intake;
-    this.numperpages = data.number_of_records_per_page;
-    this.totalentries = data.number_of_records;
-    this.pagination = data.actual_page;
-    this.namesinventory = data.inventorys || []
-    const findlikeaux = this.filterForm.controls['findlike'].getRawValue();
-    const inventoryaux = this.filterForm.controls['inventory'].getRawValue() || '0';
-    this.filterinit(data.allclients, inventoryaux, 1, data.number_of_records_per_page.toString(), findlikeaux)
-    this.onFormChanges()
+    try {
+      // 1. Obtener ingresos
+      const data = await this.api.listincomesstart(form);
+      
+      // 2. Obtener TODOS los pedidos en inventario
+      const pedidosResponse = await this.pedidoService.getPedidosEnInventario(1, 1000, '');
+      const pedidos = pedidosResponse?.data?.pedidos || [];
+      
+      // 3. Crear mapa de pedidos por SKU + Batch
+      const pedidosMap = new Map();
+      pedidos.forEach((pedido: any) => {
+        if (pedido.sku && pedido.batchId && pedido.status === 'inventario') {
+          const key = `${pedido.sku}_${pedido.batchId}`;
+          pedidosMap.set(key, {
+            nombre: pedido.name,
+            id: pedido._id
+          });
+        }
+      });
+
+      // 4. Relacionar ingresos con pedidos
+      this.incomeslists = data.intake.map((income: ListincomesI) => {
+        const sku = income.inventory_snapshot?.sku || '';
+        const batchId = income.batch_snapshot?._id || income._id || '';
+        const key = `${sku}_${batchId}`;
+        const pedido = pedidosMap.get(key);
+        
+        return {
+          ...income,
+          pedidoAsignado: pedido?.nombre || null,
+          pedidoId: pedido?.id || null
+        };
+      });
+
+      // 5. Resto del código
+      this.statusincomes = data.statuslist || [];
+      this.numperpages = data.number_of_records_per_page;
+      this.totalentries = data.number_of_records;
+      this.pagination = data.actual_page;
+      this.namesinventory = data.inventorys || [];
+      
+      const findlikeaux = this.filterForm.controls['findlike'].getRawValue();
+      const inventoryaux = this.filterForm.controls['inventory'].getRawValue() || '0';
+      this.filterinit(data.allclients, inventoryaux, 1, data.number_of_records_per_page.toString(), findlikeaux);
+      this.onFormChanges();
+      
+    } catch (error) {
+      console.error('Error en listItemsstart:', error);
+      this.incomeslists = [];
+    } finally {
+      this.loading = false;
+    }
   }
 
   findbutton() {
@@ -219,30 +263,75 @@ export class IncomeComponent {
     this.listItems(this.filterForm.value);
     this.loading = false;
   }
+  
   loading: boolean = true;
+
+  // ============================================================
+  // ✅ listItems - CON RELACIÓN DE PEDIDOS
+  // ============================================================
   async listItems(form: any) {
+    this.loading = true;
+    try {
+      // 1. Obtener ingresos
+      const data = await this.api.listincomes(form);
+      
+      // 2. Obtener TODOS los pedidos en inventario
+      const pedidosResponse = await this.pedidoService.getPedidosEnInventario(1, 1000, '');
+      const pedidos = pedidosResponse?.data?.pedidos || [];
+      
+      // 3. Crear mapa de pedidos por SKU + Batch
+      const pedidosMap = new Map();
+      pedidos.forEach((pedido: any) => {
+        if (pedido.sku && pedido.batchId && pedido.status === 'inventario') {
+          const key = `${pedido.sku}_${pedido.batchId}`;
+          pedidosMap.set(key, {
+            nombre: pedido.name,
+            id: pedido._id
+          });
+        }
+      });
 
-    const data = await this.api.listincomes(form);
+      // 4. Relacionar ingresos con pedidos
+      this.incomeslists = data.intake.map((income: ListincomesI) => {
+        const sku = income.inventory_snapshot?.sku || '';
+        const batchId = income.batch_snapshot?._id || income._id || '';
+        const key = `${sku}_${batchId}`;
+        const pedido = pedidosMap.get(key);
+        
+        return {
+          ...income,
+          pedidoAsignado: pedido?.nombre || null,
+          pedidoId: pedido?.id || null
+        };
+      });
 
-    this.incomeslists = data.intake;
-    this.numperpages = data.number_of_records_per_page;
-    this.totalentries = data.number_of_records;
-    this.pagination = data.actual_page;
-    const findlikeaux = this.filterForm.controls['findlike'].getRawValue();
-    const inventoryaux = this.filterForm.controls['inventory'].getRawValue() || '0';
-    this.filterinit(data.allclients, inventoryaux, 1, data.number_of_records_per_page.toString(), findlikeaux)
-    this.onFormChanges()
-    this.myedit = true
-    this.loading = false;
+      // 5. Resto del código
+      this.numperpages = data.number_of_records_per_page;
+      this.totalentries = data.number_of_records;
+      this.pagination = data.actual_page;
+      
+      const findlikeaux = this.filterForm.controls['findlike'].getRawValue();
+      const inventoryaux = this.filterForm.controls['inventory'].getRawValue() || '0';
+      this.filterinit(data.allclients, inventoryaux, 1, data.number_of_records_per_page.toString(), findlikeaux);
+      this.onFormChanges();
+      this.myedit = true;
+      
+    } catch (error) {
+      console.error('Error en listItems:', error);
+      this.incomeslists = [];
+    } finally {
+      this.loading = false;
+    }
   }
+
   bloquear: boolean = false;
   bloquear1: boolean = false;
+  
   async onSubmitclose(form: any) {
     if (this.isCelular) {
       if (this.imeisArr.length === 0) {
         return;
       }
-
       for (let imei of this.imeisArr.controls) {
         if (imei.invalid) {
           return;
@@ -257,15 +346,11 @@ export class IncomeComponent {
       this.bloquear1 = false;
     }, 2000);
     if (this.incomesaveForm.invalid) {
-
-      // console.log(JSON.stringify(this.nuevoForm.value, null, 2));
       return;
     } else {
       this.myedit = false
       const data = await this.api.saveincome(form);
-
       if (data == 'OK') {
-
         this.closebutton.nativeElement.click();
         this.submitted = false;
         this.listItems(this.filterForm.value);
@@ -273,19 +358,15 @@ export class IncomeComponent {
         if (data.printer === 'dymo') {
           try {
             this.apiticketdymmo.printTickets(data.id)
-
           } catch (error) {
-
           } finally {
             this.closebutton.nativeElement.click();
             this.submitted = false;
             this.listItems(this.filterForm.value);
           }
-
-
         } else {
           const params = new URLSearchParams(data.id)
-          const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //`https://82d3-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//
+          const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;
           window.open(url, '_blank');
         }
         this.closebutton.nativeElement.click();
@@ -294,12 +375,12 @@ export class IncomeComponent {
       }
     }
   }
+  
   async onSubmitcloseoff(form: any) {
     if (this.isCelular) {
       if (this.imeisArr.length === 0) {
         return;
       }
-
       for (let imei of this.imeisArr.controls) {
         if (imei.invalid) {
           return;
@@ -309,9 +390,7 @@ export class IncomeComponent {
     this.submitted = true;
     this.bloquear = true;
     this.bloquear1 = true;
-
     if (this.incomesaveForm.invalid) {
-
       return;
     } else {
       this.myedit = false
@@ -324,10 +403,8 @@ export class IncomeComponent {
         this.bloquear = false;
         this.bloquear1 = false;
       }
-
       if (data == 'OK') {
         this.listItems(this.filterForm.value);
-
         this.terminoDeBusqueda = ''
         this.submitted = false;
         this.incomesaveForm.controls['id_item'].setValue(null);
@@ -338,12 +415,10 @@ export class IncomeComponent {
         const imeisArray = this.incomesaveForm.get('imeis') as FormArray;
         imeisArray.clear();
       } else if (data.id) {
-
         if (data.printer === 'dymo') {
           try {
             this.apiticketdymmo.printTickets(data.id)
           } catch (error) {
-
           } finally {
             this.listItems(this.filterForm.value);
             this.terminoDeBusqueda = ''
@@ -356,11 +431,9 @@ export class IncomeComponent {
             const imeisArray = this.incomesaveForm.get('imeis') as FormArray;
             imeisArray.clear();
           }
-
-
         } else {
           const params = new URLSearchParams(data.id)
-          const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;//`http://localhost:5000/api/printtikets?${params.toString()}`; //`https://82d3-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//
+          const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;
           window.open(url, '_blank');
         }
         this.terminoDeBusqueda = ''
@@ -383,57 +456,54 @@ export class IncomeComponent {
   get imeisArr() {
     return this.incomesaveForm.get('imeis') as FormArray;
   }
+  
   addImei() {
     const itemName = this.incomesaveForm.get('item')?.value || '';
-
     const control = this.formBuilder.control('', [
       Validators.required,
       serialValidator(itemName, this.serialRules)
     ]);
-
     (this.incomesaveForm.get('imeis') as FormArray).push(control);
-
-    // añadir espacio para el mensaje
     this.imeiMessages.push('');
   }
+  
   imeiMessages: string[] = [];
+  
   onImeiBlur(index: number) {
     const control = (this.incomesaveForm.get('imeis') as FormArray).at(index);
-
     const errors = control.errors;
-    this.imeiMessages[index] = ''; // limpiar mensaje
-
+    this.imeiMessages[index] = '';
     if (!errors) {
       this.imeiMessages[index] = 'Serial válido ✔';
       return;
     }
-
     if (errors['serialLength']) {
       const e = errors['serialLength'];
-      this.imeiMessages[index] =
-        `Faltan ${e.missing} caracteres (necesita ${e.required}).`;
+      this.imeiMessages[index] = `Faltan ${e.missing} caracteres (necesita ${e.required}).`;
       return;
     }
-
     if (errors['serialNumeric']) {
       this.imeiMessages[index] = `Debe ser solo números.`;
       return;
     }
   }
+  
   get imeisFormArray(): FormArray {
     return this.incomesaveForm.get('imeis') as FormArray;
   }
+  
   removeImei(index: number) {
     this.imeisArr.removeAt(index);
   }
+  
   sanitizeImei(index: number) {
     const cleanValue = this.imeisArr.at(index).value.replace(/[^0-9]/g, '');
     this.imeisArr.at(index).setValue(cleanValue, { emitEvent: false });
   }
+  
   onItemChange() {
     const itemName = this.incomesaveForm.get('item')?.value || '';
     const arr = this.incomesaveForm.get('imeis') as FormArray;
-
     arr.controls.forEach((ctrl, i) => {
       ctrl.setValidators([
         Validators.required,
@@ -441,15 +511,13 @@ export class IncomeComponent {
       ]);
       ctrl.updateValueAndValidity();
     });
-
-    // limpiar mensajes
     this.imeiMessages = arr.controls.map(() => '');
   }
 
   isCelular: boolean = false;
+  
   async getdataincome() {
     const user = localStorage.getItem('User');
-
     this.mostrarSugerencias = false;
     this.blockbusquedapro = false;
     this.bloquear = false;
@@ -484,12 +552,15 @@ export class IncomeComponent {
     this.imeiMessages = [];
     this.typedocumenttext = this.typedocument[0].name_type_document;
   }
+  
   changes() {
     const data = this.incomesaveForm.value.tipo_documento;
     const found = this.typedocument.find((element) => element._id == data);
     this.typedocumenttext = found?.name_type_document;
   }
+  
   totalprice = '';
+  
   totalpriceds() {
     const cant = this.incomesaveForm.controls['cantidad'].getRawValue();
     const preciounit = this.incomesaveForm.controls['preciounit'].getRawValue();
@@ -509,9 +580,11 @@ export class IncomeComponent {
       parseFloat(datavalue)
     ).toFixed(2);
   }
+  
   taxestabletotal(datapercentaje: any, datavalue: any, dataquanty: any) {
     return (parseFloat(datavalue) * parseFloat(dataquanty)).toFixed(2);
   }
+  
   async findpercentaje() {
     this.taxespercentaje = await this.api.getfindpercentaje(
       this.incomesaveForm.controls['inpuesto'].getRawValue()
@@ -521,7 +594,6 @@ export class IncomeComponent {
     );
   }
 
-
   async remo() {
     this.items = this.items = [];
   }
@@ -529,9 +601,11 @@ export class IncomeComponent {
   inicio() {
     this.router.navigate(['dashboard']);
   }
+  
   rimpeitems: ListrimpeI[] = [];
   countriesitems: ListcountriesI[] = [];
   newproveedor = false;
+  
   async nuevoproveedor() {
     if (!this.newproveedor) {
       this.newproveedor = true;
@@ -560,21 +634,18 @@ export class IncomeComponent {
       this.newproveedor = false;
     }
   }
+  
   submitted1 = false;
   get f1(): { [key: string]: AbstractControl } {
     return this.supplierForm.controls;
   }
+  
   async savesupplier(form: any) {
     this.submitted1 = true;
-
     if (this.supplierForm.invalid) {
-      //this.postForm(form);
-      // console.log(JSON.stringify(this.nuevoForm.value, null, 2));
       return;
     } else {
-      // console.log(form)
       const data = await this.api.savesuppliersincome(form);
-      //  console.log(data)
       if (data == 'OK') {
         const data = await this.api.getdataincome();
         this.supplierslist = data.datsup;
@@ -583,30 +654,17 @@ export class IncomeComponent {
       }
     }
   }
+  
   async printreportdocument(id: any) {
     const data = await this.api.reportincomedoument(id);
     Swal.close();
     this.pdfViewerService.openPDFInNewTab(data);
-    // printJS({
-    //   printable: data,
-    //   type: 'pdf',
-    //   base64: true,
-    //   showModal: true,
-    // });
-    // console.log(data)
   }
+  
   async printreportdocumentcomplete(id: any) {
     const data = await this.api.reportincomedoumentcomplete(id);
-    // console.log(data)
     Swal.close();
     this.pdfViewerService.openPDFInNewTab(data);
-    // printJS({
-    //   printable: data,
-    //   type: 'pdf',
-    //   base64: true,
-    //   showModal: true,
-    // });
-    // console.log(data)
   }
 
   datacolor(data: any) {
@@ -620,22 +678,17 @@ export class IncomeComponent {
   }
 
   renderPage(event: number) {
-    this.filterForm.controls['pagination'].setValue(
-      event
-    );
+    this.filterForm.controls['pagination'].setValue(event);
     this.loading = true;
     this.listItems(this.filterForm.value);
     this.loading = false;
   }
-
-
 
   parseInt1(data: any) {
     return parseInt(data);
   }
 
   reportsselect(data: any) {
-    // this.printreportdocument(data)
     Swal.fire({
       title: 'Imprimir reporte',
       showDenyButton: true,
@@ -663,11 +716,13 @@ export class IncomeComponent {
       }
     });
   }
+  
   listincomeditone: ListIncomeseditI = {};
   submittededdit = false;
   get fed(): { [key: string]: AbstractControl } {
     return this.incomeseditForm.controls;
   }
+  
   async editgetdata(data: any) {
     this.submittededdit = false;
     this.listincomeditone = await this.api.getfindedititemincome(data);
@@ -682,6 +737,7 @@ export class IncomeComponent {
       observaciones: [this.listincomeditone.observations],
     });
   }
+  
   async editibncomes(data: any) {
     this.submittededdit = true;
     if (this.supplierForm.invalid) {
@@ -689,13 +745,11 @@ export class IncomeComponent {
     } else {
       this.myedit = false
       const dat = await this.api.editincome(data);
-      //  console.log(data)
       if (dat == 'OK') {
         this.submittededdit = false;
         this.closebutton1.nativeElement.click();
         this.listItems(this.filterForm.value);
       }
-
     }
   }
 
@@ -709,7 +763,9 @@ export class IncomeComponent {
       },
     });
   }
+  
   namevaluereport: any;
+  
   reportnamevalueinit(data: any, name: any) {
     this.namevaluereport = name;
     const currentDate = new Date();
@@ -724,8 +780,6 @@ export class IncomeComponent {
       ],
       id: [data, Validators.required],
     });
-
-    // window.open('https://api.whatsapp.com/send?text=Mensaje%20de%0Aprueba', '_blank')
     return;
   }
 
@@ -733,31 +787,24 @@ export class IncomeComponent {
     this.closebutton33.nativeElement.click();
     this.simpleAlert();
     const dat = await this.api.reportnamevalue(data);
-
     Swal.close();
     this.pdfViewerService.openPDFInNewTab(dat);
   }
 
   terminoDeBusqueda = '';
-
   mostrarSugerencias = false;
   blockbusquedapro = false;
   loaderpro = false;
+  
   seleccionitem() {
     const data = this.incomesaveForm.controls['id_item'].getRawValue();
-
     const found = this.items.find(element => element._id == data);
     if (!found) return;
-
     const precioBase = Number(found.price ?? 0);
-
-    // 👇 solo cuando viene EXPLÍCITAMENTE false
     const hasTax = found.hasTax !== false;
-
     const precioVentaFinal = hasTax
       ? precioBase
       : +(precioBase * 1.15).toFixed(2);
-
     this.incomesaveForm.controls['precioventa'].setValue(precioVentaFinal);
     this.incomesaveForm.controls['preciounit'].setValue(
       Number(found.last_unit_price_income ?? 0)
@@ -773,42 +820,35 @@ export class IncomeComponent {
       id_item: id_item,
       item: texto
     });
-
-    // Detectar si es celular
     const isCelular =
       texto.toUpperCase().includes('CELULAR') ||
       texto.toUpperCase().includes('MOVIL') ||
       texto.toUpperCase().includes('SMARTPHONE');
-
     this.isCelular = isCelular;
-
     if (isCelular) {
-      // Al menos un IMEI requerido
       if (this.imeisArr.length === 0) {
         this.addImei();
       }
     } else {
-      // Si no es celular, limpiar IMEIs
       this.imeisArr.clear();
     }
   }
+  
   filtrarSugerencias() {
     this.mostrarSugerencias = this.terminoDeBusqueda.length > 0;
   }
+  
   async makechoice(event: any) {
     if (event.key === 'Enter' || event === 'Enter') {
       if (this.terminoDeBusqueda.length > 2) {
         this.mostrarSugerencias = true;
         this.blockbusquedapro = true;
-
         setTimeout(() => {
           this.blockbusquedapro = false;
         }, 1000);
         this.loaderpro = true;
         this.items = await this.api.finditemincome(this.terminoDeBusqueda);
-
         this.loaderpro = false;
-
       }
     }
     if (this.terminoDeBusqueda.length <= 2) {
@@ -816,12 +856,13 @@ export class IncomeComponent {
       this.items = [];
     }
   }
+  
   blockbusqueda = false;
+  
   onKeyDownEvent(event: any) {
     if (event.key === 'Enter') {
       if (event.target.value.length > 2) {
         this.blockbusqueda = true;
-
         setTimeout(() => {
           this.blockbusqueda = false;
         }, 1000);
@@ -847,9 +888,9 @@ export class IncomeComponent {
   ff: any = ''
   ivadat: boolean = false
   modalVisible4: boolean = false;
+  
   async printlocal(id: any, print: any = null) {
     const data = await this.api.ticketsincomes({ id })
-
     this.name1 = data.topText1
     this.name2 = data.topText2
     this.name3 = data.bottomText1
@@ -859,12 +900,13 @@ export class IncomeComponent {
     this.price = data.price
     this.ff = data.f
     this.ivadat = data.iva
-
     this.modalVisible4 = true;
   }
+  
   async closeprintlocal() {
     this.modalVisible4 = false;
   }
+  
   wassapmodal: boolean = false
   openwassapmodal() {
     this.wassapmodal = true
@@ -872,6 +914,7 @@ export class IncomeComponent {
   closewassapmodal() {
     this.wassapmodal = false
   }
+  
   reportpdfmodal: boolean = false
   openreportpdfmodal() {
     this.reportpdfmodal = true
@@ -880,19 +923,10 @@ export class IncomeComponent {
     this.reportpdfmodal = false
   }
 
-
-
-
   async aceptar(data: any) {
-    //console.log(data)
     Swal.fire({
       title: '¿Cambiar estado a aprobado?',
-      text:
-
-        data.quantity +
-        ' ' + data.inventory_snapshot.name_model +
-        ' ' +
-        data.inventory_snapshot.name_item,
+      text: data.quantity + ' ' + data.inventory_snapshot.name_model + ' ' + data.inventory_snapshot.name_item,
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -904,28 +938,106 @@ export class IncomeComponent {
         this.loading = true;
         const asa = await this.api.incomeapproved(data._id);
         if (asa == 'OK') {
-
           this.listItems(this.filterForm.value);
-
         }
       }
     });
   }
+  
   precioMostrado: number = 0;
+  
   calcularPrecioConIva() {
     const precioVenta = Number(this.incomesaveForm.get('precioventa')?.value) || 0;
     const tieneIva = this.incomesaveForm.get('iva')?.value;
-
     if (tieneIva) {
-      // Checkbox en TRUE → mismo precio
       this.precioMostrado = precioVenta;
     } else {
-      // Checkbox en FALSE → agregar 15%
       this.precioMostrado = +(precioVenta * 1.15).toFixed(2);
     }
   }
+  
   seleccionarTexto(event: Event) {
     const input = event.target as HTMLInputElement;
     input.select();
+  }
+
+  // ============================================================
+  // ✅ asignarPedido - Recarga la lista después de asignar
+  // ============================================================
+  async asignarPedido(income: ListincomesI) {
+    console.log('📦 Asignando pedido para:', income);
+    
+    const sku = income.inventory_snapshot?.sku || '';
+    const batchId = income.batch_snapshot?._id || income._id || '';
+    const actualPrice = income.unit_sales_price || income.unit_price || 0;
+    const itemName = income.inventory_snapshot?.name_item || '';
+
+    if (!sku) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'SKU no disponible',
+        text: 'Este registro no tiene un SKU válido para asignar a un pedido.',
+        confirmButtonText: 'Entendido'
+      });
+      return;
+    }
+
+    if (!batchId) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Batch ID no disponible',
+        text: 'Este registro no tiene un Batch ID válido para asignar a un pedido.',
+        confirmButtonText: 'Entendido'
+      });
+      return;
+    }
+
+    if (income.pedidoAsignado) {
+      const result = await Swal.fire({
+        icon: 'info',
+        title: 'Ya tiene pedido asignado',
+        html: `
+          <p>Este ingreso ya está asignado al pedido:</p>
+          <p class="fw-bold">"${income.pedidoAsignado}"</p>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '✅ Reasignar',
+        cancelButtonText: 'Cancelar'
+      });
+      if (!result.isConfirmed) return;
+    }
+
+    const dialogRef = this.dialog.open(AsignarPedidoModalComponent, {
+      width: '850px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      panelClass: 'custom-dialog-container',
+      data: {
+        incomeId: income._id,
+        sku: sku,
+        batchId: batchId,
+        actualPrice: actualPrice,
+        itemName: itemName
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.success) {
+        // ✅ Recargar la lista para actualizar la relación
+        this.listItems(this.filterForm.value);
+        
+        Swal.fire({
+          icon: 'success',
+          title: '✅ ¡Pedido asignado!',
+          html: `
+            <p>El SKU <strong class="text-primary">${result.sku}</strong> ha sido asignado al pedido:</p>
+            <p class="fw-bold text-success">"${result.pedido.name}"</p>
+          `,
+          timer: 3000,
+          showConfirmButton: true,
+          confirmButtonText: 'OK'
+        });
+      }
+    });
   }
 }
