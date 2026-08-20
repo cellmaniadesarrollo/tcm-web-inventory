@@ -108,7 +108,7 @@ export class IncomeComponent {
     bodega: new FormControl(false),
     iva: new FormControl(true),
     selected_printer: new FormControl(''),
-    // 🚨 AGREGAR ESTO
+    isBillableInRepairOrders: new FormControl(false),
     imeis: this.formBuilder.array([])
   });
   incomeseditForm: FormGroup = new FormGroup({
@@ -335,6 +335,7 @@ export class IncomeComponent {
         this.incomesaveForm.controls['precioventa'].setValue(0);
         this.incomesaveForm.controls['preciounit'].setValue(0);
         this.incomesaveForm.controls['observaciones'].setValue('');
+        this.incomesaveForm.controls['isBillableInRepairOrders'].setValue(false);
         const imeisArray = this.incomesaveForm.get('imeis') as FormArray;
         imeisArray.clear();
       } else if (data.id) {
@@ -353,6 +354,7 @@ export class IncomeComponent {
             this.incomesaveForm.controls['precioventa'].setValue(0);
             this.incomesaveForm.controls['preciounit'].setValue(0);
             this.incomesaveForm.controls['observaciones'].setValue('');
+            this.incomesaveForm.controls['isBillableInRepairOrders'].setValue(false);
             const imeisArray = this.incomesaveForm.get('imeis') as FormArray;
             imeisArray.clear();
           }
@@ -370,6 +372,7 @@ export class IncomeComponent {
         this.incomesaveForm.controls['precioventa'].setValue(0);
         this.incomesaveForm.controls['preciounit'].setValue(0);
         this.incomesaveForm.controls['observaciones'].setValue('');
+        this.incomesaveForm.controls['isBillableInRepairOrders'].setValue(false);
         const imeisArray = this.incomesaveForm.get('imeis') as FormArray;
         imeisArray.clear();
       }
@@ -478,6 +481,7 @@ export class IncomeComponent {
       get_print: true,
       bodega: false,
       iva: true,
+      isBillableInRepairOrders: false, // 🆕
       selected_printer: user && user === 'byronp' ? 'dymo' : 'zebra'
     });
     this.imeisArr.clear();
