@@ -120,6 +120,7 @@ import { PedidoModalComponent } from './views/pedidos/components/pedido-modal/pe
 import { InventarioTablaComponent } from './views/pedidos/components/inventario-tabla/inventario-tabla.component';
 import { PedidoInventarioTablaComponent } from './views/pedidos/components/pedido-inventario-tabla/pedido-inventario-tabla.component';
 import { ImprimirModalComponent } from './views/pedidos/components/imprimir-modal/imprimir-modal.component';
+import { AsignarPedidoModalComponent } from './views/income/components/asignar-pedido-modal/asignar-pedido-modal.component';
 
 @NgModule({
   declarations: [
@@ -190,6 +191,7 @@ import { ImprimirModalComponent } from './views/pedidos/components/imprimir-moda
     InventarioTablaComponent,
     PedidoInventarioTablaComponent,
     ImprimirModalComponent,
+    AsignarPedidoModalComponent,
   ],
   imports: [
     // ============ ANGULAR ============

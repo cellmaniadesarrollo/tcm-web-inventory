@@ -31,6 +31,9 @@ export class PedidosComponent implements OnInit {
   pedidosInventario: IPedido[] = [];
   loadingPedidos: boolean = false;
 
+  // ✅ CONTADOR DE PEDIDOS PENDIENTES
+  pedidosPendientesCount: number = 0;
+
   // Tab activo
   activeTab: number = 0;
 
@@ -45,6 +48,7 @@ export class PedidosComponent implements OnInit {
   ngOnInit(): void {
     this.cargarInventario();
     this.cargarPedidosPendientes();
+    this.cargarPedidosPendientesCount(); // ✅ Cargar conteo al iniciar
   }
 
   // ============================================================
@@ -55,8 +59,28 @@ export class PedidosComponent implements OnInit {
     this.activeTab = event.index;
     if (this.activeTab === 1) {
       this.cargarPedidosPendientes();
+      this.cargarPedidosPendientesCount(); // ✅ Actualizar conteo al cambiar a la tab
     } else if (this.activeTab === 2) {
       this.cargarPedidosEnInventario();
+    }
+  }
+
+  // ============================================================
+  //  ✅ CONTEO DE PEDIDOS PENDIENTES
+  // ============================================================
+
+  /**
+   * Cargar el conteo de pedidos pendientes
+   * Usado para mostrar el badge en la pestaña
+   */
+  async cargarPedidosPendientesCount(): Promise<void> {
+    try {
+      const count = await this.pedidoService.getPedidosPendientesCount();
+      this.pedidosPendientesCount = count;
+      console.log('📋 Pedidos pendientes:', this.pedidosPendientesCount);
+    } catch (error) {
+      console.error('Error al cargar conteo de pedidos pendientes:', error);
+      this.pedidosPendientesCount = 0;
     }
   }
 
@@ -161,6 +185,7 @@ export class PedidosComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.cargarInventario();
+        this.cargarPedidosPendientesCount(); // ✅ Actualizar conteo después de cerrar modal
       }
     });
   }
@@ -198,6 +223,8 @@ export class PedidosComponent implements OnInit {
         this.itemsPerPage
       );
       this.pedidosPendientes = response.data?.pedidos || [];
+      // ✅ Actualizar conteo después de cargar
+      await this.cargarPedidosPendientesCount();
     } catch (error) {
       console.error('Error al cargar pedidos pendientes:', error);
       this.pedidosPendientes = [];
@@ -223,8 +250,7 @@ export class PedidosComponent implements OnInit {
   }
 
   /**
-   * ✅ NUEVO: INVENTARIAR PEDIDO - Cambia estado a 'inventario'
-   * Usando .then() porque el service devuelve Promise
+   * ✅ INVENTARIAR PEDIDO - Cambia estado a 'inventario'
    */
   onInventariarPedido(pedido: IPedido): void {
     if (confirm(`¿Marcar el pedido "${pedido.name}" como inventariado?`)) {
@@ -232,6 +258,7 @@ export class PedidosComponent implements OnInit {
         .then((response: any) => {
           this.snackBar.open('✅ Pedido marcado como inventariado', 'Cerrar', { duration: 3000 });
           this.cargarPedidosPendientes();
+          this.cargarPedidosPendientesCount(); // ✅ Actualizar conteo
           this.cargarInventario();
         })
         .catch((error: any) => {
@@ -243,7 +270,6 @@ export class PedidosComponent implements OnInit {
 
   /**
    * RECHAZAR PEDIDO - Cambia estado a 'rechazado'
-   * Usando .then() porque el service devuelve Promise
    */
   onRechazarPedido(pedido: IPedido): void {
     if (confirm(`¿Rechazar el pedido "${pedido.name}"?`)) {
@@ -251,6 +277,7 @@ export class PedidosComponent implements OnInit {
         .then((response: any) => {
           this.snackBar.open('❌ Pedido rechazado', 'Cerrar', { duration: 3000 });
           this.cargarPedidosPendientes();
+          this.cargarPedidosPendientesCount(); // ✅ Actualizar conteo
         })
         .catch((error: any) => {
           console.error('Error al rechazar pedido:', error);
@@ -277,6 +304,7 @@ export class PedidosComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.cargarPedidosPendientes();
+        this.cargarPedidosPendientesCount(); // ✅ Actualizar conteo
         this.cargarInventario();
       }
     });
@@ -300,6 +328,7 @@ export class PedidosComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.cargarPedidosPendientes();
+        this.cargarPedidosPendientesCount(); // ✅ Actualizar conteo
         this.cargarInventario();
       }
     });
