@@ -49,7 +49,7 @@ export class IncomeComponent {
   @ViewChild('closebutton33') closebutton33: any;
   @ViewChild('closebutton34') closebutton34: any;
   @ViewChild('closebutton1') closebutton1: any;
-  
+
   serialRules = [
     {
       name: 'CELULAR',
@@ -60,7 +60,7 @@ export class IncomeComponent {
   ];
 
   serialMessage: string = '';
-  
+
   constructor(
     private api: ApiService,
     private pdfViewerService: PdfViewerService,
@@ -113,9 +113,10 @@ export class IncomeComponent {
     bodega: new FormControl(false),
     iva: new FormControl(true),
     selected_printer: new FormControl(''),
+    isBillableInRepairOrders: new FormControl(false),
     imeis: this.formBuilder.array([])
   });
-  
+
   incomeseditForm: FormGroup = new FormGroup({
     id: new FormControl(null),
     numero_documento: new FormControl(''),
@@ -147,7 +148,7 @@ export class IncomeComponent {
   private subscribedChannel: string = 'income';
   private messageSubscription: Subscription | null = null;
   myedit: boolean = true
-  
+
   ngOnInit(): void {
     this.socketService.subscribeToChannel(this.subscribedChannel);
     this.incomesaveForm.get('precioventa')?.valueChanges.subscribe(() => {
@@ -157,7 +158,7 @@ export class IncomeComponent {
     this.incomesaveForm.get('iva')?.valueChanges.subscribe(() => {
       this.calcularPrecioConIva();
     });
-    
+
     this.messageSubscription = this.socketService.message$.subscribe((message) => {
       if (message && message === 'RELOAD') {
         console.log('Received message from channel:', message);
@@ -166,7 +167,7 @@ export class IncomeComponent {
     });
     this.listItemsstart(this.filterForm.value);
   }
-  
+
   ngOnDestroy() {
     this.socketService.unsubscribeFromChannel(this.subscribedChannel);
     if (this.messageSubscription) {
@@ -183,7 +184,7 @@ export class IncomeComponent {
       findlike: [findlike],
     })
   }
-  
+
   onFormChanges(): void {
     this.filterForm.valueChanges.subscribe((formValues) => {
       if (
@@ -207,11 +208,11 @@ export class IncomeComponent {
     try {
       // 1. Obtener ingresos
       const data = await this.api.listincomesstart(form);
-      
+
       // 2. Obtener TODOS los pedidos en inventario
       const pedidosResponse = await this.pedidoService.getPedidosEnInventario(1, 1000, '');
       const pedidos = pedidosResponse?.data?.pedidos || [];
-      
+
       // 3. Crear mapa de pedidos por SKU + Batch
       const pedidosMap = new Map();
       pedidos.forEach((pedido: any) => {
@@ -230,7 +231,7 @@ export class IncomeComponent {
         const batchId = income.batch_snapshot?._id || income._id || '';
         const key = `${sku}_${batchId}`;
         const pedido = pedidosMap.get(key);
-        
+
         return {
           ...income,
           pedidoAsignado: pedido?.nombre || null,
@@ -244,12 +245,12 @@ export class IncomeComponent {
       this.totalentries = data.number_of_records;
       this.pagination = data.actual_page;
       this.namesinventory = data.inventorys || [];
-      
+
       const findlikeaux = this.filterForm.controls['findlike'].getRawValue();
       const inventoryaux = this.filterForm.controls['inventory'].getRawValue() || '0';
       this.filterinit(data.allclients, inventoryaux, 1, data.number_of_records_per_page.toString(), findlikeaux);
       this.onFormChanges();
-      
+
     } catch (error) {
       console.error('Error en listItemsstart:', error);
       this.incomeslists = [];
@@ -263,7 +264,7 @@ export class IncomeComponent {
     this.listItems(this.filterForm.value);
     this.loading = false;
   }
-  
+
   loading: boolean = true;
 
   // ============================================================
@@ -274,11 +275,11 @@ export class IncomeComponent {
     try {
       // 1. Obtener ingresos
       const data = await this.api.listincomes(form);
-      
+
       // 2. Obtener TODOS los pedidos en inventario
       const pedidosResponse = await this.pedidoService.getPedidosEnInventario(1, 1000, '');
       const pedidos = pedidosResponse?.data?.pedidos || [];
-      
+
       // 3. Crear mapa de pedidos por SKU + Batch
       const pedidosMap = new Map();
       pedidos.forEach((pedido: any) => {
@@ -297,7 +298,7 @@ export class IncomeComponent {
         const batchId = income.batch_snapshot?._id || income._id || '';
         const key = `${sku}_${batchId}`;
         const pedido = pedidosMap.get(key);
-        
+
         return {
           ...income,
           pedidoAsignado: pedido?.nombre || null,
@@ -309,13 +310,13 @@ export class IncomeComponent {
       this.numperpages = data.number_of_records_per_page;
       this.totalentries = data.number_of_records;
       this.pagination = data.actual_page;
-      
+
       const findlikeaux = this.filterForm.controls['findlike'].getRawValue();
       const inventoryaux = this.filterForm.controls['inventory'].getRawValue() || '0';
       this.filterinit(data.allclients, inventoryaux, 1, data.number_of_records_per_page.toString(), findlikeaux);
       this.onFormChanges();
       this.myedit = true;
-      
+
     } catch (error) {
       console.error('Error en listItems:', error);
       this.incomeslists = [];
@@ -326,7 +327,7 @@ export class IncomeComponent {
 
   bloquear: boolean = false;
   bloquear1: boolean = false;
-  
+
   async onSubmitclose(form: any) {
     if (this.isCelular) {
       if (this.imeisArr.length === 0) {
@@ -375,7 +376,7 @@ export class IncomeComponent {
       }
     }
   }
-  
+
   async onSubmitcloseoff(form: any) {
     if (this.isCelular) {
       if (this.imeisArr.length === 0) {
@@ -412,6 +413,7 @@ export class IncomeComponent {
         this.incomesaveForm.controls['precioventa'].setValue(0);
         this.incomesaveForm.controls['preciounit'].setValue(0);
         this.incomesaveForm.controls['observaciones'].setValue('');
+        this.incomesaveForm.controls['isBillableInRepairOrders'].setValue(false);
         const imeisArray = this.incomesaveForm.get('imeis') as FormArray;
         imeisArray.clear();
       } else if (data.id) {
@@ -428,6 +430,7 @@ export class IncomeComponent {
             this.incomesaveForm.controls['precioventa'].setValue(0);
             this.incomesaveForm.controls['preciounit'].setValue(0);
             this.incomesaveForm.controls['observaciones'].setValue('');
+            this.incomesaveForm.controls['isBillableInRepairOrders'].setValue(false);
             const imeisArray = this.incomesaveForm.get('imeis') as FormArray;
             imeisArray.clear();
           }
@@ -443,6 +446,7 @@ export class IncomeComponent {
         this.incomesaveForm.controls['precioventa'].setValue(0);
         this.incomesaveForm.controls['preciounit'].setValue(0);
         this.incomesaveForm.controls['observaciones'].setValue('');
+        this.incomesaveForm.controls['isBillableInRepairOrders'].setValue(false);
         const imeisArray = this.incomesaveForm.get('imeis') as FormArray;
         imeisArray.clear();
       }
@@ -456,7 +460,7 @@ export class IncomeComponent {
   get imeisArr() {
     return this.incomesaveForm.get('imeis') as FormArray;
   }
-  
+
   addImei() {
     const itemName = this.incomesaveForm.get('item')?.value || '';
     const control = this.formBuilder.control('', [
@@ -466,9 +470,9 @@ export class IncomeComponent {
     (this.incomesaveForm.get('imeis') as FormArray).push(control);
     this.imeiMessages.push('');
   }
-  
+
   imeiMessages: string[] = [];
-  
+
   onImeiBlur(index: number) {
     const control = (this.incomesaveForm.get('imeis') as FormArray).at(index);
     const errors = control.errors;
@@ -487,20 +491,20 @@ export class IncomeComponent {
       return;
     }
   }
-  
+
   get imeisFormArray(): FormArray {
     return this.incomesaveForm.get('imeis') as FormArray;
   }
-  
+
   removeImei(index: number) {
     this.imeisArr.removeAt(index);
   }
-  
+
   sanitizeImei(index: number) {
     const cleanValue = this.imeisArr.at(index).value.replace(/[^0-9]/g, '');
     this.imeisArr.at(index).setValue(cleanValue, { emitEvent: false });
   }
-  
+
   onItemChange() {
     const itemName = this.incomesaveForm.get('item')?.value || '';
     const arr = this.incomesaveForm.get('imeis') as FormArray;
@@ -515,7 +519,7 @@ export class IncomeComponent {
   }
 
   isCelular: boolean = false;
-  
+
   async getdataincome() {
     const user = localStorage.getItem('User');
     this.mostrarSugerencias = false;
@@ -546,21 +550,22 @@ export class IncomeComponent {
       get_print: true,
       bodega: false,
       iva: true,
+      isBillableInRepairOrders: false, // 🆕
       selected_printer: user && user === 'byronp' ? 'dymo' : 'zebra'
     });
     this.imeisArr.clear();
     this.imeiMessages = [];
     this.typedocumenttext = this.typedocument[0].name_type_document;
   }
-  
+
   changes() {
     const data = this.incomesaveForm.value.tipo_documento;
     const found = this.typedocument.find((element) => element._id == data);
     this.typedocumenttext = found?.name_type_document;
   }
-  
+
   totalprice = '';
-  
+
   totalpriceds() {
     const cant = this.incomesaveForm.controls['cantidad'].getRawValue();
     const preciounit = this.incomesaveForm.controls['preciounit'].getRawValue();
@@ -580,11 +585,11 @@ export class IncomeComponent {
       parseFloat(datavalue)
     ).toFixed(2);
   }
-  
+
   taxestabletotal(datapercentaje: any, datavalue: any, dataquanty: any) {
     return (parseFloat(datavalue) * parseFloat(dataquanty)).toFixed(2);
   }
-  
+
   async findpercentaje() {
     this.taxespercentaje = await this.api.getfindpercentaje(
       this.incomesaveForm.controls['inpuesto'].getRawValue()
@@ -601,11 +606,11 @@ export class IncomeComponent {
   inicio() {
     this.router.navigate(['dashboard']);
   }
-  
+
   rimpeitems: ListrimpeI[] = [];
   countriesitems: ListcountriesI[] = [];
   newproveedor = false;
-  
+
   async nuevoproveedor() {
     if (!this.newproveedor) {
       this.newproveedor = true;
@@ -634,12 +639,12 @@ export class IncomeComponent {
       this.newproveedor = false;
     }
   }
-  
+
   submitted1 = false;
   get f1(): { [key: string]: AbstractControl } {
     return this.supplierForm.controls;
   }
-  
+
   async savesupplier(form: any) {
     this.submitted1 = true;
     if (this.supplierForm.invalid) {
@@ -654,13 +659,13 @@ export class IncomeComponent {
       }
     }
   }
-  
+
   async printreportdocument(id: any) {
     const data = await this.api.reportincomedoument(id);
     Swal.close();
     this.pdfViewerService.openPDFInNewTab(data);
   }
-  
+
   async printreportdocumentcomplete(id: any) {
     const data = await this.api.reportincomedoumentcomplete(id);
     Swal.close();
@@ -716,13 +721,13 @@ export class IncomeComponent {
       }
     });
   }
-  
+
   listincomeditone: ListIncomeseditI = {};
   submittededdit = false;
   get fed(): { [key: string]: AbstractControl } {
     return this.incomeseditForm.controls;
   }
-  
+
   async editgetdata(data: any) {
     this.submittededdit = false;
     this.listincomeditone = await this.api.getfindedititemincome(data);
@@ -737,7 +742,7 @@ export class IncomeComponent {
       observaciones: [this.listincomeditone.observations],
     });
   }
-  
+
   async editibncomes(data: any) {
     this.submittededdit = true;
     if (this.supplierForm.invalid) {
@@ -763,9 +768,9 @@ export class IncomeComponent {
       },
     });
   }
-  
+
   namevaluereport: any;
-  
+
   reportnamevalueinit(data: any, name: any) {
     this.namevaluereport = name;
     const currentDate = new Date();
@@ -795,7 +800,7 @@ export class IncomeComponent {
   mostrarSugerencias = false;
   blockbusquedapro = false;
   loaderpro = false;
-  
+
   seleccionitem() {
     const data = this.incomesaveForm.controls['id_item'].getRawValue();
     const found = this.items.find(element => element._id == data);
@@ -833,11 +838,11 @@ export class IncomeComponent {
       this.imeisArr.clear();
     }
   }
-  
+
   filtrarSugerencias() {
     this.mostrarSugerencias = this.terminoDeBusqueda.length > 0;
   }
-  
+
   async makechoice(event: any) {
     if (event.key === 'Enter' || event === 'Enter') {
       if (this.terminoDeBusqueda.length > 2) {
@@ -856,9 +861,9 @@ export class IncomeComponent {
       this.items = [];
     }
   }
-  
+
   blockbusqueda = false;
-  
+
   onKeyDownEvent(event: any) {
     if (event.key === 'Enter') {
       if (event.target.value.length > 2) {
@@ -888,7 +893,7 @@ export class IncomeComponent {
   ff: any = ''
   ivadat: boolean = false
   modalVisible4: boolean = false;
-  
+
   async printlocal(id: any, print: any = null) {
     const data = await this.api.ticketsincomes({ id })
     this.name1 = data.topText1
@@ -902,11 +907,11 @@ export class IncomeComponent {
     this.ivadat = data.iva
     this.modalVisible4 = true;
   }
-  
+
   async closeprintlocal() {
     this.modalVisible4 = false;
   }
-  
+
   wassapmodal: boolean = false
   openwassapmodal() {
     this.wassapmodal = true
@@ -914,7 +919,7 @@ export class IncomeComponent {
   closewassapmodal() {
     this.wassapmodal = false
   }
-  
+
   reportpdfmodal: boolean = false
   openreportpdfmodal() {
     this.reportpdfmodal = true
@@ -943,9 +948,9 @@ export class IncomeComponent {
       }
     });
   }
-  
+
   precioMostrado: number = 0;
-  
+
   calcularPrecioConIva() {
     const precioVenta = Number(this.incomesaveForm.get('precioventa')?.value) || 0;
     const tieneIva = this.incomesaveForm.get('iva')?.value;
@@ -955,7 +960,7 @@ export class IncomeComponent {
       this.precioMostrado = +(precioVenta * 1.15).toFixed(2);
     }
   }
-  
+
   seleccionarTexto(event: Event) {
     const input = event.target as HTMLInputElement;
     input.select();
@@ -966,7 +971,7 @@ export class IncomeComponent {
   // ============================================================
   async asignarPedido(income: ListincomesI) {
     console.log('📦 Asignando pedido para:', income);
-    
+
     const sku = income.inventory_snapshot?.sku || '';
     const batchId = income.batch_snapshot?._id || income._id || '';
     const actualPrice = income.unit_sales_price || income.unit_price || 0;
@@ -1025,7 +1030,7 @@ export class IncomeComponent {
       if (result?.success) {
         // ✅ Recargar la lista para actualizar la relación
         this.listItems(this.filterForm.value);
-        
+
         Swal.fire({
           icon: 'success',
           title: '✅ ¡Pedido asignado!',
