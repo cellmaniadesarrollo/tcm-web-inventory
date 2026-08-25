@@ -1,5 +1,5 @@
 // income.component.ts
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ApiService } from '../../service/api/api.service';
 import { PdfViewerService } from 'src/app/service/pdf-viewer/pdf-viewer.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -49,6 +49,7 @@ export class IncomeComponent {
   @ViewChild('closebutton33') closebutton33: any;
   @ViewChild('closebutton34') closebutton34: any;
   @ViewChild('closebutton1') closebutton1: any;
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   serialRules = [
     {
@@ -864,9 +865,41 @@ export class IncomeComponent {
 
   blockbusqueda = false;
 
+  private extractScanValue(value: string): string {
+    if (!value) return value;
+
+    const clean = value.trim();
+
+    // ✅ Caso 1: viene del ticket de inventario -> "S:SKU,BT: 2, F: ..."
+    const skuMatch = clean.match(/S:\s*([^,]+)/i);
+    if (skuMatch) {
+      return skuMatch[1].trim();
+    }
+
+    // ✅ Caso 2: viene de una URL tipo .../device-query/XXXX
+    const urlMatch = clean.match(/device-query\/([^\/\?#\s]+)/i);
+    if (urlMatch) {
+      return urlMatch[1];
+    }
+
+    // Caso 3: texto normal, se usa tal cual
+    return clean;
+  }
+
   onKeyDownEvent(event: any) {
+    const rawValue = (event.target.value || '').toUpperCase();
+    const scannedValue = this.extractScanValue(rawValue);
+
+    // Si el scanner metió una URL o el formato de ticket, corrige lo que se ve en el input
+    if (scannedValue !== rawValue) {
+      this.filterForm.controls['findlike'].setValue(scannedValue, { emitEvent: false });
+      if (this.searchInput?.nativeElement) {
+        this.searchInput.nativeElement.value = scannedValue;
+      }
+    }
+
     if (event.key === 'Enter') {
-      if (event.target.value.length > 2) {
+      if (scannedValue.length > 2) {
         this.blockbusqueda = true;
         setTimeout(() => {
           this.blockbusqueda = false;
@@ -876,7 +909,7 @@ export class IncomeComponent {
         this.loading = false;
       }
     }
-    if (event.target.value.length == 0) {
+    if (scannedValue.length == 0) {
       this.loading = true;
       this.listItems(this.filterForm.value);
       this.loading = false;
