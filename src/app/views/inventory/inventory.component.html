@@ -61,7 +61,8 @@
                   <form [formGroup]="searchForm">
                     <div class="input-group">
                       <input type="search"
-                        (keyup)="onKeyDownEvent($event)" (input)="onKeyDownEvent($event)" [readonly]="blockbusqueda"
+                        (keyup)="onKeyDownEvent($event)" 
+                        [readonly]="blockbusqueda"
                         class="form-control form-control-lg" placeholder="Buscar" formControlName="valuesearch"
                         #searchInput />
                       <div class="input-group-append">

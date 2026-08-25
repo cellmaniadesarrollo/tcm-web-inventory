@@ -868,29 +868,31 @@ export class IncomeComponent {
   private extractScanValue(value: string): string {
     if (!value) return value;
 
-    const clean = value.trim();
-
     // ✅ Caso 1: viene del ticket de inventario -> "S:SKU,BT: 2, F: ..."
-    const skuMatch = clean.match(/S:\s*([^,]+)/i);
+    const skuMatch = value.match(/S:\s*([^,]+)/i);
     if (skuMatch) {
       return skuMatch[1].trim();
     }
 
     // ✅ Caso 2: viene de una URL tipo .../device-query/XXXX
-    const urlMatch = clean.match(/device-query\/([^\/\?#\s]+)/i);
+    const urlMatch = value.match(/device-query\/([^\/\?#\s]+)/i);
     if (urlMatch) {
-      return urlMatch[1];
+      return urlMatch[1].trim();
     }
 
-    // Caso 3: texto normal, se usa tal cual
-    return clean;
+    // Caso 3: texto normal manual (SE CONSERVA TAL CUAL, permitiendo espacios)
+    return value;
   }
 
-  onKeyDownEvent(event: any) {
-    const rawValue = (event.target.value || '').toUpperCase();
-    const scannedValue = this.extractScanValue(rawValue);
+  onKeyDownEvent(event: KeyboardEvent) {
+    const target = event.target as HTMLInputElement;
+    const rawValue = target.value || '';
+    
+    // Transformamos a mayúsculas conservando espacios
+    const upperValue = rawValue.toUpperCase();
+    const scannedValue = this.extractScanValue(upperValue);
 
-    // Si el scanner metió una URL o el formato de ticket, corrige lo que se ve en el input
+    // Solo corregimos el input si realmente detectó un formato especial (URL o Ticket)
     if (scannedValue !== rawValue) {
       this.filterForm.controls['findlike'].setValue(scannedValue, { emitEvent: false });
       if (this.searchInput?.nativeElement) {
@@ -898,8 +900,10 @@ export class IncomeComponent {
       }
     }
 
+    const cleanQuery = scannedValue.trim();
+
     if (event.key === 'Enter') {
-      if (scannedValue.length > 2) {
+      if (cleanQuery.length > 2) {
         this.blockbusqueda = true;
         setTimeout(() => {
           this.blockbusqueda = false;
@@ -909,7 +913,8 @@ export class IncomeComponent {
         this.loading = false;
       }
     }
-    if (scannedValue.length == 0) {
+
+    if (cleanQuery.length === 0) {
       this.loading = true;
       this.listItems(this.filterForm.value);
       this.loading = false;

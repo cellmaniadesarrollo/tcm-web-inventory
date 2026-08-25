@@ -240,32 +240,39 @@ export class InventoryComponent {
     this.router.navigate(['dashboard']);
   }
   blockbusqueda = false
-  onKeyDownEvent(event: any) {
-    const rawValue = event.target.value || '';
+  onKeyDownEvent(event: KeyboardEvent) {
+    const target = event.target as HTMLInputElement;
+    const rawValue = target.value || '';
     const scannedValue = this.extractScanValue(rawValue);
 
-    // Si el scanner metió una URL, corrige lo que se ve en el input
+    // Si el scanner metió una URL o ticket, se ajusta el control y la vista
     if (scannedValue !== rawValue) {
       this.searchForm.controls['valuesearch'].setValue(scannedValue, { emitEvent: false });
+      if (this.searchInput?.nativeElement) {
+        this.searchInput.nativeElement.value = scannedValue;
+      }
     }
 
     this.datapage.findlike = scannedValue;
 
+    const cleanQuery = scannedValue.trim();
+
     if (event.key === 'Enter') {
-      if (scannedValue.length > 0) {
-        this.blockbusqueda = true
+      if (cleanQuery.length > 0) {
+        this.blockbusqueda = true;
 
         setTimeout(() => {
-          this.blockbusqueda = false
+          this.blockbusqueda = false;
         }, 1000);
         this.datapage.pagination = 1;
-        this.loading = true
+        this.loading = true;
         this.listItems(this.datapage);
       }
     }
-    if (scannedValue.length == 0) {
+
+    if (cleanQuery.length === 0) {
       this.datapage.pagination = 1;
-      this.loading = true
+      this.loading = true;
       this.listItems(this.datapage);
     }
   }
@@ -843,21 +850,19 @@ export class InventoryComponent {
   private extractScanValue(value: string): string {
     if (!value) return value;
 
-    const clean = value.trim();
-
     // ✅ Caso 1: viene del ticket de inventario -> "S:SKU,BT: 2, F: ..."
-    const skuMatch = clean.match(/S:\s*([^,]+)/i);
+    const skuMatch = value.match(/S:\s*([^,]+)/i);
     if (skuMatch) {
       return skuMatch[1].trim();
     }
 
     // ✅ Caso 2: viene de una URL tipo .../device-query/XXXX
-    const urlMatch = clean.match(/device-query\/([^\/\?#\s]+)/i);
+    const urlMatch = value.match(/device-query\/([^\/\?#\s]+)/i);
     if (urlMatch) {
-      return urlMatch[1];
+      return urlMatch[1].trim();
     }
 
-    // Caso 3: texto normal, se usa tal cual
-    return clean;
+    // Caso 3: texto normal manual (se conserva tal cual para permitir espacios)
+    return value;
   }
 }
