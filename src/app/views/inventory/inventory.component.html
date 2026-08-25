@@ -5,7 +5,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Inventario</h1>
+          <h1>Inventario Bodega</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -60,9 +60,10 @@
                 <div class="col-sm-4 justify-content-center">
                   <form [formGroup]="searchForm">
                     <div class="input-group">
-                      <input type="search" oninput="this.value = this.value.toUpperCase()"
+                      <input type="search"
                         (keyup)="onKeyDownEvent($event)" (input)="onKeyDownEvent($event)" [readonly]="blockbusqueda"
-                        class="form-control form-control-lg" placeholder="Buscar" formControlName="valuesearch" />
+                        class="form-control form-control-lg" placeholder="Buscar" formControlName="valuesearch"
+                        #searchInput />
                       <div class="input-group-append">
                         <button type="button" class="btn btn-lg btn-default" [disabled]="blockbusqueda"
                           (click)="findbutton()">
