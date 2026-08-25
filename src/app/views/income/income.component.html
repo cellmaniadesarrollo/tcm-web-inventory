@@ -62,9 +62,10 @@
                 <div class="col-sm-3 justify-content-center">
                   <form [formGroup]="filterForm">
                     <div class="input-group">
-                      <input type="search" oninput="this.value = this.value.toUpperCase()"
+                      <input type="search"
                         (keyup)="onKeyDownEvent($event)" (input)="onKeyDownEvent($event)" [readonly]="blockbusqueda"
-                        class="form-control form-control-lg" placeholder="Buscar" formControlName="findlike" />
+                        class="form-control form-control-lg" placeholder="Buscar" formControlName="findlike"
+                        #searchInput />
                       <div class="input-group-append">
                         <button type="button" [disabled]="blockbusqueda" class="btn btn-lg btn-default"
                           (click)="findbutton()">

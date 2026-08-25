@@ -843,11 +843,21 @@ export class InventoryComponent {
   private extractScanValue(value: string): string {
     if (!value) return value;
 
-    // Quita espacios/saltos de línea que algunos scanners agregan al final
     const clean = value.trim();
 
-    // Si viene una URL tipo .../device-query/XXXX, extrae solo el ID
-    const match = clean.match(/device-query\/([^\/\?#\s]+)/i);
-    return match ? match[1] : clean;
+    // ✅ Caso 1: viene del ticket de inventario -> "S:SKU,BT: 2, F: ..."
+    const skuMatch = clean.match(/S:\s*([^,]+)/i);
+    if (skuMatch) {
+      return skuMatch[1].trim();
+    }
+
+    // ✅ Caso 2: viene de una URL tipo .../device-query/XXXX
+    const urlMatch = clean.match(/device-query\/([^\/\?#\s]+)/i);
+    if (urlMatch) {
+      return urlMatch[1];
+    }
+
+    // Caso 3: texto normal, se usa tal cual
+    return clean;
   }
 }
