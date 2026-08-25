@@ -58,6 +58,7 @@ declare var dymo: any;
 export class InventoryComponent {
   // socket: WebSocketSubject<any> = new WebSocketSubject('ws://localhost:3000');
   @ViewChild('closebutton') closebutton: any;
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   active = 1;
   datapage = {
@@ -240,10 +241,18 @@ export class InventoryComponent {
   }
   blockbusqueda = false
   onKeyDownEvent(event: any) {
-    this.datapage.findlike = this.searchForm.value.valuesearch || '';
+    const rawValue = event.target.value || '';
+    const scannedValue = this.extractScanValue(rawValue);
+
+    // Si el scanner metió una URL, corrige lo que se ve en el input
+    if (scannedValue !== rawValue) {
+      this.searchForm.controls['valuesearch'].setValue(scannedValue, { emitEvent: false });
+    }
+
+    this.datapage.findlike = scannedValue;
 
     if (event.key === 'Enter') {
-      if (event.target.value.length > 0) {
+      if (scannedValue.length > 0) {
         this.blockbusqueda = true
 
         setTimeout(() => {
@@ -254,7 +263,7 @@ export class InventoryComponent {
         this.listItems(this.datapage);
       }
     }
-    if (event.target.value.length == 0) {
+    if (scannedValue.length == 0) {
       this.datapage.pagination = 1;
       this.loading = true
       this.listItems(this.datapage);
@@ -776,26 +785,27 @@ export class InventoryComponent {
   }
 
   async onSearchOrder(value: string) {
-    this.orderSearchValue = value;
+    const scannedValue = this.extractScanValue(value);
 
-    // Si hay orden seleccionada y el usuario borró/cambió el texto, limpia la selección
-    if (this.selectedOrder && value.trim() !== `#${this.selectedOrder.order_number} - ${this.selectedOrder.customer.firstName} ${this.selectedOrder.customer.lastName}`) {
+    // Actualiza el modelo para que el input muestre solo el ID (no la URL completa)
+    this.orderSearchValue = scannedValue;
+
+    if (this.selectedOrder && scannedValue.trim() !== `#${this.selectedOrder.order_number} - ${this.selectedOrder.customer.firstName} ${this.selectedOrder.customer.lastName}`) {
       this.selectedOrder = null;
       this.salidaForm.controls['numero_orden'].setValue('');
       this.salidaForm.controls['orderId'].setValue(null);
     }
 
     this.ordersFound = [];
-    if (!value || value.trim().length < 2) return;
+    if (!scannedValue || scannedValue.trim().length < 2) return;
 
-    // Si ya hay orden seleccionada y el texto no cambió, no busca
     if (this.selectedOrder) return;
 
     clearTimeout(this.orderSearchTimeout);
     this.orderSearchTimeout = setTimeout(async () => {
       this.searchingOrders = true;
       try {
-        const result = await this.api.searchOrdersForMovement(value.trim());
+        const result = await this.api.searchOrdersForMovement(scannedValue.trim());
         this.ordersFound = result;
       } catch (e) {
         this.ordersFound = [];
@@ -828,5 +838,16 @@ export class InventoryComponent {
     this.salidaForm.controls['numero_orden'].setValue('');
     this.salidaForm.controls['orderId'].setValue(null);
     this.salidaForm.controls['es_manual'].setValue(this.manualOrderMode); // 👈 nuevo
+  }
+
+  private extractScanValue(value: string): string {
+    if (!value) return value;
+
+    // Quita espacios/saltos de línea que algunos scanners agregan al final
+    const clean = value.trim();
+
+    // Si viene una URL tipo .../device-query/XXXX, extrae solo el ID
+    const match = clean.match(/device-query\/([^\/\?#\s]+)/i);
+    return match ? match[1] : clean;
   }
 }
