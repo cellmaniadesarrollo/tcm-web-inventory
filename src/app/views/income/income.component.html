@@ -593,10 +593,17 @@
                 <option [ngValue]="'dymo'">Dymo</option>
                 <option [ngValue]="'zebra'">Zebra</option>
               </select>
-                            <div class="form-check form-check-inline ms-3">
-                <input class="form-check-input" type="checkbox" formControlName="bodega"   />
+              <div class="form-check form-check-inline ms-3">
+                <input class="form-check-input" type="checkbox" formControlName="bodega" />
                 <label class="form-check-label" for="printLabelCheckbox">
                   3er Piso
+                </label>
+              </div>
+              <div class="form-check form-check-inline ms-3">
+                <input class="form-check-input" type="checkbox" formControlName="isBillableInRepairOrders"
+                  id="isBillableInRepairOrdersCheckbox" />
+                <label class="form-check-label" for="isBillableInRepairOrdersCheckbox">
+                  Facturable en órdenes de reparación
                 </label>
               </div>
             </div>
@@ -685,54 +692,44 @@
 
       <!-- end body modal -->
       <!-- modal footer -->
-<div class="modal-footer" *ngIf="!newproveedor">
+      <div class="modal-footer" *ngIf="!newproveedor">
 
-  <!-- INGRESAR Y CERRAR -->
-  <button
-    type="button"
-    class="btn btn-success btn-loading"
-    [disabled]="bloquear"
-    (click)="onSubmitclose(incomesaveForm.value)">
+        <!-- INGRESAR Y CERRAR -->
+        <button type="button" class="btn btn-success btn-loading" [disabled]="bloquear"
+          (click)="onSubmitclose(incomesaveForm.value)">
 
-    <ng-container *ngIf="!bloquear; else loadingClose">
-      Ingresar y cerrar
-    </ng-container>
+          <ng-container *ngIf="!bloquear; else loadingClose">
+            Ingresar y cerrar
+          </ng-container>
 
-    <ng-template #loadingClose>
-      <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-      Guardando...
-    </ng-template>
+          <ng-template #loadingClose>
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            Guardando...
+          </ng-template>
 
-  </button>
+        </button>
 
-  <!-- INGRESAR -->
-  <button
-    type="button"
-    class="btn btn-primary btn-loading"
-    [disabled]="bloquear"
-    (click)="onSubmitcloseoff(incomesaveForm.value)">
+        <!-- INGRESAR -->
+        <button type="button" class="btn btn-primary btn-loading" [disabled]="bloquear"
+          (click)="onSubmitcloseoff(incomesaveForm.value)">
 
-    <ng-container *ngIf="!bloquear; else loadingSave">
-      Ingresar
-    </ng-container>
+          <ng-container *ngIf="!bloquear; else loadingSave">
+            Ingresar
+          </ng-container>
 
-    <ng-template #loadingSave>
-      <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-      Guardando...
-    </ng-template>
+          <ng-template #loadingSave>
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            Guardando...
+          </ng-template>
 
-  </button>
+        </button>
 
-  <!-- CANCELAR -->
-  <button
-    type="button"
-    class="btn btn-danger"
-    data-bs-dismiss="modal"
-    [disabled]="bloquear">
-    Cancelar
-  </button>
+        <!-- CANCELAR -->
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" [disabled]="bloquear">
+          Cancelar
+        </button>
 
-</div>
+      </div>
       <!-- nuevo proveedor -->
       <div class="modal-footer" *ngIf="newproveedor">
         <div>
