@@ -13,6 +13,7 @@ export interface ListitemsincomeI {
   last_unit_price_income?: any;
   last_income_price?: any;
   hasTax?: any;
+  isBillableInRepairOrders?: boolean;
 }
 
 export interface ListinventorysnamesI {
@@ -56,10 +57,10 @@ export interface ListincomesI {
   quantity?: any;
   incomestype?: ListSatatusincomesI;
   user_create?: any;
-  
+
   // snapshot de lote
   batch_snapshot?: BatchSnapshotI;
-  
+
   inventory_snapshot: {
     sku?: any;
     upc?: any;
@@ -68,11 +69,11 @@ export interface ListincomesI {
     name_color?: any;
     name_quality?: any;
   };
-  
+
   inventoryflow?: ListitemsincomeI;
   documentnumberincome?: ListnumberincomeI;
   firstStatus?: { createduser?: any };
-  
+
   // ✅ PROPIEDADES PARA PEDIDO
   pedidoAsignado?: string | null;
   pedidoId?: string | null;

@@ -174,20 +174,21 @@
                         <th>Creado</th>
                         <th>Obs.</th>
                         <th>Est.</th>
-                        <th>Pedido</th>  <!-- NUEVO -->
+                        <th class="col-pedido-narrow">Pedido</th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let item of incomeslists | paginate : { itemsPerPage: numperpages, currentPage: pagination, totalItems: totalentries }"
-                          [ngClass]="datacolor(item.incomestype?.name_incomestypes)">
-                        
+                      <tr
+                        *ngFor="let item of incomeslists | paginate : { itemsPerPage: numperpages, currentPage: pagination, totalItems: totalentries }"
+                        [ngClass]="rowClasses(item)">
+
                         <!-- Columna Cant -->
                         <td>{{ item.quantity }}</td>
-                        
+
                         <!-- Columna Producto -->
-                        <td data-bs-toggle="modal" data-bs-target="#exampleModal6" 
-                            (click)="reportnamevalueinit(item.inventory_snapshot.sku, item.inventory_snapshot.name_item)">
+                        <td data-bs-toggle="modal" data-bs-target="#exampleModal6"
+                          (click)="reportnamevalueinit(item.inventory_snapshot.sku, item.inventory_snapshot.name_item)">
                           <strong>{{ item.inventory_snapshot.sku }}</strong> <strong>-</strong>
                           {{ item.inventory_snapshot.name_item }} <strong>-</strong>
                           {{ item.inventory_snapshot.name_model }} <strong>-</strong>
@@ -198,98 +199,94 @@
                             <span>{{ identifiers.join(', ') }}</span>
                           </ng-container>
                         </td>
-                        
+
                         <!-- Columna Proveedor -->
                         <td>{{ item.documentnumberincome?.supplier?.razon_social }}</td>
-                        
+
                         <!-- Columna Nº Doc -->
                         <td (click)="reportsselect(item.documentnumberincome?._id)">
                           {{ item.documentnumberincome?.document_number }}
                         </td>
-                        
+
                         <!-- Columna Fecha -->
                         <td title="{{ item.date_income }}">{{ item.date_income.substring(0, 10) }}</td>
-                        
+
                         <!-- Columna PU -->
                         <td (click)="editgetdata(item._id)" data-bs-toggle="modal" data-bs-target="#editwassap">
                           {{ item.unit_price }}
                         </td>
-                        
+
                         <!-- Columna PT -->
-                        <td>{{ taxestabletotal(item.documentnumberincome?.taxpercentaje?.percentaje, item.unit_price, item.quantity) }}</td>
-                        
+                        <td>{{ taxestabletotal(item.documentnumberincome?.taxpercentaje?.percentaje, item.unit_price,
+                          item.quantity) }}</td>
+
                         <!-- Columna PI -->
                         <td>{{ taxestable(item.documentnumberincome?.taxpercentaje?.percentaje, item.unit_price) }}</td>
-                        
+
                         <!-- Columna PvP -->
                         <td (click)="editgetdata(item._id)" data-bs-toggle="modal" data-bs-target="#editwassap">
                           {{ item.unit_sales_price }}
                         </td>
-                        
+
                         <!-- Columna Creado -->
                         <td>{{ item.user_create }}</td>
-                        
+
                         <!-- Columna Obs -->
                         <td (click)="editgetdata(item._id)" data-bs-toggle="modal" data-bs-target="#editwassap">
                           {{ item.observations }}
                         </td>
-                        
+
                         <!-- Columna Est -->
                         <td>{{ item.incomestype?.name_incomestypes.substring(0, 4) }}</td>
-                        
+
                         <!-- ✅ NUEVA COLUMNA: Pedido -->
-                        <td>
-                          <ng-container *ngIf="item.pedidoAsignado; else sinPedido">
-                            <span class="badge bg-success d-inline-flex align-items-center gap-1" style="font-size: 11px;">
-                              <i class="bi bi-check-circle"></i>
-                              <span class="text-truncate" style="max-width: 100px;" title="{{ item.pedidoAsignado }}">
-                                {{ item.pedidoAsignado }}
-                              </span>
-                            </span>
-                          </ng-container>
-                          <ng-template #sinPedido>
-                            <span class="badge bg-secondary d-inline-flex align-items-center gap-1" style="font-size: 11px;">
-                              <i class="bi bi-clock"></i>
-                              Sin asignar
-                            </span>
-                          </ng-template>
-                        </td>
-                        
+<td>
+  <ng-container *ngIf="item.pedidoAsignado; else sinPedido">
+    <span class="badge bg-success d-inline-flex align-items-center gap-1" style="font-size: 11px;">
+      <i class="bi bi-check-circle"></i>
+      <span class="text-truncate" style="max-width: 50px;" title="{{ item.pedidoAsignado }}">
+        {{ item.pedidoAsignado }}
+      </span>
+    </span>
+  </ng-container>
+  <ng-template #sinPedido>
+    <span class="badge bg-secondary d-inline-flex align-items-center gap-1" style="font-size: 11px;">
+      <i class="bi bi-clock"></i>
+      Sin asig.
+    </span>
+  </ng-template>
+</td>
+
                         <!-- ✅ Columna Acciones - MODIFICADA -->
                         <td>
-                          <div class="d-flex gap-1 flex-wrap align-items-center">
-                            
+                          <div class="action-buttons-grid">
+
                             <!-- Imprimir normal -->
                             <abbr title="Imprimir normal">
                               <a class="btn btn-outline-dark btn-sm p-1" (click)="printlocal(item._id)">
                                 <i class="fa fa-ticket"></i>
                               </a>
                             </abbr>
-                            
+
                             <!-- Imprimir Dymo -->
                             <abbr title="Imprimir en Dymo">
-                              <a class="btn btn-outline-dark btn-sm p-1" 
-                                (click)="printlocal(item._id,'dymo')"
+                              <a class="btn btn-outline-dark btn-sm p-1" (click)="printlocal(item._id,'dymo')"
                                 style="border-color: #0054D2; color: #0054D2;">
                                 <i class="fa fa-print"></i>
                               </a>
                             </abbr>
-                            
-                            <!-- ✅ BOTÓN ASIGNAR A PEDIDO -->
+
+                            <!-- BOTÓN ASIGNAR A PEDIDO -->
                             <abbr title="Asignar a Pedido">
-                              <button class="btn btn-outline-primary btn-sm p-1" 
-                                      (click)="asignarPedido(item)"
-                                      style="border-color: #6f42c1; color: #6f42c1;"
-                                      [disabled]="item.pedidoAsignado">
+                              <button class="btn btn-outline-primary btn-sm p-1" (click)="asignarPedido(item)"
+                                style="border-color: #6f42c1; color: #6f42c1;" [disabled]="item.pedidoAsignado">
                                 <i class="bi bi-box-seam"></i>
                               </button>
                             </abbr>
 
                             <!-- Aprobar (solo para PENDIENTE) -->
-                            <button *ngIf="item.incomestype?.name_incomestypes == 'PENDIENTE'" 
-                                    type="button"
-                                    class="btn btn-outline-success btn-sm p-1" 
-                                    (click)="aceptar(item)">
+                            <button *ngIf="item.incomestype?.name_incomestypes == 'PENDIENTE'" type="button"
+                              class="btn btn-outline-success btn-sm p-1" (click)="aceptar(item)">
                               <i class="bi bi-check-circle p-0"></i>
                             </button>
                           </div>
