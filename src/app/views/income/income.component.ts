@@ -1083,4 +1083,9 @@ export class IncomeComponent {
       }
     });
   }
+  rowClasses(item: any): string {
+    const base = this.datacolor(item.incomestype?.name_incomestypes) || '';
+    const repair = item.isBillableInRepairOrders ? 'repair-billable-row' : '';
+    return `${base} ${repair}`.trim();
+  }
 }
