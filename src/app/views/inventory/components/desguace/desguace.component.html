@@ -1,0 +1,124 @@
+<!-- components/desguace/desguace.component.html -->
+
+<div class="desguace-container">
+  <!-- HEADER -->
+  <div class="desguace-header">
+    <div class="header-titles">
+      <h5 class="mb-0">🔧 Partes para Desguace</h5>
+      <small class="text-muted">Selecciona un batch para ver sus partes</small>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-sm btn-primary" (click)="refresh()" [disabled]="isBatchLoading">
+        <i class="fa fa-refresh"></i> Actualizar
+      </button>
+      <button class="btn btn-sm btn-danger ml-2" (click)="close.emit()">
+        <i class="fa fa-times"></i> Cerrar
+      </button>
+    </div>
+  </div>
+
+  <!-- SELECTOR DE BATCH -->
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group">
+        <label class="border-lable-flt w-100">
+          <ng-select
+            placeholder="Seleccionar batch"
+            [(ngModel)]="selectedBatch"
+            [items]="batches"
+            bindLabel="displayName"
+            bindValue="realId"
+            (change)="onBatchSelected($event)"
+            [loading]="isBatchLoading"
+            [searchable]="true"
+            [clearable]="true"
+          >
+            <ng-option *ngFor="let b of batches" [value]="b">
+              Lote {{ b.batchNumber }} - {{ b.batchSku || b.sku || 'N/A' }} ({{ b.quantity || 0 }} disponibles)
+            </ng-option>
+          </ng-select>
+          <span class="widget-title shop-sidebar">Batch</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO DEL BATCH SELECCIONADO -->
+  <div class="batch-info" *ngIf="selectedBatch">
+    <div class="row">
+      <div class="col-md-3">
+        <strong>Lote #{{ selectedBatch.batchNumber }}</strong>
+      </div>
+      <div class="col-md-3">
+        <span class="text-muted">SKU:</span> {{ selectedBatch.batchSku || selectedBatch.sku || 'N/A' }}
+      </div>
+      <div class="col-md-3">
+        <span class="text-muted">Producto:</span> {{ selectedBatch.productName || 'N/A' }}
+      </div>
+      <div class="col-md-3">
+        <span class="text-muted">Partes:</span>
+        <span class="badge badge-success">✅ {{ buenaCount }}</span>
+        <span class="badge badge-danger">❌ {{ malaCount }}</span>
+        <span class="badge badge-secondary">{{ totalParts }} total</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLA DE VERIFICACIONES -->
+  <div class="table-responsive" *ngIf="!isLoading && verifications.length > 0">
+    <table class="table table-bordered table-hover table-striped table-sm">
+      <thead>
+        <tr>
+          <th>Parte</th>
+          <th>Estado</th>
+          <th>Dispositivo</th>
+          <th>Cliente</th>
+          <th>Orden</th>
+          <th>SKU Batch</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of verifications">
+          <td>{{ item.partLabel || item.partName }}</td>
+          <td>
+            <span class="badge" [class.badge-success]="item.status === 'BUENA'" [class.badge-danger]="item.status === 'MALA'">
+              {{ item.status }}
+            </span>
+          </td>
+          <td>{{ item.metadata?.deviceName || item.deviceName || 'N/A' }}</td>
+          <td>{{ item.customerName || 'N/A' }}</td>
+          <td>#{{ item.metadata?.orderNumber || item.orderNumber || 'N/A' }}</td>
+          <td><code>{{ item.metadata?.batchSku || item.batchSku || 'N/A' }}</code></td>
+          <td>
+            <span *ngIf="item.value !== null && item.value !== undefined">
+              {{ item.value }}{{ item.partName === 'battery' ? '%' : 'GB' }}
+            </span>
+            <span *ngIf="item.value === null || item.value === undefined">N/A</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="isLoading" class="text-center py-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Cargando verificaciones...</p>
+  </div>
+
+  <!-- VACÍO -->
+  <div *ngIf="!isLoading && !error && verifications.length === 0 && selectedBatch" class="text-center py-4">
+    <i class="fa fa-inbox fa-3x text-muted"></i>
+    <h6 class="mt-2">No hay partes disponibles</h6>
+    <p class="text-muted">El batch seleccionado no tiene partes con estado BUENA o MALA.</p>
+  </div>
+
+  <div *ngIf="!isLoading && !error && verifications.length === 0 && !selectedBatch" class="text-center py-4">
+    <i class="fa fa-inbox fa-3x text-muted"></i>
+    <h6 class="mt-2">Selecciona un batch</h6>
+    <p class="text-muted">Selecciona un batch para ver sus partes disponibles.</p>
+  </div>
+</div>
