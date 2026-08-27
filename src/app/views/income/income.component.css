@@ -125,3 +125,42 @@ select {
   justify-content: center;
   line-height: 1;
 }
+
+/* Borde izquierdo azul marino para filas facturables en reparación */
+.table-sm1 tr.repair-billable-row td:first-child {
+  border-left: 4px solid #002147 !important;
+  box-shadow: inset 4px 0 0 #002147; /* refuerzo para navegadores con border-collapse */
+}
+/* Cuadrícula fija 2x2 para los botones de acción, en cualquier tamaño de pantalla */
+.action-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 3px;
+  justify-content: start;
+  align-items: center;
+}
+
+.action-buttons-grid .btn,
+.action-buttons-grid abbr {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+}
+
+.action-buttons-grid abbr .btn {
+  width: 100%;
+  height: 100%;
+}
+
+/* Columna Pedido angosta, aprox. el ancho de la palabra "Pedido" */
+.col-pedido-narrow {
+  width: 60px;
+  max-width: 60px;
+}
+
+.table-sm1 td:has(.badge) {
+  white-space: nowrap;
+}
