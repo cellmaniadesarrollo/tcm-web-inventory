@@ -71,3 +71,15 @@
     border-top-left-radius: 0;
   }
   
+  /* Asegura que los desplegables de Angular Material se muestren por encima de cualquier modal o card */
+.cdk-overlay-container {
+  z-index: 99999 !important;
+}
+
+.modal-sobre-modal-fix {
+  z-index: 100000 !important;
+}
+
+.modal-sobre-modal-fix .mat-mdc-dialog-container {
+  pointer-events: auto !important;
+}

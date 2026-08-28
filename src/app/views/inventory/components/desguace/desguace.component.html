@@ -1,0 +1,143 @@
+<div class="desguace-container">
+  
+  <!-- HEADER -->
+  <header class="desguace-header">
+    <div class="header-titles">
+      <h2 class="mat-title-large">🔧 Partes para Desguace</h2>
+      <p class="mat-body-medium text-secondary">Selecciona un batch para ver sus partes</p>
+    </div>
+    <div class="header-actions">
+      <button mat-flat-button color="primary" (click)="refresh()" [disabled]="isBatchLoading">
+        <mat-icon>refresh</mat-icon> Actualizar
+      </button>
+      <button mat-icon-button color="warn" (click)="close.emit()" matTooltip="Cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <!-- SELECTOR DE BATCH -->
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Seleccionar Batch</mat-label>
+    <mat-select 
+      [(ngModel)]="selectedBatch" 
+      [compareWith]="compareBatches"
+      (selectionChange)="onBatchSelected($event.value)" 
+      [disabled]="isBatchLoading">
+      <mat-option *ngFor="let b of batches" [value]="b">
+        Lote {{ b.batchNumber }}
+      </mat-option>
+    </mat-select>
+    <mat-spinner matSuffix *ngIf="isBatchLoading" diameter="20"></mat-spinner>
+  </mat-form-field>
+
+  <!-- INFO DEL BATCH SELECCIONADO -->
+  <mat-card appearance="outlined" class="batch-info-card" *ngIf="selectedBatch">
+    <mat-card-content class="batch-info-grid">
+      <div><strong>Lote:</strong> #{{ selectedBatch.batchNumber }}</div>
+      <div class="badge-group">
+        <strong>Partes:</strong>
+        <span class="custom-badge badge-success">✅ {{ buenaCount }}</span>
+        <span class="custom-badge badge-danger">❌ {{ malaCount }}</span>
+        <span class="custom-badge badge-neutral">{{ totalParts }} total</span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- TABLA DE VERIFICACIONES -->
+  <div class="table-container mat-elevation-z1" *ngIf="!isLoading && verifications.length > 0">
+    <table mat-table [dataSource]="verifications" class="w-100">
+
+      <!-- Parte -->
+      <ng-container matColumnDef="part">
+        <th mat-header-cell *matHeaderCellDef> Parte </th>
+        <td mat-cell *matCellDef="let item"> {{ item.partLabel || item.partName }} </td>
+      </ng-container>
+
+      <!-- Estado -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Estado </th>
+        <td mat-cell *matCellDef="let item">
+          <span class="custom-badge" [ngClass]="item.status === 'BUENA' ? 'badge-success' : 'badge-danger'">
+            {{ item.status }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Dispositivo -->
+      <ng-container matColumnDef="device">
+        <th mat-header-cell *matHeaderCellDef> Dispositivo </th>
+        <td mat-cell *matCellDef="let item"> {{ item.metadata?.deviceName || item.deviceName || 'N/A' }} </td>
+      </ng-container>
+
+      <!-- Cliente -->
+      <ng-container matColumnDef="customer">
+        <th mat-header-cell *matHeaderCellDef> Cliente </th>
+        <td mat-cell *matCellDef="let item"> {{ item.customerName || 'N/A' }} </td>
+      </ng-container>
+
+      <!-- Orden -->
+      <ng-container matColumnDef="order">
+        <th mat-header-cell *matHeaderCellDef> Orden </th>
+        <td mat-cell *matCellDef="let item"> #{{ item.metadata?.orderNumber || item.orderNumber || 'N/A' }} </td>
+      </ng-container>
+
+      <!-- SKU Batch -->
+      <ng-container matColumnDef="sku">
+        <th mat-header-cell *matHeaderCellDef> SKU Batch </th>
+        <td mat-cell *matCellDef="let item"> <code>{{ item.metadata?.batchSku || item.batchSku || 'N/A' }}</code> </td>
+      </ng-container>
+
+      <!-- Valor -->
+      <ng-container matColumnDef="value">
+        <th mat-header-cell *matHeaderCellDef> Valor </th>
+        <td mat-cell *matCellDef="let item">
+          <span *ngIf="item.value !== null && item.value !== undefined">
+            {{ item.value }}{{ item.partName === 'battery' ? '%' : 'GB' }}
+          </span>
+          <span *ngIf="item.value === null || item.value === undefined">N/A</span>
+        </td>
+      </ng-container>
+
+      <!-- Acción -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="text-center"> Acción </th>
+        <td mat-cell *matCellDef="let item" class="text-center">
+          <!-- ✅ DESHABILITAR SI: status es MALA O newBatchId existe -->
+          <button mat-mini-fab 
+                  color="accent" 
+                  (click)="abrirModalCrearIngreso(item)"
+                  [disabled]="item.status === 'MALA' || item.newBatchId"
+                  matTooltip="{{ item.newBatchId ? '✅ Ya fue procesado' : 'Crear ingreso desde esta pieza' }}">
+            <mat-icon>{{ item.newBatchId ? 'check_circle' : 'add' }}</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- ✅ CORRECCIÓN DE LAS FILAS DE LA TABLA -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="isLoading" class="state-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p class="text-secondary mt-2">Cargando verificaciones...</p>
+  </div>
+
+  <!-- VACÍO CON BATCH -->
+  <div *ngIf="!isLoading && !error && verifications.length === 0 && selectedBatch" class="state-container">
+    <mat-icon class="large-icon text-secondary">inbox</mat-icon>
+    <h3>No hay partes disponibles</h3>
+    <p class="text-secondary">El batch seleccionado no tiene partes con estado BUENA o MALA.</p>
+  </div>
+
+  <!-- VACÍO SIN BATCH -->
+  <div *ngIf="!isLoading && !error && verifications.length === 0 && !selectedBatch" class="state-container">
+    <mat-icon class="large-icon text-secondary">touch_app</mat-icon>
+    <h3>Selecciona un batch</h3>
+    <p class="text-secondary">Selecciona un batch arriba para desplegar las partes disponibles.</p>
+  </div>
+
+</div>

@@ -384,6 +384,9 @@
             <li [ngbNavItem]="5">
               <button ngbNavLink (click)="incomehr()">In. R. H.</button>
             </li>
+            <li [ngbNavItem]="6">
+              <button ngbNavLink (click)="activarDesguace()">DESGUACE</button>
+            </li>
           </ul>
           <button type="button" #closebutton class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
@@ -874,6 +877,11 @@
           </div>
           <app-tableincomerep [id]="find" [fontSize]="'8px'"></app-tableincomerep>
         </div>
+        <div class="modal-body" *ngIf="mostrarDesguace">
+          <app-desguace 
+              [deviceId]="find">
+            </app-desguace>
+          </div>
         <div class="modal-footer">
           <div *ngIf="editar">
             <button type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="onSubmitclose()">

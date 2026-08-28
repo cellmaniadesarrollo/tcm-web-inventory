@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './views/login/login.component';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { InventoryComponent } from './views/inventory/inventory.component';
-import { InventorynewComponent } from './views/inventory/inventorynew/inventorynew.component';
+import { InventorynewComponent } from './views/inventory/components/inventorynew/inventorynew.component';
 import { MovementsComponent } from './views/movements/movements.component';
 import { IncomeComponent } from './views/income/income.component';
 import { IncomerepComponent } from './views/incomerep/incomerep.component';

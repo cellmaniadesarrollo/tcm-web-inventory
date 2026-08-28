@@ -82,6 +82,7 @@ export class InventoryComponent {
   orderSearchValue: string = '';
   submitted = false;
   private orderSearchTimeout: any = null;
+  mostrarDesguace: boolean = false;
   constructor(
     private setdataService: SetdataService,
     private datePipe: DatePipe,
@@ -433,6 +434,7 @@ export class InventoryComponent {
     this.history = false;
     this.incomeH = false;
     this.incomeRH = false;
+    this.mostrarDesguace = false;
     this.selectedOrder = null;
     this.orderSearchValue = '';
     this.ordersFound = [];
@@ -447,8 +449,8 @@ export class InventoryComponent {
   nameitem = '';
   focus = false;
   showModalBox: boolean = false;
-  maxvalue: String = '';
-  minvalue: String = '1';
+  maxvalue: string = '';
+  minvalue: string = '1';
   async datafind(id: any, name: any, code: any, value: any) {
     this.showModalBox = true;
     this.save = '';
@@ -470,6 +472,7 @@ export class InventoryComponent {
     this.history = false;
     this.incomeH = false;
     this.incomeRH = false;
+    this.mostrarDesguace = false;
     this.listdata();
   }
   movementshisto: Listmovementsitem[] = []
@@ -480,6 +483,7 @@ export class InventoryComponent {
     this.editar = false;
     this.incomeH = false;
     this.incomeRH = false;
+    this.mostrarDesguace = false;
     const data = await this.api.listhistoryitems(this.find)
     this.movementshisto = data
     // console.log(data)
@@ -495,6 +499,7 @@ export class InventoryComponent {
     this.editar = false;
     const data = await this.api.listincomeshistory(this.find)
     this.incomeshistory = data
+    this.mostrarDesguace = false;
     //console.log(data)
     //this.listdata();
   }
@@ -504,11 +509,27 @@ export class InventoryComponent {
     this.history = false;
     this.salida = false;
     this.editar = false;
+    this.mostrarDesguace = false;
     //const data = await this.api.listincomeshistory(this.find)
     // this.incomeshistory = data
     //console.log(data)
     //this.listdata();
   }
+
+  activarDesguace() {
+    this.mostrarDesguace = true;
+    // Ocultar las otras vistas
+    this.salida = false;
+    this.editar = false;
+    this.history = false;
+    this.incomeH = false;
+    this.incomeRH = false;
+  }
+
+  cerrarDesguace() {
+    this.mostrarDesguace = false;
+  }
+
   pvimpuesto(punit: any, ptax: any) {
     return (((parseFloat(ptax) / 100) + 1) * parseFloat(punit))
   }
