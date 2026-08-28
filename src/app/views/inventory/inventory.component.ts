@@ -449,8 +449,8 @@ export class InventoryComponent {
   nameitem = '';
   focus = false;
   showModalBox: boolean = false;
-  maxvalue: String = '';
-  minvalue: String = '1';
+  maxvalue: string = '';
+  minvalue: string = '1';
   async datafind(id: any, name: any, code: any, value: any) {
     this.showModalBox = true;
     this.save = '';

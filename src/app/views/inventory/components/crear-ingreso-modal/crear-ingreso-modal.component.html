@@ -1,0 +1,181 @@
+<!-- components/desguace/crear-ingreso-modal/crear-ingreso-modal.component.html -->
+
+<div class="dialog-container">
+  <!-- HEADER -->
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon color="primary" class="me-2">add_circle</mat-icon>
+    Nuevo Ingreso desde Desguace
+    <button mat-icon-button class="close-button" (click)="onCancel()" tabindex="-1">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h2>
+
+  <!-- BODY -->
+  <mat-dialog-content class="dialog-content">
+    <!-- Información de la parte -->
+    <mat-card appearance="outlined" class="part-info-card">
+      <mat-card-content class="part-info-grid">
+        <div><strong>Parte:</strong> {{ data.part.partLabel || data.part.partName }}</div>
+        <div>
+          <strong>Estado:</strong>
+          <span class="custom-badge" [ngClass]="data.part.status === 'BUENA' ? 'badge-success' : 'badge-danger'">
+            {{ data.part.status }}
+          </span>
+        </div>
+        <div *ngIf="data.part.value !== null && data.part.value !== undefined">
+          <strong>Valor:</strong> {{ data.part.value }} {{ data.part.partName === 'battery' ? '%' : 'GB' }}
+        </div>
+        <div><strong>Dispositivo:</strong> {{ data.part.metadata?.deviceName || 'N/A' }}</div>
+        <div *ngIf="data.part.metadata?.orderNumber">
+          <strong>Orden #:</strong> {{ data.part.metadata?.orderNumber }}
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <form *ngIf="ingresosaveForm" [formGroup]="ingresosaveForm" class="form-grid">
+      
+      <!-- Proveedor -->
+      <mat-form-field appearance="outline" class="col-span-12">
+        <mat-label>Proveedor</mat-label>
+        <mat-select formControlName="id_proveedor">
+          <mat-option *ngFor="let item of supplierslist" [value]="item._id">
+            {{ item.razon_social }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="f['id_proveedor'].hasError('required')">
+          El proveedor es obligatorio
+        </mat-error>
+      </mat-form-field>
+
+      <!-- TIPO DE DOCUMENTO - QUITAR [disabled]="true" -->
+      <mat-form-field appearance="outline" class="col-span-6 col-span-sm-12">
+        <mat-label>Tipo de Documento</mat-label>
+        <mat-select formControlName="tipo_documento" (selectionChange)="changes()">
+          <mat-option *ngFor="let type of typedocument" [value]="type._id">
+            {{ type.name_type_document }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- NÚMERO DE DOCUMENTO - QUITAR readonly -->
+      <mat-form-field appearance="outline" class="col-span-6 col-span-sm-12">
+        <mat-label>Número de {{ typedocumenttext || 'Documento' }}</mat-label>
+        <input matInput type="text" formControlName="numero_documento" 
+              [placeholder]="'Número de ' + typedocumenttext" />
+      </mat-form-field>
+
+      <!-- CAMPO DE BÚSQUEDA DE PRODUCTO -->
+      <!-- ✅ CORREGIDO: Se removió temporalmente [readonly] para asegurar entrada libre -->
+      <div class="col-span-12 search-container">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Buscar Producto a Enlazar</mat-label>
+          <input matInput
+            type="text"
+            formControlName="item"
+            id="myInput"
+            (input)="onInputChange($event)"
+            (keydown.enter)="makechoice('Enter')"
+            autocomplete="off"
+            placeholder="Escribe para buscar por nombre, SKU, modelo..."
+          />
+          <button mat-icon-button matSuffix (click)="makechoice('Enter')" type="button">
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <!-- Sugerencias -->
+        <div *ngIf="loaderpro" class="loading-suggestions">
+          <mat-spinner diameter="24"></mat-spinner>
+          <span>Cargando...</span>
+        </div>
+
+        <div class="suggestions-list" *ngIf="mostrarSugerencias && items.length > 0 && !loaderpro">
+          <div class="suggestion-item" *ngFor="let item of items"
+              (click)="seleccionarSugerencia('«'+ item.upc +'» '+item.nameitem+' '+item.modelitem+' '+item.quality+' '+item.stateproduc+' '+item.colors1, item._id)">
+            <span class="suggestion-upc">«{{ item.upc }}»</span>
+            <span class="suggestion-name">{{ item.nameitem }}</span>
+            <span class="suggestion-model">{{ item.modelitem }}</span>
+            <span class="suggestion-quality">{{ item.quality }}</span>
+            <span class="suggestion-state">{{ item.stateproduc }}</span>
+            <span class="suggestion-color">{{ item.colors1 }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cantidad y Precios -->
+      <mat-form-field appearance="outline" class="col-span-3 col-span-sm-6">
+        <mat-label>Cantidad</mat-label>
+        <input matInput type="number" formControlName="cantidad" min="1" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-span-3 col-span-sm-6">
+        <mat-label>Precio Unitario</mat-label>
+        <input matInput type="number" step="0.01" min="0" formControlName="preciounit" (input)="totalpriceds()" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-span-3 col-span-sm-6">
+        <mat-label>Impuesto</mat-label>
+        <mat-select formControlName="inpuesto" (selectionChange)="findpercentaje()">
+          <mat-option *ngFor="let tax of taxesnames" [value]="tax._id">
+            {{ tax.tax_name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-span-2 col-span-sm-6">
+        <mat-label>Porcentaje</mat-label>
+        <mat-select formControlName="porcentaje" (selectionChange)="totalpriceds()">
+          <mat-option *ngFor="let percentaje of taxespercentaje" [value]="percentaje._id">
+            {{ percentaje.percentaje }} %
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="col-span-1 total-price-display col-span-sm-12">
+        <span class="label">Total:</span>
+        <span class="value">${{ totalprice || '0.00' }}</span>
+      </div>
+
+      <!-- Precio Venta y Fecha -->
+      <mat-form-field appearance="outline" class="col-span-4 col-span-sm-12">
+        <mat-label>Precio Venta</mat-label>
+        <input matInput type="number" step="0.01" min="0" formControlName="precioventa" (focus)="seleccionarTexto($event)" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-span-4 col-span-sm-12">
+        <mat-label>Fecha</mat-label>
+        <input matInput type="datetime-local" formControlName="fecha" />
+      </mat-form-field>
+
+      <div class="col-span-4 checkbox-group col-span-sm-12">
+        <mat-checkbox formControlName="get_print" color="primary">Imprimir etiqueta</mat-checkbox>
+        <mat-checkbox formControlName="bodega" color="primary">3er Piso</mat-checkbox>
+        <mat-checkbox formControlName="isBillableInRepairOrders" color="primary">Facturable</mat-checkbox>
+        <mat-checkbox formControlName="iva" color="primary">Incluye IVA?</mat-checkbox>
+      </div>
+
+      <!-- Observaciones -->
+      <mat-form-field appearance="outline" class="col-span-12">
+        <mat-label>Observaciones</mat-label>
+        <textarea matInput formControlName="observaciones" rows="3" placeholder="Observaciones"></textarea>
+      </mat-form-field>
+
+    </form>
+  </mat-dialog-content>
+
+  <!-- FOOTER -->
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button type="button" (click)="onCancel()" [disabled]="bloquear">
+      Cancelar
+    </button>
+    <button mat-flat-button color="primary" type="button" [disabled]="bloquear" (click)="onSubmitclose(ingresosaveForm.value)">
+      <ng-container *ngIf="!bloquear; else loadingState">
+        <mat-icon>save</mat-icon> Guardar
+      </ng-container>
+      <ng-template #loadingState>
+        <mat-spinner diameter="18" class="button-spinner"></mat-spinner>
+        <span>Guardando...</span>
+      </ng-template>
+    </button>
+  </mat-dialog-actions>
+</div>
