@@ -148,7 +148,8 @@ export class AsignarPedidoModalComponent implements OnInit, AfterViewInit {
       confirmButtonColor: '#1976d2',
       cancelButtonColor: '#dc3545',
       confirmButtonText: '✅ Sí, asignar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
+      heightAuto: false,
     });
 
     if (!confirm.isConfirmed) return;
