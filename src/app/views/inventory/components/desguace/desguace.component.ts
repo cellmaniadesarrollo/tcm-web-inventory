@@ -126,10 +126,11 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
           if (response.success) {
             this.verifications = response.data?.verifications || [];
             
-            const good = response.data?.goodCount || 0;
-            const bad = response.data?.badCount || 0;
+            const clean = response.data?.cleanCount ?? response.data?.goodCount ?? 0;
+            const loss  = response.data?.lossCount  ?? response.data?.badCount  ?? 0;
+            
             this.snackBar.open(
-              `📦 Batch #${this.selectedBatch?.batchNumber || 'N/A'}: ${this.verifications.length} partes (✅ ${good} buenas, ❌ ${bad} malas)`,
+              `📦 Batch #${this.selectedBatch?.batchNumber || 'N/A'}: ${this.verifications.length} partes (✅ ${clean} clean, ⚠️ ${loss} loss)`,
               'Cerrar',
               { duration: 4000 }
             );
@@ -155,13 +156,13 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    if (part.status === 'MALA') {
-      this.snackBar.open('❌ No se puede crear ingreso de una parte en estado MALA', 'Cerrar', { duration: 3000 });
+    // ✅ CAMBIO: 'MALA' → 'LOSS' (con fallback legacy por si hay datos sin migrar)
+    if (part.status === 'LOSS' || part.status === 'MALA') {
+      this.snackBar.open('⚠️ No se puede crear ingreso de una parte en estado LOSS', 'Cerrar', { duration: 3000 });
       return;
     }
 
     // ✅ 1. Cerrar el modal padre (el que contiene el desguace)
-    // Buscar el botón de cerrar del modal padre
     const closeButton = document.querySelector('#nuevoprocedenciamodal .btn-close') as HTMLElement;
     if (closeButton) {
       closeButton.click();
@@ -187,8 +188,6 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
       dialogRef.afterClosed().subscribe((result) => {
         if (result?.success) {
           this.snackBar.open('✅ Ingreso creado exitosamente', 'Cerrar', { duration: 3000 });
-          // ✅ Reabrir el modal padre
-          // Esto depende de cómo se abre el modal padre originalmente
           this.close.emit();
         }
       });
@@ -261,12 +260,23 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.verifications.length;
   }
 
+  // ✅ NUEVO: CLEAN reemplaza a BUENA
+  get cleanCount(): number {
+    return this.verifications.filter(v => v.status === 'CLEAN').length;
+  }
+
+  // ✅ NUEVO: LOSS reemplaza a MALA
+  get lossCount(): number {
+    return this.verifications.filter(v => v.status === 'LOSS').length;
+  }
+
+  // ⚠️ Opcional: compatibilidad con datos legacy (si aún tienes BUENA/MALA en BD)
   get buenaCount(): number {
-    return this.verifications.filter(v => v.status === 'BUENA').length;
+    return this.verifications.filter(v => v.status === 'BUENA' || v.status === 'CLEAN').length;
   }
 
   get malaCount(): number {
-    return this.verifications.filter(v => v.status === 'MALA').length;
+    return this.verifications.filter(v => v.status === 'MALA' || v.status === 'LOSS').length;
   }
 
   refresh(): void {
