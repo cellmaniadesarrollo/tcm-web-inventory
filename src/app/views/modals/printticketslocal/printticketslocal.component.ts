@@ -9,7 +9,9 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import { DymoserviceService } from 'src/app/service/dymoservice/dymoservice.service';
-
+// Arriba del archivo (solo para la implementación temporal):
+import Swal from 'sweetalert2';
+import { environment } from 'src/environments/environment'; // ajusta la ruta a tu proyecto
 @Component({
   selector: 'app-printticketslocal',
   templateUrl: './printticketslocal.component.html',
@@ -24,8 +26,8 @@ export class PrintticketslocalComponent {
   @Input() qrdata: any;
   @Input() price: any;
   @Input() f: any;
-   @Input() ivsa: boolean=false;
-   @Input () showiva:boolean=false
+  @Input() ivsa: boolean = false;
+  @Input() showiva: boolean = false
   @Output() closeModalEvent = new EventEmitter<any>();
   constructor(
     private api: ApiService,
@@ -79,19 +81,57 @@ export class PrintticketslocalComponent {
       if (this.printtype === 'dymo') {
         try {
           await this.apidymo.printTickets(this.printform.value)
-        } catch (error) { 
+        } catch (error) {
           this.errorimpresion = true
           this.loading = false
           return
-        }  
+        }
 
         //console.log(data)
       } else {
-        const params = new URLSearchParams(this.printform.value)
-        const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;// `http://localhost:5000/api/printtikets?${params.toString()}`;//`https://82d3-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//
-        window.open(url, '_blank');
+
+        // ===================== ORIGINAL (red local) =====================
+        // Para volver a lo anterior: descomenta este bloque y borra el bloque TEMPORAL.
+        // const params = new URLSearchParams(this.printform.value)
+        // const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;// `http://localhost:5000/api/printtikets?${params.toString()}`;//`https://82d3-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//
+        // window.open(url, '_blank');
+        // ================================================================
+
+        // ===================== TEMPORAL (servidor expuesto) =====================
+        try {
+          const params = new URLSearchParams({
+            ...this.printform.value,
+            key: "0dcb738447c888755bb9f58733771ef92be7fb368bf45c42"   // token que validará nginx
+          });
+          const url = `https://etiquetas.teamcellmania.com/api/printtikets?${params.toString()}`;
+
+          const res = await fetch(url);
+          if (!res.ok) {
+            throw new Error(`Error de impresión: ${res.status}`);
+          }
+
+          await Swal.fire({
+            icon: 'success',
+            title: '¡Impreso con éxito!',
+            text: 'La etiqueta se envió a la impresora.',
+            confirmButtonText: 'Aceptar',
+            timer: 3000,
+            timerProgressBar: true
+          });
+        } catch (error) {
+          console.log(error);
+          this.loading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'No se pudo imprimir',
+            text: 'Revisa que el servidor de impresión esté encendido e inténtalo de nuevo.'
+          });
+          return;
+        }
+        // =======================================================================
       }
 
+      this.loading = false;
       this.closeModal()
     }
   }
