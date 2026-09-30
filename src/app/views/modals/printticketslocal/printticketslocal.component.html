@@ -67,10 +67,11 @@
           </div>
         </div>
         <!-- Mensaje de error en rojo -->
-<div class="row mt-3" *ngIf="errorimpresion">
+<!-- Resultado de la impresión -->
+<div class="row mt-3" *ngIf="errorimpresion || successimpresion">
   <div class="col-12 text-center">
-    <span class="text-danger fw-bold">
-      ❌ No se pudo realizar la impresión. Intente nuevamente.
+    <span class="fw-bold" [ngClass]="successimpresion ? 'text-success' : 'text-danger'">
+      {{ successimpresion ? '✅' : '❌' }} {{ mensajeimpresion }}
     </span>
   </div>
 </div>
