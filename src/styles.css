@@ -83,3 +83,13 @@
 .modal-sobre-modal-fix .mat-mdc-dialog-container {
   pointer-events: auto !important;
 }
+
+/* Corrección para SweetAlert2 por encima de Angular Material (z-index superior a 99999) */
+body div.swal2-container {
+  z-index: 100001 !important;
+}
+
+/* Opcional: Si el fondo obscuro (backdrop) de SweetAlert queda raro, esto asegura su capa */
+body .swal2-backdrop-show {
+  z-index: 100001 !important;
+}

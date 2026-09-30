@@ -26,7 +26,10 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
   verifications: any[] = [];
   selectedBatch: any = null;
   batches: any[] = [];
-  
+
+  // ✅ Destino del batch (CLEAN | LOST), viene de batches.partsDestino
+  batchDestino: 'CLEAN' | 'LOST' | null = null;
+
   // Estados
   isLoading = false;
   isBatchLoading = false;
@@ -72,7 +75,7 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isBatchLoading = true;
     try {
       const response = await this.api.movementoutdata(this.deviceId);
-      
+
       console.log('📦 Respuesta API movementoutdata:', response);
 
       if (response && response.batches) {
@@ -83,7 +86,7 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
         }));
 
         console.log('✅ Batches procesados para la lista:', this.batches);
-        
+
         if (this.batches.length === 1) {
           this.onBatchSelected(this.batches[0]);
         }
@@ -102,11 +105,12 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!batch) {
       this.selectedBatch = null;
       this.verifications = [];
+      this.batchDestino = null;
       return;
     }
 
     const batchRealId = batch.realId || batch.batchId || batch._id;
-    
+
     if (!batchRealId) {
       console.error('❌ No se encontró el ID real del batch:', batch);
       this.snackBar.open('❌ Error: ID de batch no válido', 'Cerrar', { duration: 3000 });
@@ -123,13 +127,20 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
       )
       .subscribe({
         next: (response: any) => {
+          console.log('batch response', response?.data, this.selectedBatch);
+
           if (response.success) {
             this.verifications = response.data?.verifications || [];
-            
-            const good = response.data?.goodCount || 0;
-            const bad = response.data?.badCount || 0;
+
+            // ✅ Destino: primero de la respuesta, luego del batch de la lista
+            this.batchDestino =
+              response.data?.partsDestino ??
+              response.data?.batch?.partsDestino ??
+              this.selectedBatch?.partsDestino ??
+              null;
+
             this.snackBar.open(
-              `📦 Batch #${this.selectedBatch?.batchNumber || 'N/A'}: ${this.verifications.length} partes (✅ ${good} buenas, ❌ ${bad} malas)`,
+              `📦 Batch #${this.selectedBatch?.batchNumber || 'N/A'}: ${this.verifications.length} partes (✅ ${this.buenaCount} buenas, ⚠️ ${this.malaCount} malas)`,
               'Cerrar',
               { duration: 4000 }
             );
@@ -149,19 +160,13 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
   abrirModalCrearIngreso(part: any): void {
     if (!part) return;
 
-    // ✅ Validar si ya fue procesado
+    // ✅ Solo se bloquea si ya fue procesado (BUENA y MALA pueden ingresar)
     if (part.newBatchId) {
       this.snackBar.open('✅ Esta parte ya fue procesada y tiene un ingreso creado', 'Cerrar', { duration: 3000 });
       return;
     }
 
-    if (part.status === 'MALA') {
-      this.snackBar.open('❌ No se puede crear ingreso de una parte en estado MALA', 'Cerrar', { duration: 3000 });
-      return;
-    }
-
     // ✅ 1. Cerrar el modal padre (el que contiene el desguace)
-    // Buscar el botón de cerrar del modal padre
     const closeButton = document.querySelector('#nuevoprocedenciamodal .btn-close') as HTMLElement;
     if (closeButton) {
       closeButton.click();
@@ -181,14 +186,13 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
         data: {
           part: part,
           deviceId: this.deviceId,
+          partsDestino: this.batchDestino,
         }
       });
 
       dialogRef.afterClosed().subscribe((result) => {
         if (result?.success) {
           this.snackBar.open('✅ Ingreso creado exitosamente', 'Cerrar', { duration: 3000 });
-          // ✅ Reabrir el modal padre
-          // Esto depende de cómo se abre el modal padre originalmente
           this.close.emit();
         }
       });
@@ -198,11 +202,9 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
   // ✅ MÉTODO PARA FORZAR EL FOCO EN EL MODAL HIJO
   private forceFocusOnModalChild(): void {
     try {
-      // Buscar el diálogo hijo
       const dialogContainers = document.querySelectorAll('.cdk-overlay-pane .mat-dialog-container');
       let childDialog = null;
-      
-      // Buscar el último diálogo (el más reciente)
+
       if (dialogContainers.length > 0) {
         childDialog = dialogContainers[dialogContainers.length - 1];
       }
@@ -212,18 +214,15 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
         return;
       }
 
-      // Buscar el contenido del diálogo
       const dialogContent = childDialog.querySelector('.dialog-content');
       if (dialogContent) {
         (dialogContent as HTMLElement).style.pointerEvents = 'auto';
-        
-        // Buscar el primer input
+
         const firstInput = dialogContent.querySelector('input:not([type="hidden"]), select, textarea, .mat-input-element');
         if (firstInput) {
           (firstInput as HTMLElement).focus();
           console.log('✅ Foco forzado en el modal hijo:', firstInput);
-          
-          // Si es un input de Angular Material
+
           const matInput = firstInput.querySelector('.mat-input-element') as HTMLElement;
           if (matInput) {
             matInput.focus();
@@ -231,14 +230,12 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
 
-      // ✅ Asegurar que todos los inputs del modal hijo reciban eventos
       const allInputs = childDialog.querySelectorAll('input, select, textarea, .mat-form-field');
       allInputs.forEach((el) => {
         (el as HTMLElement).style.pointerEvents = 'auto';
         (el as HTMLElement).style.userSelect = 'auto';
       });
 
-      // ✅ Deshabilitar temporalmente el pointer-events del overlay padre
       const backdrops = document.querySelectorAll('.cdk-overlay-backdrop');
       backdrops.forEach((bd, index) => {
         if (index < backdrops.length - 1) {
@@ -254,8 +251,13 @@ export class DesguaceComponent implements OnInit, OnDestroy, AfterViewInit {
   clearBatchSelection(): void {
     this.selectedBatch = null;
     this.verifications = [];
+    this.batchDestino = null;
     this.snackBar.open('🔄 Filtro de batch eliminado', 'Cerrar', { duration: 2000 });
   }
+
+  // ============================================
+  // GETTERS
+  // ============================================
 
   get totalParts(): number {
     return this.verifications.length;
