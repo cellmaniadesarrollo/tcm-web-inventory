@@ -9,7 +9,10 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import { DymoserviceService } from 'src/app/service/dymoservice/dymoservice.service';
+import { environment } from '../../../../environments/environment';
+// Arriba del archivo (solo para la implementación temporal):
 
+// ajusta la ruta a tu proyecto
 @Component({
   selector: 'app-printticketslocal',
   templateUrl: './printticketslocal.component.html',
@@ -24,8 +27,8 @@ export class PrintticketslocalComponent {
   @Input() qrdata: any;
   @Input() price: any;
   @Input() f: any;
-   @Input() ivsa: boolean=false;
-   @Input () showiva:boolean=false
+  @Input() ivsa: boolean = false;
+  @Input() showiva: boolean = false
   @Output() closeModalEvent = new EventEmitter<any>();
   constructor(
     private api: ApiService,
@@ -71,27 +74,81 @@ export class PrintticketslocalComponent {
   }
   submitted = false;
   loading = false;
-
+  successimpresion: boolean = false;
+  mensajeimpresion: string = '';
   async onSubmit() {
     this.submitted = true;
     if (this.printform.valid) {
       this.loading = true;
+      this.errorimpresion = false;
+      this.successimpresion = false;
+      this.mensajeimpresion = '';
+
       if (this.printtype === 'dymo') {
         try {
           await this.apidymo.printTickets(this.printform.value)
-        } catch (error) { 
+        } catch (error) {
           this.errorimpresion = true
+          this.mensajeimpresion = 'No se pudo realizar la impresión. Intente nuevamente.';
           this.loading = false
           return
-        }  
+        }
 
         //console.log(data)
       } else {
-        const params = new URLSearchParams(this.printform.value)
-        const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;// `http://localhost:5000/api/printtikets?${params.toString()}`;//`https://82d3-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//
-        window.open(url, '_blank');
+
+        // ===================== ORIGINAL (red local) =====================
+        // Para volver a lo anterior: descomenta este bloque y borra el bloque TEMPORAL.
+        // const params = new URLSearchParams(this.printform.value)
+        // const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;// `http://localhost:5000/api/printtikets?${params.toString()}`;//`https://82d3-186-69-248-234.ngrok-free.app/api/printtikets?${params.toString()}`;//
+        // window.open(url, '_blank');
+        // ================================================================
+
+        // ===================== TEMPORAL (servidor expuesto) =====================
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 20000);
+        try {
+          const params = new URLSearchParams({
+            ...this.printform.value,
+            key: environment.printKey   // token que validará nginx
+          });
+          const url = `https://etiquetas.teamcellmania.com/api/printtikets?${params.toString()}`;
+
+          const res = await fetch(url, {
+            headers: { Accept: 'application/json' },
+            signal: controller.signal
+          });
+
+          if (!res.ok) {
+            if (res.status === 403) throw new Error('Acceso denegado (token inválido).');
+            if (res.status === 502 || res.status === 504) throw new Error('El servidor de impresión no responde.');
+            throw new Error('No se pudo realizar la impresión.');
+          }
+
+          const data = await res.json();
+          if (!data.ok) throw new Error(data.message || 'No se pudo realizar la impresión.');
+
+          // Éxito: mostrar confirmación un momento y cerrar el modal
+          this.loading = false;
+          this.successimpresion = true;
+          this.mensajeimpresion = data.message || 'Etiqueta impresa con éxito.';
+          setTimeout(() => this.closeModal(), 1500);
+          return;
+        } catch (error: any) {
+          console.log(error);
+          this.loading = false;
+          this.errorimpresion = true;
+          this.mensajeimpresion = error?.name === 'AbortError'
+            ? 'Tiempo de espera agotado. Intente nuevamente.'
+            : (error?.message || 'No se pudo realizar la impresión. Intente nuevamente.');
+          return;
+        } finally {
+          clearTimeout(timeout);
+        }
+        // =======================================================================
       }
 
+      this.loading = false;
       this.closeModal()
     }
   }
