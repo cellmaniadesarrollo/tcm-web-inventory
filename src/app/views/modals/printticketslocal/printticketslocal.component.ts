@@ -9,9 +9,10 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import { DymoserviceService } from 'src/app/service/dymoservice/dymoservice.service';
+import { environment } from '../../../../environments/environment';
 // Arriba del archivo (solo para la implementación temporal):
-import Swal from 'sweetalert2';
-import { environment } from 'src/environments/environment'; // ajusta la ruta a tu proyecto
+
+// ajusta la ruta a tu proyecto
 @Component({
   selector: 'app-printticketslocal',
   templateUrl: './printticketslocal.component.html',
@@ -73,16 +74,22 @@ export class PrintticketslocalComponent {
   }
   submitted = false;
   loading = false;
-
+  successimpresion: boolean = false;
+  mensajeimpresion: string = '';
   async onSubmit() {
     this.submitted = true;
     if (this.printform.valid) {
       this.loading = true;
+      this.errorimpresion = false;
+      this.successimpresion = false;
+      this.mensajeimpresion = '';
+
       if (this.printtype === 'dymo') {
         try {
           await this.apidymo.printTickets(this.printform.value)
         } catch (error) {
           this.errorimpresion = true
+          this.mensajeimpresion = 'No se pudo realizar la impresión. Intente nuevamente.';
           this.loading = false
           return
         }
@@ -98,35 +105,45 @@ export class PrintticketslocalComponent {
         // ================================================================
 
         // ===================== TEMPORAL (servidor expuesto) =====================
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 20000);
         try {
           const params = new URLSearchParams({
             ...this.printform.value,
-            key: "0dcb738447c888755bb9f58733771ef92be7fb368bf45c42"   // token que validará nginx
+            key: environment.printKey   // token que validará nginx
           });
           const url = `https://etiquetas.teamcellmania.com/api/printtikets?${params.toString()}`;
 
-          const res = await fetch(url);
+          const res = await fetch(url, {
+            headers: { Accept: 'application/json' },
+            signal: controller.signal
+          });
+
           if (!res.ok) {
-            throw new Error(`Error de impresión: ${res.status}`);
+            if (res.status === 403) throw new Error('Acceso denegado (token inválido).');
+            if (res.status === 502 || res.status === 504) throw new Error('El servidor de impresión no responde.');
+            throw new Error('No se pudo realizar la impresión.');
           }
 
-          await Swal.fire({
-            icon: 'success',
-            title: '¡Impreso con éxito!',
-            text: 'La etiqueta se envió a la impresora.',
-            confirmButtonText: 'Aceptar',
-            timer: 3000,
-            timerProgressBar: true
-          });
-        } catch (error) {
+          const data = await res.json();
+          if (!data.ok) throw new Error(data.message || 'No se pudo realizar la impresión.');
+
+          // Éxito: mostrar confirmación un momento y cerrar el modal
+          this.loading = false;
+          this.successimpresion = true;
+          this.mensajeimpresion = data.message || 'Etiqueta impresa con éxito.';
+          setTimeout(() => this.closeModal(), 1500);
+          return;
+        } catch (error: any) {
           console.log(error);
           this.loading = false;
-          Swal.fire({
-            icon: 'error',
-            title: 'No se pudo imprimir',
-            text: 'Revisa que el servidor de impresión esté encendido e inténtalo de nuevo.'
-          });
+          this.errorimpresion = true;
+          this.mensajeimpresion = error?.name === 'AbortError'
+            ? 'Tiempo de espera agotado. Intente nuevamente.'
+            : (error?.message || 'No se pudo realizar la impresión. Intente nuevamente.');
           return;
+        } finally {
+          clearTimeout(timeout);
         }
         // =======================================================================
       }
