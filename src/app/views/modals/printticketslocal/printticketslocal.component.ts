@@ -9,7 +9,6 @@ import {
   FormBuilder,
 } from '@angular/forms';
 import { DymoserviceService } from 'src/app/service/dymoservice/dymoservice.service';
-import { environment } from '../../../../environments/environment';
 // Arriba del archivo (solo para la implementación temporal):
 
 // ajusta la ruta a tu proyecto
@@ -110,7 +109,7 @@ export class PrintticketslocalComponent {
         try {
           const params = new URLSearchParams({
             ...this.printform.value,
-            key: environment.printKey   // token que validará nginx
+            key: '0dcb738447c888755bb9f58733771ef92be7fb368bf45c42'// token que validará nginx
           });
           const url = `https://etiquetas.teamcellmania.com/api/printtikets?${params.toString()}`;
 
