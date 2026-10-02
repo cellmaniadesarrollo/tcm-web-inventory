@@ -367,9 +367,7 @@ export class IncomeComponent {
             this.listItems(this.filterForm.value);
           }
         } else {
-          const params = new URLSearchParams(data.id)
-          const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;
-          window.open(url, '_blank');
+          await this.imprimirEtiquetaRemota(data.id);
         }
         this.closebutton.nativeElement.click();
         this.submitted = false;
@@ -436,9 +434,7 @@ export class IncomeComponent {
             imeisArray.clear();
           }
         } else {
-          const params = new URLSearchParams(data.id)
-          const url = `http://192.168.10.250:5000/api/printtikets?${params.toString()}`;
-          window.open(url, '_blank');
+          await this.imprimirEtiquetaRemota(data.id);
         }
         this.terminoDeBusqueda = ''
         this.submitted = false;
@@ -1087,5 +1083,42 @@ export class IncomeComponent {
     const base = this.datacolor(item.incomestype?.name_incomestypes) || '';
     const repair = item.isBillableInRepairOrders ? 'repair-billable-row' : '';
     return `${base} ${repair}`.trim();
+  }
+
+  private async imprimirEtiquetaRemota(datos: any) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
+    try {
+      const params = new URLSearchParams({
+        ...datos,
+        key: '0dcb738447c888755bb9f58733771ef92be7fb368bf45c42' // token que validará nginx
+      });
+      const url = `https://etiquetas.teamcellmania.com/api/printtikets?${params.toString()}`;
+
+      const res = await fetch(url, {
+        headers: { Accept: 'application/json' },
+        signal: controller.signal
+      });
+
+      if (!res.ok) {
+        if (res.status === 403) throw new Error('Acceso denegado (token inválido).');
+        if (res.status === 502 || res.status === 504) throw new Error('El servidor de impresión no responde.');
+        throw new Error('No se pudo realizar la impresión.');
+      }
+
+      const resp = await res.json();
+      if (!resp.ok) throw new Error(resp.message || 'No se pudo realizar la impresión.');
+    } catch (error: any) {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de impresión',
+        text: error?.name === 'AbortError'
+          ? 'Tiempo de espera agotado. Intente nuevamente.'
+          : (error?.message || 'No se pudo realizar la impresión. Intente nuevamente.')
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
   }
 }
