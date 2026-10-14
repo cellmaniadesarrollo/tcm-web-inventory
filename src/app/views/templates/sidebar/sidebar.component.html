@@ -1,9 +1,14 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
-  <a (click)="inicio()" class="brand-link">
-    <img src="assets/icono.png" alt="AdminLTE Logo" class="brand-image img-rounded elevation-3" style="opacity: 0.8" />
-    <span class="brand-text font-weight-light"><strong>Team CellMania</strong></span>
+  <a class="brand-link">
+    <img src="assets/icono.png" alt="AdminLTE Logo"
+        class="brand-image img-rounded elevation-3"
+        style="opacity: 0.8; cursor: pointer"
+        (click)="toggleSidebar($event)" />
+    <span class="brand-text font-weight-light" style="cursor: pointer" (click)="inicio()">
+      <strong>Team CellMania</strong>
+    </span>
   </a>
 
   <div class="sidebar">
