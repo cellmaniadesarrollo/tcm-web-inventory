@@ -31,6 +31,7 @@
     "date-fns-tz": "^3.2.0",
     "dymojs": "^1.2.0",
     "jquery": "^3.7.1",
+    "jsqr": "^1.4.0",
     "ng-angular-popup": "^0.5.2",
     "ngx-chips": "^3.0.0",
     "ngx-pagination": "^6.0.3",

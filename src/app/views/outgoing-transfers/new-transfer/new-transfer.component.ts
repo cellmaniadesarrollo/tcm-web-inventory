@@ -10,6 +10,9 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2'; 
 import { UbicacionCompartidaService } from 'src/app/service/ubicacion-compartida/ubicacion-compartida.service';
+import { MatDialog } from '@angular/material/dialog';
+import { QrScannerModalComponent } from 'src/app/shared/qr-scanner-modal/qr-scanner-modal.component';
+
 interface Product {
   id: string;
   sku: string;
@@ -56,6 +59,7 @@ export class NewTransferComponent {
   constructor(private barcodeScannerService: BarcodeScannerService, private cdr: ChangeDetectorRef,
      private fb: FormBuilder, private inventorytransferapi: InventoryTransfersApiService, 
       private api: ApiService,private router: Router,
+      private dialog: MatDialog,
      private ubicacionService: UbicacionCompartidaService) {
     this.form = this.fb.group({
       productCtrl: [''],
@@ -262,4 +266,19 @@ ubicasion: any = ''
     const item = this.selectedProducts[index];
     return !item.destination_branch_id || !item.quantity || item.quantity <= 0;
   } 
+
+  openQrScanner(): void {
+    this.dialog
+      .open(QrScannerModalComponent, {
+        width: '420px',
+        maxWidth: '95vw',
+        autoFocus: false
+      })
+      .afterClosed()
+      .subscribe((text?: string) => {
+        if (!text) return;
+        this.productCtrl.setValue(text.trim());
+        this.onSearchClick();
+      });
+  }
 }

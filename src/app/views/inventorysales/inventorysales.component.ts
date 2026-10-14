@@ -29,6 +29,8 @@ import {
   Getoneitem,
 
 } from 'src/app/models/item.inteface';
+import { MatDialog } from '@angular/material/dialog';
+import { QrScannerModalComponent } from 'src/app/shared/qr-scanner-modal/qr-scanner-modal.component';
 
 import { SocketService } from 'src/app/service/socket/socket.service';
 import { Subscription } from 'rxjs';
@@ -80,6 +82,7 @@ export class InventorysalesComponent {
     private tokenstate: TokencheckService,
     private datePipe: DatePipe,
     private renderer: Renderer2,
+    private dialog: MatDialog
   ) { }
 
   items: ListitemsI[] = [];
@@ -831,5 +834,25 @@ export class InventorysalesComponent {
     return Array.from(map.entries())
       .map(([name, qty]) => `${name} (${qty})`)
       .join(', ');
+  }
+
+  openQrScanner(): void {
+    this.dialog
+      .open(QrScannerModalComponent, {
+        width: '420px',
+        maxWidth: '95vw',
+        autoFocus: false
+      })
+      .afterClosed()
+      .subscribe((text?: string) => {
+        if (!text) return;
+
+        const value = text.trim().toUpperCase();
+        this.searchForm.controls['valuesearch'].setValue(value);
+        this.datapage.findlike = value;
+        this.datapage.pagination = 1;
+        this.loading = true;
+        this.listItems(this.datapage);
+      });
   }
 }
