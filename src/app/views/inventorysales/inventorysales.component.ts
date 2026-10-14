@@ -44,6 +44,7 @@ import {
 import { Renderer2 } from '@angular/core';
 import printJS from 'print-js';
 import { ApireportsService } from 'src/app/service/apireports/apireports.service';
+import { extractScanValue } from 'src/app/shared/utils/scan-value.util';
 
 declare var window: any;
 declare var dymo: any;
@@ -847,7 +848,9 @@ export class InventorysalesComponent {
       .subscribe((text?: string) => {
         if (!text) return;
 
-        const value = text.trim().toUpperCase();
+        const upper = text.trim().toUpperCase();
+        const value = extractScanValue(upper).trim();
+
         this.searchForm.controls['valuesearch'].setValue(value);
         this.datapage.findlike = value;
         this.datapage.pagination = 1;
