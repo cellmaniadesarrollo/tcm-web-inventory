@@ -61,6 +61,10 @@
                         class="form-control form-control-lg" placeholder="Buscar" formControlName="valuesearch" />
                       <div class="input-group-append">
                         <button type="button" class="btn btn-lg btn-default" [disabled]="blockbusqueda"
+                          (click)="openQrScanner()" title="Escanear QR">
+                          <i class="fa fa-qrcode"></i>
+                        </button>
+                        <button type="button" class="btn btn-lg btn-default" [disabled]="blockbusqueda"
                           (click)="findbutton()">
                           <i class="fa fa-search"></i>
                         </button>

@@ -1,11 +1,12 @@
 // sidebar.component.ts
 
 import { Component, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router'; 
+import { Router, NavigationEnd } from '@angular/router'; 
 import { SharedServiceService } from 'src/app/service/SharedService/shared-service.service';
 import { PedidoService } from 'src/app/service/pedido/pedido.service';
 import { Subscription, interval } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, filter } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-sidebar',
@@ -29,8 +30,10 @@ export class SidebarComponent implements OnDestroy {
   // ✅ Contador de pedidos pendientes
   pedidosPendientesCount: number = 0;
   private refreshSubscription: Subscription | null = null;
+  private routerSub: Subscription | null = null;
 
   ngOnInit(): void {
+    document.addEventListener('click', this.onDocumentClick);
     this.loadimg();
     this.sharedService.currentData$.subscribe(data => {
       this.datoRecibido = data; 
@@ -74,6 +77,10 @@ export class SidebarComponent implements OnDestroy {
           console.error('Error al actualizar conteo de pedidos:', error);
         }
       });
+
+    this.routerSub = this.router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe(() => this.closeSidebarOnMobile());
   }
 
   ngOnDestroy(): void {
@@ -81,7 +88,20 @@ export class SidebarComponent implements OnDestroy {
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
     }
+
+    if (this.routerSub) {
+      this.routerSub.unsubscribe();
+    }
+
+    document.removeEventListener('click', this.onDocumentClick);
   }
+
+  private onDocumentClick = (e: Event) => {
+    const target = e.target as HTMLElement;
+    if (target?.id === 'sidebar-overlay') {
+      this.closeSidebarOnMobile();
+    }
+  };
 
   // ============================================================
   //  ✅ CARGAR CONTEO DE PEDIDOS PENDIENTES
@@ -220,5 +240,16 @@ export class SidebarComponent implements OnDestroy {
 
   sleep(ms: any) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  private closeSidebarOnMobile(): void {
+    if (window.innerWidth >= 992) return; // 992px es el breakpoint de AdminLTE
+
+    const body = document.body;
+    body.classList.remove('sidebar-open');
+    body.classList.add('sidebar-closed', 'sidebar-collapse');
+
+    // Quita el overlay oscuro si quedó en pantalla
+    document.getElementById('sidebar-overlay')?.remove();
   }
 }

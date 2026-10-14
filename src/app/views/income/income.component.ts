@@ -37,6 +37,7 @@ import { SetdataService } from 'src/app/service/setdata/setdata.service';
 import { SocketService } from 'src/app/service/socket/socket.service';
 import { Subscription } from 'rxjs';
 import { DymoserviceService } from 'src/app/service/dymoservice/dymoservice.service';
+import { QrScannerModalComponent } from 'src/app/shared/qr-scanner-modal/qr-scanner-modal.component';
 
 @Component({
   selector: 'app-income',
@@ -1120,5 +1121,30 @@ export class IncomeComponent {
     } finally {
       clearTimeout(timeout);
     }
+  }
+
+  openQrScanner(): void {
+    this.dialog
+      .open(QrScannerModalComponent, {
+        width: '420px',
+        maxWidth: '95vw',
+        autoFocus: false
+      })
+      .afterClosed()
+      .subscribe((text?: string) => {
+        if (!text) return;
+
+        const upper = text.trim().toUpperCase();
+        const value = this.extractScanValue(upper).trim();
+
+        this.filterForm.controls['findlike'].setValue(value);
+        if (this.searchInput?.nativeElement) {
+          this.searchInput.nativeElement.value = value;
+        }
+
+        this.filterForm.controls['pagination'].setValue(1);
+        this.loading = true;
+        this.listItems(this.filterForm.value);
+      });
   }
 }

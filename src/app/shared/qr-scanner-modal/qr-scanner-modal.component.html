@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Escanear QR</h2>
+
+<mat-dialog-content class="scanner-content">
+  <mat-form-field *ngIf="cameras.length > 1" appearance="outline" class="camera-select">
+    <mat-label>Cámara</mat-label>
+    <mat-select [(ngModel)]="selectedCameraId" (selectionChange)="onCameraChange()">
+      <mat-option *ngFor="let c of cameras" [value]="c.id">{{ c.label }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="reader-wrapper">
+    <video #video class="video" playsinline muted></video>
+    <canvas #canvas class="hidden-canvas"></canvas>
+
+    <div class="frame" *ngIf="!isStarting && !errorMessage"></div>
+    <div *ngIf="isStarting && !errorMessage" class="overlay">Iniciando cámara...</div>
+
+    <button *ngIf="torchSupported" mat-mini-fab class="torch-btn" (click)="toggleTorch()" type="button">
+      <mat-icon>{{ torchOn ? 'flash_off' : 'flash_on' }}</mat-icon>
+    </button>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-box">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <p class="hint" *ngIf="!errorMessage">
+    Aleja un poco el celular (20-30 cm) hasta que el QR se vea nítido
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cancelar</button>
+</mat-dialog-actions>

@@ -4,6 +4,9 @@ import { InventoryTransfersApiService } from 'src/app/service/inventory-transfer
 import { Router } from '@angular/router';
 import { UbicacionCompartidaService } from 'src/app/service/ubicacion-compartida/ubicacion-compartida.service';
 import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { QrScannerModalComponent } from 'src/app/shared/qr-scanner-modal/qr-scanner-modal.component';
+
 export interface Transfer {
   _id: string;
   quantity: number;
@@ -39,7 +42,8 @@ export interface Status {
 export class OutgoingTransfersComponent {
   private subscriptions: Subscription = new Subscription();
   constructor(private backendapi: InventoryTransfersApiService, 
-     private router: Router, private ubicacionService: UbicacionCompartidaService) { }
+    private router: Router, private ubicacionService: UbicacionCompartidaService,
+    private dialog: MatDialog) { }
   datapage = {
     allclients: '0',
     pagination: 1,
@@ -95,4 +99,19 @@ export class OutgoingTransfersComponent {
     // tu lógica
   } 
 
+  openQrScanner(): void {
+    this.dialog
+      .open(QrScannerModalComponent, {
+        width: '420px',
+        maxWidth: '95vw',
+        autoFocus: false
+      })
+      .afterClosed()
+      .subscribe((text?: string) => {
+        if (!text) return;
+        this.datapage.findlike = text.trim();
+        this.datapage.pagination = 1;
+        this.buscar();
+      });
+  }
 }
