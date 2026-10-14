@@ -112,11 +112,17 @@ export class OutgoingTransfersComponent {
         if (!text) return;
 
         const upper = text.trim().toUpperCase();
-        const value = extractScanValue(upper).trim();
+        const sku = extractScanValue(upper).trim();   // "REP-HUA-NEG-INF00000000001928"
+        const value = this.extractInfNumber(sku);     // "00000000001928"
 
-        this.datapage.findlike = text.trim();
+        this.datapage.findlike = value;
         this.datapage.pagination = 1;
         this.buscar();
       });
+  }
+
+  private extractInfNumber(sku: string): string {
+    const match = sku.match(/INF(\d+)/i);
+    return match ? match[1] : sku;
   }
 }
