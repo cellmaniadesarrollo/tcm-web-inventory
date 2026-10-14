@@ -92,9 +92,22 @@ export class OutgoingTransfersComponent {
    */
   private toNumberOnly(raw: string): string {
     const original = (raw || '').trim();
-    // Busca "INF" + dígitos en cualquier parte del texto (ticket completo, SKU o URL)
-    const match = original.match(/IN[FV](\d+)/i);
-    return match ? match[1] : original;   // "00000000001928"
+    if (!original) return original;
+
+    // 1. Si es ticket "S:SKU,BT:..." quedarse solo con el SKU
+    const skuMatch = original.match(/S:\s*([^,]+)/i);
+    const candidate = (skuMatch ? skuMatch[1] : original).trim();
+
+    // 2. Tomar los dígitos que están justo después de "INF" (tolerando espacios o guiones)
+    const infMatch = candidate.match(/INF[\s\-']*(\d+)/i);
+    if (infMatch) return infMatch[1];
+
+    // 3. Si el SKU termina en un bloque largo de dígitos, usar ese bloque
+    const endMatch = candidate.match(/(\d{8,})\s*$/);
+    if (endMatch) return endMatch[1];
+
+    // 4. Búsqueda manual normal: se deja tal cual
+    return original;
   }
 
   async buscar() {
@@ -130,8 +143,6 @@ export class OutgoingTransfersComponent {
       .afterClosed()
       .subscribe((text?: string) => {
         if (!text) return;
-
-        console.log('QR crudo:', JSON.stringify(text)); // temporal
 
         this.datapage.findlike = this.toNumberOnly(text);
         this.datapage.pagination = 1;
