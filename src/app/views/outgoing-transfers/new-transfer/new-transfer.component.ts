@@ -81,11 +81,11 @@ ubicasion: any = ''
     })
   );
     
-    this.barcodeScannerService.listenForScan(28, 29) // mínimo y máximo
-      .subscribe(code => { 
-        this.productCtrl.setValue(code);
-        this.onSearchClick() 
-        // Aquí haces tu búsqueda o lo que necesites
+    this.barcodeScannerService.listenForScan(28, 29)
+      .subscribe(code => {
+        const value = extractScanValue(code.trim().toUpperCase()).trim();
+        this.productCtrl.setValue(value);
+        this.onSearchClick();
       });
     this.productCtrl.valueChanges.subscribe(value => {
       if (typeof value !== 'string' || this.loading) return;
@@ -280,9 +280,9 @@ ubicasion: any = ''
         if (!text) return;
 
         const upper = text.trim().toUpperCase();
-        const value = extractScanValue(upper).trim();
+        const value = extractScanValue(upper).trim();   // "REP-HUA-NEG-INF00000000001928"
 
-        this.productCtrl.setValue(text.trim());
+        this.productCtrl.setValue(value);               // <- value, no text
         this.onSearchClick();
       });
   }
