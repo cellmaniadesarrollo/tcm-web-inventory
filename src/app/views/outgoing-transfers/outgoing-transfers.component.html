@@ -25,7 +25,9 @@
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Buscar</mat-label>
-          <input matInput placeholder="Buscar por producto, modelo..." [(ngModel)]="datapage.findlike"
+          <input matInput placeholder="Buscar por producto, modelo..."
+            [(ngModel)]="datapage.findlike"
+            (ngModelChange)="onSearchChange($event)"
             (keyup.enter)="buscar()" />
           <button *ngIf="datapage.findlike" mat-icon-button matSuffix (click)="limpiarBusqueda()">
             <mat-icon>close</mat-icon>
