@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { UbicacionCompartidaService } from 'src/app/service/ubicacion-compartida/ubicacion-compartida.service';
 import { MatDialog } from '@angular/material/dialog';
 import { QrScannerModalComponent } from 'src/app/shared/qr-scanner-modal/qr-scanner-modal.component';
+import { extractScanValue } from 'src/app/shared/utils/scan-value.util';
 
 interface Product {
   id: string;
@@ -277,6 +278,10 @@ ubicasion: any = ''
       .afterClosed()
       .subscribe((text?: string) => {
         if (!text) return;
+
+        const upper = text.trim().toUpperCase();
+        const value = extractScanValue(upper).trim();
+
         this.productCtrl.setValue(text.trim());
         this.onSearchClick();
       });
