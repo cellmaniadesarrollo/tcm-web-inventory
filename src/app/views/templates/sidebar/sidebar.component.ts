@@ -252,4 +252,24 @@ export class SidebarComponent implements OnDestroy {
     // Quita el overlay oscuro si quedó en pantalla
     document.getElementById('sidebar-overlay')?.remove();
   }
+
+  toggleSidebar(event?: Event): void {
+    event?.stopPropagation();
+
+    const body = document.body;
+    const isMobile = window.innerWidth < 992; // breakpoint de AdminLTE
+
+    if (isMobile) {
+      // En móvil: abrir/cerrar el menú deslizable
+      if (body.classList.contains('sidebar-open')) {
+        this.closeSidebarOnMobile();
+      } else {
+        body.classList.remove('sidebar-closed', 'sidebar-collapse');
+        body.classList.add('sidebar-open');
+      }
+    } else {
+      // En escritorio: colapsar/expandir
+      body.classList.toggle('sidebar-collapse');
+    }
+  }
 }
