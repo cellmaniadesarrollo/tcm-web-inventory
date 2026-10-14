@@ -115,14 +115,27 @@ export class OutgoingTransfersComponent {
         const sku = extractScanValue(upper).trim();   // "REP-HUA-NEG-INF00000000001928"
         const value = this.extractInfNumber(sku);     // "00000000001928"
 
-        this.datapage.findlike = value;
+        this.datapage.findlike = this.cleanSearchValue(text);
         this.datapage.pagination = 1;
         this.buscar();
       });
   }
 
-  private extractInfNumber(sku: string): string {
-    const match = sku.match(/INF(\d+)/i);
-    return match ? match[1] : sku;
+  private extractInfNumber(raw: string): string {
+    const match = raw.match(/INF(\d+)/i);
+    return match ? match[1] : raw;
+  }
+
+  private cleanSearchValue(raw: string): string {
+    const upper = (raw || '').trim().toUpperCase();
+    const sku = extractScanValue(upper).trim();
+    return this.extractInfNumber(sku);
+  }
+
+  onSearchChange(value: string) {
+    const cleaned = this.cleanSearchValue(value);
+    if (cleaned !== value) {
+      this.datapage.findlike = cleaned;
+    }
   }
 }
