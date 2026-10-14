@@ -280,9 +280,9 @@ ubicasion: any = ''
         if (!text) return;
 
         const upper = text.trim().toUpperCase();
-        const value = extractScanValue(upper).trim();
+        const value = extractScanValue(upper).trim();   // "REP-HUA-NEG-INF00000000001928"
 
-        this.productCtrl.setValue(text.trim());
+        this.productCtrl.setValue(value);               // <- value, no text
         this.onSearchClick();
       });
   }
