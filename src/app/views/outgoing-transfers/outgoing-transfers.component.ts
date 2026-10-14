@@ -6,6 +6,7 @@ import { UbicacionCompartidaService } from 'src/app/service/ubicacion-compartida
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { QrScannerModalComponent } from 'src/app/shared/qr-scanner-modal/qr-scanner-modal.component';
+import { extractScanValue } from 'src/app/shared/utils/scan-value.util';
 
 export interface Transfer {
   _id: string;
@@ -109,6 +110,10 @@ export class OutgoingTransfersComponent {
       .afterClosed()
       .subscribe((text?: string) => {
         if (!text) return;
+
+        const upper = text.trim().toUpperCase();
+        const value = extractScanValue(upper).trim();
+
         this.datapage.findlike = text.trim();
         this.datapage.pagination = 1;
         this.buscar();
