@@ -42,7 +42,7 @@ export interface Status {
 })
 export class OutgoingTransfersComponent {
   private subscriptions: Subscription = new Subscription();
-  constructor(private backendapi: InventoryTransfersApiService, 
+  constructor(private backendapi: InventoryTransfersApiService,
     private router: Router, private ubicacionService: UbicacionCompartidaService,
     private dialog: MatDialog) { }
   datapage = {
@@ -57,7 +57,7 @@ export class OutgoingTransfersComponent {
   filtroBusqueda: string = '';
   paginaActual = 1;
   paginas = [1, 2, 3]; // Generar dinámicamente según total
-   estados: Status[] = [];
+  estados: Status[] = [];
   ubicasion: any = ''
   transacciones: Transfer[] = []
   ngOnInit() {
@@ -75,30 +75,52 @@ export class OutgoingTransfersComponent {
       })
     );
   }
-  renderPage(event:any){
-    this.datapage.pagination=event  
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  renderPage(event: any) {
+    this.datapage.pagination = event
     this.buscar()
   }
+
+  /**
+   * Si el texto es un ticket (S:...) o un SKU con "INF" + dígitos,
+   * devuelve solo el número (ej: "00000000001928").
+   * Si es una búsqueda manual normal, la deja tal cual.
+   */
+  private toNumberOnly(raw: string): string {
+    const original = (raw || '').trim();
+    const upper = original.toUpperCase();
+    const sku = extractScanValue(upper).trim();   // "REP-HUA-NEG-INF00000000001928"
+    const match = sku.match(/INF(\d+)/i);
+    return match ? match[1] : original;           // "00000000001928"
+  }
+
   async buscar() {
-    // Aquí se llama al backend con datapage
+    // Limpia el valor (también actualiza lo que se ve en el input)
+    this.datapage.findlike = this.toNumberOnly(this.datapage.findlike);
+
     this.isLoading = true;
-    const data = await this.backendapi.listitem({ data: this.datapage, coodinates: this.ubicasion })
-    this.transacciones = data.items.data
-    this.estados = data.status
-    this.totalentries=data.items.pagination.total 
-    this.isLoading = false
-    // Tu servicio llamaría al backend y llenaría `transacciones` y `paginas`
+    try {
+      const data = await this.backendapi.listitem({ data: this.datapage, coodinates: this.ubicasion })
+      this.transacciones = data.items.data
+      this.estados = data.status
+      this.totalentries = data.items.pagination.total
+    } finally {
+      this.isLoading = false
+    }
   }
 
   limpiarBusqueda() {
     this.datapage.findlike = '';
     this.buscar();
-  } 
-
+  }
 
   nuevaSolicitud() {
     // tu lógica
-  } 
+  }
 
   openQrScanner(): void {
     this.dialog
@@ -111,31 +133,9 @@ export class OutgoingTransfersComponent {
       .subscribe((text?: string) => {
         if (!text) return;
 
-        const upper = text.trim().toUpperCase();
-        const sku = extractScanValue(upper).trim();   // "REP-HUA-NEG-INF00000000001928"
-        const value = this.extractInfNumber(sku);     // "00000000001928"
-
-        this.datapage.findlike = this.cleanSearchValue(text);
+        this.datapage.findlike = text;   // buscar() lo limpia
         this.datapage.pagination = 1;
         this.buscar();
       });
-  }
-
-  private extractInfNumber(raw: string): string {
-    const match = raw.match(/INF(\d+)/i);
-    return match ? match[1] : raw;
-  }
-
-  private cleanSearchValue(raw: string): string {
-    const upper = (raw || '').trim().toUpperCase();
-    const sku = extractScanValue(upper).trim();
-    return this.extractInfNumber(sku);
-  }
-
-  onSearchChange(value: string) {
-    const cleaned = this.cleanSearchValue(value);
-    if (cleaned !== value) {
-      this.datapage.findlike = cleaned;
-    }
   }
 }
