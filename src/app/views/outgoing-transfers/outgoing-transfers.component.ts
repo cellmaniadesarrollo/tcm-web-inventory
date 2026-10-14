@@ -92,24 +92,22 @@ export class OutgoingTransfersComponent {
    */
   private toNumberOnly(raw: string): string {
     const original = (raw || '').trim();
-    const upper = original.toUpperCase();
-    const sku = extractScanValue(upper).trim();   // "REP-HUA-NEG-INF00000000001928"
-    const match = sku.match(/INF(\d+)/i);
-    return match ? match[1] : original;           // "00000000001928"
+    // Busca "INF" + dígitos en cualquier parte del texto (ticket completo, SKU o URL)
+    const match = original.match(/IN[FV](\d+)/i);
+    return match ? match[1] : original;   // "00000000001928"
   }
 
   async buscar() {
-    // Limpia el valor (también actualiza lo que se ve en el input)
     this.datapage.findlike = this.toNumberOnly(this.datapage.findlike);
 
     this.isLoading = true;
     try {
-      const data = await this.backendapi.listitem({ data: this.datapage, coodinates: this.ubicasion })
-      this.transacciones = data.items.data
-      this.estados = data.status
-      this.totalentries = data.items.pagination.total
+      const data = await this.backendapi.listitem({ data: this.datapage, coodinates: this.ubicasion });
+      this.transacciones = data.items.data;
+      this.estados = data.status;
+      this.totalentries = data.items.pagination.total;
     } finally {
-      this.isLoading = false
+      this.isLoading = false;
     }
   }
 
@@ -133,7 +131,9 @@ export class OutgoingTransfersComponent {
       .subscribe((text?: string) => {
         if (!text) return;
 
-        this.datapage.findlike = text;   // buscar() lo limpia
+        console.log('QR crudo:', JSON.stringify(text)); // temporal
+
+        this.datapage.findlike = this.toNumberOnly(text);
         this.datapage.pagination = 1;
         this.buscar();
       });
