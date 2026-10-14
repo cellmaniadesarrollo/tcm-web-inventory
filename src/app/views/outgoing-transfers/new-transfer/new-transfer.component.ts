@@ -81,11 +81,11 @@ ubicasion: any = ''
     })
   );
     
-    this.barcodeScannerService.listenForScan(28, 29) // mínimo y máximo
-      .subscribe(code => { 
-        this.productCtrl.setValue(code);
-        this.onSearchClick() 
-        // Aquí haces tu búsqueda o lo que necesites
+    this.barcodeScannerService.listenForScan(28, 29)
+      .subscribe(code => {
+        const value = extractScanValue(code.trim().toUpperCase()).trim();
+        this.productCtrl.setValue(value);
+        this.onSearchClick();
       });
     this.productCtrl.valueChanges.subscribe(value => {
       if (typeof value !== 'string' || this.loading) return;
