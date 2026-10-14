@@ -1,0 +1,10 @@
+.scanner-content { display: flex; flex-direction: column; gap: 12px; min-width: 280px; }
+.camera-select { width: 100%; }
+.reader-wrapper { position: relative; width: 100%; background: #000; border-radius: 8px; overflow: hidden; min-height: 240px; }
+.video { width: 100%; max-height: 60vh; display: block; object-fit: cover; }
+.hidden-canvas { display: none; }
+.frame { position: absolute; inset: 12%; border: 2px solid rgba(255,255,255,.8); border-radius: 12px; pointer-events: none; }
+.overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; background: rgba(0,0,0,.6); font-size: 14px; }
+.torch-btn { position: absolute; right: 8px; bottom: 8px; }
+.error-box { display: flex; align-items: center; gap: 8px; padding: 12px; border-radius: 8px; background: #fdecea; color: #b71c1c; font-size: 13px; }
+.hint { margin: 0; text-align: center; font-size: 12px; opacity: .7; }

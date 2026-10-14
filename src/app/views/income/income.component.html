@@ -63,13 +63,17 @@
                   <form [formGroup]="filterForm">
                     <div class="input-group">
                       <input type="search"
-                        (keyup)="onKeyDownEvent($event)" 
+                        (keyup)="onKeyDownEvent($event)"
                         [readonly]="blockbusqueda"
-                        class="form-control form-control-lg" 
-                        placeholder="Buscar" 
+                        class="form-control form-control-lg"
+                        placeholder="Buscar"
                         formControlName="findlike"
                         #searchInput />
                       <div class="input-group-append">
+                        <button type="button" [disabled]="blockbusqueda" class="btn btn-lg btn-default"
+                          (click)="openQrScanner()" title="Escanear QR">
+                          <i class="fa fa-qrcode"></i>
+                        </button>
                         <button type="button" [disabled]="blockbusqueda" class="btn btn-lg btn-default"
                           (click)="findbutton()">
                           <i class="fa fa-search"></i>

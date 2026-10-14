@@ -123,6 +123,7 @@ import { ImprimirModalComponent } from './views/pedidos/components/imprimir-moda
 import { AsignarPedidoModalComponent } from './views/income/components/asignar-pedido-modal/asignar-pedido-modal.component';
 import { DesguaceComponent } from './views/inventory/components/desguace/desguace.component';
 import { CrearIngresoModalComponent } from './views/inventory/components/crear-ingreso-modal/crear-ingreso-modal.component';
+import { QrScannerModalComponent } from './shared/qr-scanner-modal/qr-scanner-modal.component';
 
 @NgModule({
   declarations: [
@@ -196,6 +197,7 @@ import { CrearIngresoModalComponent } from './views/inventory/components/crear-i
     AsignarPedidoModalComponent,
     DesguaceComponent,
     CrearIngresoModalComponent,
+    QrScannerModalComponent,
   ],
   imports: [
     // ============ ANGULAR ============
